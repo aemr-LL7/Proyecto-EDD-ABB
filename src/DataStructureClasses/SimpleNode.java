@@ -5,7 +5,7 @@
 package DataStructureClasses;
 
 /**
- * @author B-St
+ * @author andre
  * @param <T>
  */
 public class SimpleNode<T>{
