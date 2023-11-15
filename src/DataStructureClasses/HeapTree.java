@@ -8,12 +8,16 @@ package DataStructureClasses;
  *
  * @author andre
  */
-public class BST<T> {
 
-    private NodeBST<T> pRoot;
+/*
+    Dudas sobre el arbol: tiene limite establecido de arcivos? Que hacer con los archivos sobrantes?
+ */
+public class HeapTree<T> {
+
+    private HeapNode<T> pRoot;
     private int size;
 
-    public BST() {
+    public HeapTree() {
         this.pRoot = null;
         this.size = 0;
     }
@@ -25,7 +29,7 @@ public class BST<T> {
     /*
         RECORRIDOS DEL ARBOL
      */
-    public void preorden(NodeBST<T> treeRoot) {
+    public void preorden(HeapNode<T> treeRoot) {
         if (treeRoot != null) {
             System.out.println(treeRoot.getData());
             this.preorden(treeRoot.getpLeft());
@@ -33,7 +37,7 @@ public class BST<T> {
         }
     }
 
-    public void inorden(NodeBST<T> treeRoot) {
+    public void inorden(HeapNode<T> treeRoot) {
         if (treeRoot != null) {
             this.inorden(treeRoot.getpLeft());
             System.out.println(treeRoot.getData());
@@ -41,7 +45,7 @@ public class BST<T> {
         }
     }
 
-    public void postorden(NodeBST<T> treeRoot) {
+    public void postorden(HeapNode<T> treeRoot) {
         if (treeRoot != null) {
             this.postorden(treeRoot.getpLeft());
             this.postorden(treeRoot.getpRight());
@@ -53,7 +57,7 @@ public class BST<T> {
         Añadir, eliminar, buscar
      */
     // null no se encuentra el padre, debe existir al menos un nodo en el arbol
-    public NodeBST<T> searchFatherForInsertion(NodeBST<T> root, T data) {
+    public HeapNode<T> searchFatherForInsertion(HeapNode<T> root, T data) {
         if (root.getData() == data) {
             return null;
         } else if ((Integer) root.getData() > (Integer) data) {
@@ -64,11 +68,11 @@ public class BST<T> {
     }
 
     public void add(T data) {
-        NodeBST<T> newNode = new NodeBST<>(data);
+        HeapNode<T> newNode = new HeapNode<>(data);
         if (isEmpty()) {
             pRoot = newNode;
         } else {
-            NodeBST<T> father = searchFatherForInsertion(pRoot, data);
+            HeapNode<T> father = searchFatherForInsertion(pRoot, data);
             if ((Integer) father.getData() > (Integer) data) {
                 father.setpLeft(newNode);
             } else {
@@ -86,11 +90,11 @@ public class BST<T> {
     /*
         Getters y Setters
      */
-    public NodeBST<T> getpRoot() {
+    public HeapNode<T> getpRoot() {
         return pRoot;
     }
 
-    public void setpRoot(NodeBST<T> pRoot) {
+    public void setpRoot(HeapNode<T> pRoot) {
         this.pRoot = pRoot;
     }
 

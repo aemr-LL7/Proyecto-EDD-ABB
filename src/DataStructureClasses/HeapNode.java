@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package DataStructureClasses;
 
 /**
@@ -9,16 +5,16 @@ package DataStructureClasses;
  * @author andre
  * @param <T>
  */
-public class NodeBST<T> {
+public class HeapNode<T> {
 
     private T data;
-    private NodeBST<T> pLeft, pRight, pFather;
+    private HeapNode<T> pLeft, pRight, pFather;
     // puede tener un apuntador al nodo padre
 
     /*
         Inicializar constructor
      */
-    public NodeBST(T data) {
+    public HeapNode(T data) {
         this.data = data;
         this.pLeft = null;
         this.pRight = null;
@@ -27,45 +23,49 @@ public class NodeBST<T> {
     /*
         Constructor con apuntador al padre (raiz)
      */
-    public NodeBST(T data, NodeBST<T> pFather) {
+    public HeapNode(T data, HeapNode<T> pFather) {
         this.data = data;
         this.pLeft = null;
         this.pRight = null;
         this.pFather = pFather;
     }
 
-    /*
-        Getters y Setters
-     */
+    //Devolver la data del nodo
     public T getData() {
         return data;
     }
 
+    //Establecer la data del nodo
     public void setData(T data) {
         this.data = data;
     }
 
-    public NodeBST<T> getpLeft() {
+    //Obtener el hijo izquierdo del nodo
+    public HeapNode<T> getpLeft() {
         return pLeft;
     }
 
-    public void setpLeft(NodeBST<T> pLeft) {
+    //Determinar el hijo izquierdo del nodo
+    public void setpLeft(HeapNode<T> pLeft) {
         this.pLeft = pLeft;
     }
-
-    public NodeBST<T> getpRight() {
+    
+    //Obtener el hijo derecho del nodo
+    public HeapNode<T> getpRight() {
         return pRight;
     }
 
-    public void setpRight(NodeBST<T> pRight) {
+    //Establecer el hijo izquierdo del nodo
+    public void setpRight(HeapNode<T> pRight) {
         this.pRight = pRight;
     }
 
-    public NodeBST<T> getpFather() {
+    //Obtener el padre del nodo
+    public HeapNode<T> getpFather() {
         return pFather;
     }
 
-    public void setpFather(NodeBST<T> pFather) {
+    public void setpFather(HeapNode<T> pFather) {
         this.pFather = pFather;
     }
 
