@@ -27,9 +27,9 @@ public class User {
     }
 
     /*
-        Sobrecarga de metodo Usuario
+        Sobrecarga de constructor Usuario
      */
-    public User(String name, String type, SimpleList<User> files_list) {
+    public User(String name, String type, SimpleList<Document> files_list) {
         this.name = name;
         this.type = type;
         this.files_list = files_list;

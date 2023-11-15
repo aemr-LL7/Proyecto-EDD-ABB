@@ -9,10 +9,17 @@ import java.util.Random;
 public class Document {
 
     private String ID;
+    private int numPages;
     private String content;
-
+    
     public Document(String content) {
         this.content = content;
+        this.generateId();
+    }
+    
+    public Document(String content, int numPages) {
+        this.content = content;
+        this.setNumPages(numPages);
         this.generateId();
     }
 
@@ -45,6 +52,14 @@ public class Document {
         this.ID = ID;
     }
 
+    public int getNumPages() {
+        return numPages;
+    }
+
+    public void setNumPages(int numPages) {
+        this.numPages = numPages;
+    }
+
     public String getContent() {
         return content;
     }
@@ -52,5 +67,7 @@ public class Document {
     public void setContent(String content) {
         this.content = content;
     }
+
+
 
 }

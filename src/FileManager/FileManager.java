@@ -1,5 +1,7 @@
 package FileManager;
 
+import Classes.User;
+import DataStructureClasses.SimpleList;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -150,32 +152,34 @@ public class FileManager {
         }
     }
 
-    // METODO DE EJEMPLO (PRUEBA)
-    public void printCSV(File inFile) {
+    // WIP Leer informacin del csv
+    public SimpleList<User> readUsersFromCSV(File inFile) {
+        SimpleList<User> userList = new SimpleList();
+
         if (inFile.getName().endsWith(".csv")) {
             try {
                 FileReader fileReader = new FileReader(inFile);
                 BufferedReader bufferedReader = new BufferedReader(fileReader);
 
                 String line;
-                String parts[];
+                //String parts[];
                 while ((line = bufferedReader.readLine()) != null) {
-                    String[] data = line.split(","); // Dividir la línea por comas
-                    if (data.length == 2) {
-                        String usuario = data[0].trim();
-                        String tipo = data[1].trim();
-
-                        // Aquí se debe decidir lo que haremos con esta informacion
-                        // EJEMPLO Imprimir
-                        System.out.println("Usuario: " + usuario + ", Tipo: " + tipo);
+                    if (line.contains("usuario") && line.contains("tipo")) {
+                        ;
                     } else {
-                        // ejemplo archivo inventario TABLA?
-                        parts = line.split(",");
+                        if (!line.isEmpty()) {
+                            String[] data = line.split(","); // Dividir la línea por comas
+                            if (data.length == 2) {
+                                String username = data[0].trim();
+                                String type = data[1].trim();
 
-                        for (int i = 0; i < parts.length; i++) {
-                            System.out.print(parts[i].trim() + "    |   ");
+                                // Crear un objeto User y agregarlo a la lista
+                                User newUser = new User(username, type);
+                                userList.addAtTheEnd(newUser);
+                            } else {
+                                System.out.println("Linea no reconocida! " + line);
+                            }
                         }
-                        System.out.println();
                     }
 
                 }
@@ -187,6 +191,28 @@ public class FileManager {
             }
         } else {
             System.out.println("El archivo no es de tipo CSV");
+        }
+        return userList;
+    }
+
+    public void writeUsersToCSV(SimpleList<User> userList) {
+        try {
+            FileWriter fileWriter = new FileWriter("usuarios.csv");
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+
+            // Etiquetas
+            bufferedWriter.write("usuario, tipo");
+            bufferedWriter.newLine();
+
+            for (int i = 0; i < userList.getSize(); i++) {
+                User newUser = userList.getValueByIndex(i);
+                bufferedWriter.write(newUser.getName() + ", " + newUser.getPriority() + "\n");
+            }
+
+            bufferedWriter.close();
+            System.out.println("Usuarios guardados en el archivo CSV exitosamente");
+        } catch (IOException e) {
+            System.out.println("Algo salió mal:(");
         }
     }
 
