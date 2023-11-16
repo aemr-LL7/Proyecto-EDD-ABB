@@ -11,6 +11,7 @@ public class Document {
     private String ID;
     private int numPages;
     private String content;
+    private boolean isPriority;
     
     public Document(String content) {
         this.content = content;
