@@ -1,5 +1,10 @@
 package DataStructureClasses;
 
+import Classes.Document;
+import Classes.UserAdministrator;
+import Classes.UserCommon;
+import Classes.UserHumanResources;
+
 /**
  *
  * @author B-St
@@ -25,11 +30,10 @@ public class OurHashTable<T> {
     }
 
     /*
-    Funcion para introducir datos a la tabla, tambien maneja el cambio de tamano si se exede el limite.
-    toma el ID del objeto pasado para guardarlo como la key????
-    */
-    public void put(T value) {
-        int key = value.hashCode();
+    Funcion para introducir documentos a la tabla, tambien maneja el cambio de tamano si se exede el limite. 
+     */
+    public void put(String name, T value) {
+        int key = name.hashCode();
         int hash = hashFunction(key);
         OurEntry<T> newEntry = new OurEntry<>(key, value);
 
@@ -49,6 +53,22 @@ public class OurHashTable<T> {
             this.extendTable();
         }
 
+    }
+
+    public T get(String name) {
+
+        int key = name.hashCode();
+        int hash = hashFunction(key);
+        OurEntry<T> returning = this.table[hash];
+        while (returning != null) {
+            if (this.checkKey(key, returning)) {
+                return returning.getValue();
+
+            }
+            returning = returning.getNext();
+        }
+
+        return null;
     }
 
     //Clona la tabla con un nuevo tamano
@@ -75,6 +95,18 @@ public class OurHashTable<T> {
         }
 
         this.table = newTable;
+    }
+
+    private boolean checkKey(int key, OurEntry entry) {
+        return key == entry.getKey();
+    }
+
+    public boolean isDocument(OurEntry entry) {
+        return (entry.getValue() instanceof Document);
+    }
+
+    public boolean isUser(OurEntry entry) {
+        return (entry.getValue() instanceof UserAdministrator) || (entry.getValue() instanceof UserCommon) || (entry.getValue() instanceof UserHumanResources);
     }
 
     private int hashFunction(int key) {

@@ -1,6 +1,6 @@
 package FileManager;
 
-import Classes.User;
+import Classes.UserBlank;
 import DataStructureClasses.SimpleList;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -152,8 +152,8 @@ public class FileManager {
     }
 
     // WIP Leer informacin del csv
-    public SimpleList<User> readUsersFromCSV(File inFile) {
-        SimpleList<User> userList = new SimpleList();
+    public SimpleList<UserBlank> readUsersFromCSV(File inFile) {
+        SimpleList<UserBlank> userList = new SimpleList();
 
         if (inFile.getName().endsWith(".csv")) {
             try {
@@ -173,7 +173,7 @@ public class FileManager {
                                 String type = data[1].trim();
 
                                 // Crear un objeto User y agregarlo a la lista
-                                User newUser = new User(username, type);
+                                UserBlank newUser = new UserBlank(username, type);
                                 userList.addAtTheEnd(newUser);
                             } else {
                                 System.out.println("Linea no reconocida! " + line);
@@ -194,7 +194,7 @@ public class FileManager {
         return userList;
     }
 
-    public void writeUsersToCSV(SimpleList<User> userList) {
+    public void writeUsersToCSV(SimpleList<UserBlank> userList) {
         try {
             FileWriter fileWriter = new FileWriter("usuarios.csv");
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
@@ -204,7 +204,7 @@ public class FileManager {
             bufferedWriter.newLine();
 
             for (int i = 0; i < userList.getSize(); i++) {
-                User newUser = userList.getValueByIndex(i);
+                UserBlank newUser = userList.getValueByIndex(i);
                 bufferedWriter.write(newUser.getName() + ", " + newUser.getPriority() + "\n");
             }
 

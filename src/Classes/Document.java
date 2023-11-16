@@ -1,6 +1,6 @@
 package Classes;
 
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  *
@@ -8,49 +8,47 @@ import java.util.Random;
  */
 public class Document {
 
-    private String ID;
+    private String name;
     private int numPages;
-    private String content;
+    private static final String content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ullamcorper sit amet neque ac vulputate. Praesent ut sodales risus. Suspendisse ultricies posuere enim ut aliquam. Duis pellentesque ut lacus sed porttitor. Morbi fringilla tempor nulla, id luctus sem fermentum id. Vestibulum mi dolor, volutpat vitae ante vulputate, mollis molestie dui. Quisque in luctus metus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Mauris vel rhoncus urna. Aenean maximus augue metus, in maximus est dictum non. Suspendisse potenti. Etiam pulvinar enim at erat elementum, quis vestibulum enim vulputate.\n";
+    
+    //Determina si se usara la prioridad del usuario a la hora de generar la prioridad de insercion en el heap.
     private boolean isPriority;
     
-    public Document(String content) {
-        this.content = content;
-        this.generateId();
+    //Apuntador al usuario que creo el documento
+    private User creator;
+
+    public Document(String name, User creator, boolean isPriority) {
+        this.name = name;
+        int randomGeneratedPages = ThreadLocalRandom.current().nextInt(0, 20 + 1);
+        this.numPages = randomGeneratedPages;
+        this.isPriority = false;
+        this.creator = creator;
+        this.isPriority = isPriority;
+    }
+
+    public Document(String name, int numPages, User creator, boolean isPriority) {
+        this.name = name;
+        this.setNumPages(numPages);
+        this.isPriority = false;
+        this.creator = creator;
+        this.isPriority = isPriority;
+    }
+
+    public int getCreatorCI(){
+        return this.creator.getCI();
     }
     
-    public Document(String content, int numPages) {
-        this.content = content;
-        this.setNumPages(numPages);
-        this.generateId();
+    public void setPriorit(boolean priority) {
+        this.isPriority = priority;
     }
 
-    private void generateId() {
-
-        String newID = "";
-
-        Random random = new Random();
-        for (int i = 0; i < 3; i++) {
-            char letter = (char) (random.nextInt(26) + 'A');
-            newID += letter;
-        }
-
-        newID += "-";
-
-        for (int i = 0; i < 3; i++) {
-            int digit = random.nextInt(10);
-            newID += digit;
-
-        }
-        
-        this.ID = newID;
+    public String getName() {
+        return name;
     }
 
-    public String getID() {
-        return ID;
-    }
-
-    public void setID(String ID) {
-        this.ID = ID;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getNumPages() {
@@ -64,11 +62,5 @@ public class Document {
     public String getContent() {
         return content;
     }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-
 
 }
