@@ -1,9 +1,7 @@
 package DataStructureClasses;
 
 import Classes.Document;
-import Classes.UserAdministrator;
-import Classes.UserCommon;
-import Classes.UserHumanResources;
+import Classes.User;
 
 /**
  *
@@ -32,10 +30,10 @@ public class OurHashTable<T> {
     /*
     Funcion para introducir documentos a la tabla, tambien maneja el cambio de tamano si se exede el limite. 
      */
-    public void put(String name, T value) {
-        int key = name.hashCode();
-        int hash = hashFunction(key);
-        OurEntry<T> newEntry = new OurEntry<>(key, value);
+    public void put(String key, T value) {
+        int inputKey = key.hashCode();
+        int hash = hashFunction(inputKey);
+        OurEntry<T> newEntry = new OurEntry<>(inputKey, value);
 
         if (table[hash] == null) {
             table[hash] = newEntry;
@@ -54,14 +52,46 @@ public class OurHashTable<T> {
         }
 
     }
+    
+    public T get(String inputKey) {
 
-    public T get(String name) {
-
-        int key = name.hashCode();
+        int key = inputKey.hashCode();
         int hash = hashFunction(key);
         OurEntry<T> returning = this.table[hash];
         while (returning != null) {
             if (this.checkKey(key, returning)) {
+                return returning.getValue();
+
+            }
+            returning = returning.getNext();
+        }
+
+        return null;
+    }
+
+    public User getUser(String name, int CI) {
+
+        int key = name.hashCode();
+        int hash = hashFunction(key);
+        OurEntry<User> returning = (OurEntry<User>) this.table[hash];
+        while (returning != null) {
+            if (this.checkKey(key, returning) && (returning.getValue().getCI()) == CI) {
+                return returning.getValue();
+
+            }
+            returning = returning.getNext();
+        }
+
+        return null;
+    }
+
+    public Document getDocument(String name, User creator) {
+
+        int key = name.hashCode();
+        int hash = hashFunction(key);
+        OurEntry<Document> returning = (OurEntry<Document>) this.table[hash];
+        while (returning != null) {
+            if (this.checkKey(key, returning) && (returning.getValue().getCreatorCI() == creator.getCI())) {
                 return returning.getValue();
 
             }
@@ -99,14 +129,6 @@ public class OurHashTable<T> {
 
     private boolean checkKey(int key, OurEntry entry) {
         return key == entry.getKey();
-    }
-
-    public boolean isDocument(OurEntry entry) {
-        return (entry.getValue() instanceof Document);
-    }
-
-    public boolean isUser(OurEntry entry) {
-        return (entry.getValue() instanceof UserAdministrator) || (entry.getValue() instanceof UserCommon) || (entry.getValue() instanceof UserHumanResources);
     }
 
     private int hashFunction(int key) {

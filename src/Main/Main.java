@@ -1,5 +1,6 @@
 package Main;
 
+import DataStructureClasses.OurHashTable;
 import DataStructureClasses.SimpleList;
 
 /**
@@ -17,14 +18,18 @@ public class Main {
         
          */
 
-        SimpleList testList = new SimpleList();
-        testList.addAtTheEnd(1);
-        testList.addAtTheEnd(2);
-        testList.addAtTheEnd(2);
-        testList.addAtTheEnd(4);
-        testList.addAtTheEnd(5);
+        OurHashTable testTable = new OurHashTable();
 
-        
-    
+        testTable.put("uno", 1);
+        testTable.put("tres", 3);
+        testTable.put("dos", 2);
+
+        try {
+            int returning = (int) testTable.get("ddd");
+            System.out.println("Numero recuperado: " + returning);
+        } catch (Exception e) {
+            System.out.println("Numero no encontrado.");
+        }
+
     }
 }

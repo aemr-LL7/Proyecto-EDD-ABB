@@ -1,6 +1,6 @@
 package FileManager;
 
-import Classes.UserBlank;
+import Classes.User;
 import DataStructureClasses.SimpleList;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -151,68 +151,68 @@ public class FileManager {
         }
     }
 
-    // WIP Leer informacin del csv
-    public SimpleList<UserBlank> readUsersFromCSV(File inFile) {
-        SimpleList<UserBlank> userList = new SimpleList();
+    // WIP Leer informacin del csv, Hace falta crear los usuarios implementando la cedula y la prioridad de las clases hermanas en su interfaz
+//    public SimpleList<User> readUsersFromCSV(File inFile) {
+//        SimpleList<User> userList = new SimpleList();
+//
+//        if (inFile.getName().endsWith(".csv")) {
+//            try {
+//                FileReader fileReader = new FileReader(inFile);
+//                BufferedReader bufferedReader = new BufferedReader(fileReader);
+//
+//                String line;
+//                //String parts[];
+//                while ((line = bufferedReader.readLine()) != null) {
+//                    if (line.contains("usuario") && line.contains("tipo")) {
+//                        ;
+//                    } else {
+//                        if (!line.isEmpty()) {
+//                            String[] data = line.split(","); // Dividir la línea por comas
+//                            if (data.length == 2) {
+//                                String username = data[0].trim();
+//                                String type = data[1].trim();
+//
+//                                // Crear un objeto User y agregarlo a la lista
+//                                User newUser = new User(username, type);
+//                                userList.addAtTheEnd(newUser);
+//                            } else {
+//                                System.out.println("Linea no reconocida! " + line);
+//                            }
+//                        }
+//                    }
+//
+//                }
+//                fileReader.close();
+//                bufferedReader.close();
+//
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        } else {
+//            System.out.println("El archivo no es de tipo CSV");
+//        }
+//        return userList;
+//    }
 
-        if (inFile.getName().endsWith(".csv")) {
-            try {
-                FileReader fileReader = new FileReader(inFile);
-                BufferedReader bufferedReader = new BufferedReader(fileReader);
-
-                String line;
-                //String parts[];
-                while ((line = bufferedReader.readLine()) != null) {
-                    if (line.contains("usuario") && line.contains("tipo")) {
-                        ;
-                    } else {
-                        if (!line.isEmpty()) {
-                            String[] data = line.split(","); // Dividir la línea por comas
-                            if (data.length == 2) {
-                                String username = data[0].trim();
-                                String type = data[1].trim();
-
-                                // Crear un objeto User y agregarlo a la lista
-                                UserBlank newUser = new UserBlank(username, type);
-                                userList.addAtTheEnd(newUser);
-                            } else {
-                                System.out.println("Linea no reconocida! " + line);
-                            }
-                        }
-                    }
-
-                }
-                fileReader.close();
-                bufferedReader.close();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            System.out.println("El archivo no es de tipo CSV");
-        }
-        return userList;
-    }
-
-    public void writeUsersToCSV(SimpleList<UserBlank> userList) {
-        try {
-            FileWriter fileWriter = new FileWriter("usuarios.csv");
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-
-            // Etiquetas
-            bufferedWriter.write("usuario, tipo");
-            bufferedWriter.newLine();
-
-            for (int i = 0; i < userList.getSize(); i++) {
-                UserBlank newUser = userList.getValueByIndex(i);
-                bufferedWriter.write(newUser.getName() + ", " + newUser.getPriority() + "\n");
-            }
-
-            bufferedWriter.close();
-            System.out.println("Usuarios guardados en el archivo CSV exitosamente");
-        } catch (IOException e) {
-            System.out.println("Algo salió mal:(");
-        }
-    }
+//    public void writeUsersToCSV(SimpleList<UserBlank> userList) {
+//        try {
+//            FileWriter fileWriter = new FileWriter("usuarios.csv");
+//            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+//
+//            // Etiquetas
+//            bufferedWriter.write("usuario, tipo");
+//            bufferedWriter.newLine();
+//
+//            for (int i = 0; i < userList.getSize(); i++) {
+//                UserBlank newUser = userList.getValueByIndex(i);
+//                bufferedWriter.write(newUser.getName() + ", " + newUser.getPriority() + "\n");
+//            }
+//
+//            bufferedWriter.close();
+//            System.out.println("Usuarios guardados en el archivo CSV exitosamente");
+//        } catch (IOException e) {
+//            System.out.println("Algo salió mal:(");
+//        }
+//    }
 
 }
