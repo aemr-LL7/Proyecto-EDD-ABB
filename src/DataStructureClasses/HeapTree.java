@@ -1,8 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package DataStructureClasses;
+
+import Classes.Document;
 
 /**
  *
@@ -19,20 +17,20 @@ public class HeapTree {
     private int size;//Cantidad de elementos del Heap
 
     //Constructor para crear Heap vacio
-    public HeapTree(int maxsize) {
+    public HeapTree(int maxSize) {
         this.size = 0;
-        this.heap = new int[maxsize];
+        this.heap = new int[maxSize];
     }
 
     //Constructor para crear Heap a partir de un arreglo de numeros
-    public HeapTree(int[] array) {
-        this.size = array.length;
-        //Se recibe el arreglo y se asigna al heap
-        this.heap = array;
-
-        //Se construye el heap
-        this.buildHeap();
-    }
+//    public HeapTree(int[] array) {
+//        this.size = array.length;
+//        //Se recibe el arreglo y se asigna al heap
+//        this.heap = array;
+//
+//        //Se construye el heap
+//        this.buildHeap();
+//    }
 
     public void buildHeap() {
         for (int i = this.size / 2; i >= 0; i--) {

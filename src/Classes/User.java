@@ -16,12 +16,16 @@ public interface User {
 
     public void setName(String name);
     
-    public String getPriority();
+    public int getPriority();
     
     public SimpleList getFiles_list();
 
     public void setFiles_list(SimpleList files_list);
     
     public int getCI();
+    
+    public boolean hasPriorityOver(User comparingUser);
+    
+    public double getPriorityModifier();
     
 }
