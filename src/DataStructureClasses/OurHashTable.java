@@ -31,8 +31,9 @@ public class OurHashTable<T> {
     Funcion para introducir documentos a la tabla, tambien maneja el cambio de tamano si se exede el limite. 
      */
     public void put(String key, T value) {
-        int inputKey = key.hashCode();
+        int inputKey = key.toLowerCase().hashCode();
         int hash = hashFunction(inputKey);
+        hash = Math.abs(hash); 
         OurEntry<T> newEntry = new OurEntry<>(inputKey, value);
 
         if (table[hash] == null) {
@@ -57,6 +58,7 @@ public class OurHashTable<T> {
 
         int key = inputKey.hashCode();
         int hash = hashFunction(key);
+        hash = Math.abs(hash); 
         OurEntry<T> returning = this.table[hash];
         while (returning != null) {
             if (this.checkKey(key, returning)) {
@@ -71,8 +73,8 @@ public class OurHashTable<T> {
 
     public User getUser(String name, int CI) {
 
-        int key = name.hashCode();
-        int hash = hashFunction(key);
+        int key = name.toLowerCase().hashCode();
+        int hash = Math.abs(hashFunction(key));
         OurEntry<User> returning = (OurEntry<User>) this.table[hash];
         while (returning != null) {
             if (this.checkKey(key, returning) && (returning.getValue().getCI()) == CI) {
@@ -87,8 +89,9 @@ public class OurHashTable<T> {
 
     public Document getDocument(String name, User creator) {
 
-        int key = name.hashCode();
-        int hash = hashFunction(key);
+        int key = name.toLowerCase().hashCode();
+        int hash = Math.abs(hashFunction(key));
+        hash = Math.abs(hash); 
         OurEntry<Document> returning = (OurEntry<Document>) this.table[hash];
         while (returning != null) {
             if (this.checkKey(key, returning) && (returning.getValue().getCreatorCI() == creator.getCI())) {
@@ -126,7 +129,9 @@ public class OurHashTable<T> {
 
         this.table = newTable;
     }
-
+    
+    
+    
     private boolean checkKey(int key, OurEntry entry) {
         return key == entry.getKey();
     }

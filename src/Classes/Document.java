@@ -1,5 +1,6 @@
 package Classes;
 
+import DataStructureClasses.SimpleList;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -22,17 +23,35 @@ public class Document {
         this.name = name;
         int randomGeneratedPages = ThreadLocalRandom.current().nextInt(0, 20 + 1);
         this.numPages = randomGeneratedPages;
-        this.isPriority = false;
         this.creator = creator;
         this.isPriority = isPriority;
+        
+        //Anadir el documento a la lista de documentos del creador 
+        SimpleList<Document> creatorDocuments = this.creator.getFiles_list();
+        creatorDocuments.addAtTheEnd(this);
     }
 
     public Document(String name, int numPages, User creator, boolean isPriority) {
         this.name = name;
         this.setNumPages(numPages);
-        this.isPriority = false;
         this.creator = creator;
         this.isPriority = isPriority;
+        
+        SimpleList<Document> creatorDocuments = this.creator.getFiles_list();
+        creatorDocuments.addAtTheEnd(this);
+    }
+    
+    public String toString(){
+        
+        String priority;
+        
+        if(this.isPriority){
+            priority = "Verdadero.";
+        } else {
+            priority = "Falso.";
+        }
+        
+        return "Nombre del documento: " + "\n-" + this.name +"\n\n"+ "Numero de paginas: \n-"+this.numPages+"\n\nContenido: \nLorem Ipsum.\n"+ "\nCreador: \n-"+ this.creator.getName()+"\n\nEs prioridad?\n-" + priority+"\n\n";
     }
 
     public int getCreatorCI(){

@@ -16,17 +16,17 @@ public class UserAdministrator implements User{
     private String name;
     
     //Cedula
-    private static int CI;
+    private int CI;
     
     //Lista en la que se guardan referencias a los objetos Document q creo el usuario
-    private SimpleList files_list;
+    private SimpleList<Document> files_list;
     
     private final int priority = 0;
 
     /*
        constructor de Usuario
      */
-    public UserAdministrator(String name, int Ci){
+    public UserAdministrator(String name, int CI){
         this.name = name;
         this.files_list = new SimpleList<Document>();
         this.CI = CI;

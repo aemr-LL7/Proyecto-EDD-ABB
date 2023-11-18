@@ -13,17 +13,17 @@ public class UserCommon implements User{
     private String name;
     
     //Cedula
-    private static int CI;
+    private int CI;
     
     //Lista en la que se guardan referencias a los objetos Document q creo el usuario
-    private SimpleList files_list;
+    private SimpleList<Document> files_list;
     
     private final int priority = 2;
 
     /*
        constructor de Usuario
      */
-    public UserCommon(String name, int Ci){
+    public UserCommon(String name, int CI){
         this.name = name;
         this.files_list = new SimpleList<Document>();
         this.CI = CI;

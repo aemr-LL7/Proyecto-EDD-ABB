@@ -1,7 +1,9 @@
 package Main;
 
+import Classes.Document;
+import Classes.User;
+import Classes.UserAdministrator;
 import DataStructureClasses.OurHashTable;
-import DataStructureClasses.SimpleList;
 
 /**
  *
@@ -18,18 +20,22 @@ public class Main {
         
          */
 
-        OurHashTable testTable = new OurHashTable();
+        UserAdministrator user = new UserAdministrator("Eros", 23);
+        UserAdministrator user1 = new UserAdministrator("Daniela", 24);
+        UserAdministrator user2 = new UserAdministrator("Garfie", 25);
 
-        testTable.put("uno", 1);
-        testTable.put("tres", 3);
-        testTable.put("dos", 2);
+        OurHashTable table = new OurHashTable();
 
-        try {
-            int returning = (int) testTable.get("ddd");
-            System.out.println("Numero recuperado: " + returning);
-        } catch (Exception e) {
-            System.out.println("Numero no encontrado.");
-        }
+        Document document = new Document("Papaya", user, false);
+        Document document1 = new Document("Pina", user1, true);
+        Document document2 = new Document("Tomate", user2, false);
+
+        table.put(document.getName(), document);
+        table.put(document1.getName(), document1);
+        table.put(document2.getName(), document2);
+        
+        String documentString = table.getDocument(document1.getName(), user1).toString();
+        System.out.println("Documento encontrado! \n\n"+documentString);
 
     }
 }
