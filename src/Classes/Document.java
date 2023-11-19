@@ -95,7 +95,7 @@ public class Document {
     }
     
     public int getCreatorCI(){
-        return this.creator.getCI();
+        return this.creator.getDni();
     }
     
     public void setPriorit(boolean priority) {

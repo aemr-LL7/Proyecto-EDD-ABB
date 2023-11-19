@@ -77,7 +77,7 @@ public class OurHashTable<T> {
         int hash = Math.abs(hashFunction(key));
         OurEntry<User> returning = (OurEntry<User>) this.table[hash];
         while (returning != null) {
-            if (this.checkKey(key, returning) && (returning.getValue().getCI()) == CI) {
+            if (this.checkKey(key, returning) && (returning.getValue().getDni()) == CI) {
                 return returning.getValue();
 
             }
@@ -94,7 +94,7 @@ public class OurHashTable<T> {
         hash = Math.abs(hash); 
         OurEntry<Document> returning = (OurEntry<Document>) this.table[hash];
         while (returning != null) {
-            if (this.checkKey(key, returning) && (returning.getValue().getCreatorCI() == creator.getCI())) {
+            if (this.checkKey(key, returning) && (returning.getValue().getCreatorCI() == creator.getDni())) {
                 return returning.getValue();
 
             }

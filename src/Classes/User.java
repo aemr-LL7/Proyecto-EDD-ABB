@@ -22,7 +22,7 @@ public interface User {
 
     public void setFiles_list(SimpleList files_list);
     
-    public int getCI();
+    public int getDni();
     
     public boolean hasPriorityOver(User comparingUser);
     

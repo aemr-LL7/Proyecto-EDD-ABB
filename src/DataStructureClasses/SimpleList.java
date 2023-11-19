@@ -4,6 +4,10 @@
  */
 package DataStructureClasses;
 
+import Classes.UserAdministrator;
+import Classes.UserCommon;
+import Classes.UserHumanResources;
+
 /**
  *
  * @author B-St
@@ -86,6 +90,42 @@ public class SimpleList<T> {
             //contador++;
         }
         return chain + "//";
+    }
+
+    public void printUsersList() {
+        try {
+            SimpleNode<T> pAux = this.pFirst;
+            System.out.println("Lista==============================");
+            while (pAux != null) {
+                // Verificar el tipo de usuario y mostrar atributos
+                if (pAux.getData() instanceof UserAdministrator) {
+                    UserAdministrator adminUser = (UserAdministrator) pAux.getData();
+                    System.out.println("User Type: Administrator");
+                    System.out.println("Name: " + adminUser.getName());
+                    System.out.println("CI: " + adminUser.getDni());
+                    System.out.println("* Priority: " + adminUser.getPriority());
+
+                } else if (pAux.getData() instanceof UserCommon) {
+                    UserCommon commonUser = (UserCommon) pAux.getData();
+                    System.out.println("User Type: Common");
+                    System.out.println("Name: " + commonUser.getName());
+                    System.out.println("CI: " + commonUser.getDni());
+                    System.out.println("* Priority: " + commonUser.getPriority());
+
+                } else if (pAux.getData() instanceof UserHumanResources) {
+                    UserHumanResources hrUser = (UserHumanResources) pAux.getData();
+                    System.out.println("User Type: Human Resources");
+                    System.out.println("Name: " + hrUser.getName());
+                    System.out.println("CI: " + hrUser.getDni());
+                    System.out.println("* Priority: " + hrUser.getPriority());
+                }
+
+                pAux = pAux.getpNext();
+            }
+            System.out.println("===================================");
+        } catch (Exception e) {
+            System.out.println("Error al imprimir.");
+        }
     }
 
     public T getValueByIndex(int index) {

@@ -18,6 +18,18 @@ public class DocumentHeapThree {
         this.size = -1;
     }
 
+    public int getSize() {
+        return size;
+    }
+
+    public Document[] getHeapArray() {
+        return this.heap;
+    }
+
+    public boolean isEmpty() {
+        return size == -1;
+    }
+
     //funcion que retorna el padre del documento en la posicion dada
     private int parent(int i) {
         return (int) (i - 1) % 2;
@@ -86,6 +98,11 @@ public class DocumentHeapThree {
 
     //funcion para extraer el elemento de mayor prioridad
     public Document extractMax() {
+        if (this.isEmpty()) {
+            System.out.println("No se puede extraer de un montículo vacío");
+            return null;
+        }
+
         Document returningDocument = heap[0];
 
         //Reemplazamos la raiz con la hoja mas lejana
@@ -103,7 +120,7 @@ public class DocumentHeapThree {
         return this.heap[0];
 
     }
-    
+
     //Funcion para cambiar los valores de dos posiciones netre si
     private void swap(int i, int j) {
 

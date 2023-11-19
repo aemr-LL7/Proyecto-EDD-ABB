@@ -13,7 +13,7 @@ public class UserCommon implements User {
     private String name;
 
     //Cedula
-    private int CI;
+    private int dni;
 
     //Lista en la que se guardan referencias a los objetos Document q creo el usuario
     private SimpleList<Document> files_list;
@@ -29,7 +29,7 @@ public class UserCommon implements User {
     public UserCommon(String name, int CI) {
         this.name = name;
         this.files_list = new SimpleList<Document>();
-        this.CI = CI;
+        this.dni = dni;
     }
 
     /*
@@ -56,8 +56,8 @@ public class UserCommon implements User {
     }
 
     @Override
-    public int getCI() {
-        return this.CI;
+    public int getDni() {
+        return this.dni;
     }
 
     @Override

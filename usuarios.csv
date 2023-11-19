@@ -1,7 +1,8 @@
-usuario, tipo
-Jperez, prioridad_alta
-m_himiot_alfaro, prioridad_media
-yurdaneta_1, prioridad_baja
-Mairo, prioridad_alta
-Heros, prioridad_media
-Andru, prioridad_baja
+usuario, tipo, cedula
+perezJM, common, 06
+hamlet3, humanres, 88
+samQslim, common, 29634987
+mairo, humanres, 56
+heros, admin, 1
+andru, admin, 1
+
