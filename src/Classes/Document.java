@@ -125,7 +125,10 @@ public class Document {
     public double getTimeOfCreation() {
         return timeOfCreation;
     }
-    
+
+    public boolean isIsPriority() {
+        return isPriority;
+    }
     
 
 }

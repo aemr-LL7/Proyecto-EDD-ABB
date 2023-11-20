@@ -14,8 +14,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
@@ -130,21 +134,41 @@ public class FileManager {
 
     }
 
+    // Método para establecer el aspecto visual del sistema
+    private void setSystemLookAndFeel() {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+            Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     //abre una ventana en la que se selecciona un archivo
     public File selectFile() {
         try {
+            // Cambiar el aspecto visual del sistema
+            this.setSystemLookAndFeel();
+
             JFileChooser filechooser = new JFileChooser();
             filechooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
-            filechooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            filechooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+            filechooser.setDialogTitle("Seleccione un archivo");
             filechooser.setAcceptAllFileFilterUsed(false);
             filechooser.addChoosableFileFilter(new FileNameExtensionFilter("Archivos CSV (*.csv)", "csv"));
-            filechooser.showOpenDialog(filechooser);
 
-            File file = filechooser.getSelectedFile();
-            if (file.getName().endsWith(".csv")) {
-                return file;
+            // Mostrar la ventana de selección de archivos
+            int result = filechooser.showOpenDialog(filechooser);
+
+            if (result == JFileChooser.APPROVE_OPTION) {
+                File file = filechooser.getSelectedFile();
+                if (file.getName().endsWith(".csv")) {
+                    return file;
+                } else {
+                    System.out.println("Por favor, selecciona un archivo CSV.");
+                    return null;
+                }
             } else {
-                System.out.println("Por favor, selecciona un archivo CSV.");
+                JOptionPane.showMessageDialog(null, "No se ha seleccionado ningun archivo.", "Cancelando", JOptionPane.CANCEL_OPTION);
                 return null;
             }
 

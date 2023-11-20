@@ -19,6 +19,7 @@ public class Main {
             -Comprender funcionamiento del timer (clases timer y timetask)
         
          */
+        
         FileManager filemanager = new FileManager();
         File fileselect = filemanager.selectFile();
         SimpleList testList = filemanager.readUsersFromCSV(fileselect);

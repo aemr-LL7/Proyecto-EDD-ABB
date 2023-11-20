@@ -32,7 +32,7 @@ public class DocumentHeapThree {
 
     //funcion que retorna el padre del documento en la posicion dada
     private int parent(int i) {
-        return (int) (i - 1) % 2;
+        return (i - 1) / 2;
     }
 
     //Retorna el hijo izquierdo de la posicion dada
