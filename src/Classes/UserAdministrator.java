@@ -36,12 +36,13 @@ public class UserAdministrator implements User {
         this.dni = dni;
     }
 
+    @Override
     public boolean isNameAvailable(String documentName) {
 
         SimpleNode<Document> pAux = this.files_list.getpFirst();
 
         while (pAux != null) {
-            if (pAux.getData().getName() == documentName.toLowerCase()) {
+            if (pAux.getData().getName().equals(documentName.toLowerCase())) {
                 return false;
             }
             pAux = pAux.getpNext();

@@ -13,7 +13,6 @@ public class Document {
     private int docSize;
     private static final String content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ullamcorper sit amet neque ac vulputate. Praesent ut sodales risus. Suspendisse ultricies posuere enim ut aliquam. Duis pellentesque ut lacus sed porttitor. Morbi fringilla tempor nulla, id luctus sem fermentum id. Vestibulum mi dolor, volutpat vitae ante vulputate, mollis molestie dui. Quisque in luctus metus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Mauris vel rhoncus urna. Aenean maximus augue metus, in maximus est dictum non. Suspendisse potenti. Etiam pulvinar enim at erat elementum, quis vestibulum enim vulputate.\n";
 
-
     //Apuntador al usuario que creo el documento
     private User creator;
 
@@ -31,7 +30,13 @@ public class Document {
 
         //Anadir el documento a la lista de documentos del creador 
         SimpleList<Document> creatorDocuments = this.creator.getFiles_list();
-        creatorDocuments.addAtTheEnd(this);
+
+        if (this.creator.isNameAvailable(name)) {
+            creatorDocuments.addAtTheEnd(this);
+        } else {
+            System.out.println("Error en la creacion del documento, el nombre: " + name + " ya existe para este usuario.");
+            return;
+        }
     }
 
     public String toString() {
@@ -39,10 +44,10 @@ public class Document {
     }
 
     //Esta fnucion hay que cambiarla de lugar y funcionalidad
-    public boolean hasPriorityOver(Document document){
+    public boolean hasPriorityOver(Document document) {
         return false;
     }
-    
+
     public User getCreator() {
         return creator;
     }

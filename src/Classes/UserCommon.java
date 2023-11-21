@@ -1,6 +1,7 @@
 package Classes;
 
 import DataStructureClasses.SimpleList;
+import DataStructureClasses.SimpleNode;
 import java.util.Random;
 
 /**
@@ -30,6 +31,20 @@ public class UserCommon implements User {
         this.name = name;
         this.files_list = new SimpleList<Document>();
         this.dni = dni;
+    }
+    
+    @Override
+    public boolean isNameAvailable(String documentName) {
+
+        SimpleNode<Document> pAux = this.files_list.getpFirst();
+
+        while (pAux != null) {
+            if (pAux.getData().getName().equals(documentName.toLowerCase())) {
+                return false;
+            }
+            pAux = pAux.getpNext();
+        }
+        return true;
     }
 
     @Override
