@@ -32,6 +32,11 @@ public class UserCommon implements User {
         this.dni = dni;
     }
 
+    @Override
+    public String toString(){
+        return "Nombre del usuario: "+this.name+"\nCI del usuario: "+this.dni+"\nTipo de usuario: Comun.\n";
+    }
+    
     /*
         Getters y Setters
      */

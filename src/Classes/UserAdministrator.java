@@ -5,6 +5,7 @@
 package Classes;
 
 import DataStructureClasses.SimpleList;
+import DataStructureClasses.SimpleNode;
 
 /**
  *
@@ -33,6 +34,24 @@ public class UserAdministrator implements User {
         this.name = name;
         this.files_list = new SimpleList<Document>();
         this.dni = dni;
+    }
+
+    public boolean isNameAvailable(String documentName) {
+
+        SimpleNode<Document> pAux = this.files_list.getpFirst();
+
+        while (pAux != null) {
+            if (pAux.getData().getName() == documentName.toLowerCase()) {
+                return false;
+            }
+            pAux = pAux.getpNext();
+        }
+        return true;
+    }
+    
+    @Override
+    public String toString(){
+        return "Nombre del usuario: "+this.name+"\nCI del usuario: "+this.dni+"\nTipo de usuario: Administrador.\n";
     }
 
     /*

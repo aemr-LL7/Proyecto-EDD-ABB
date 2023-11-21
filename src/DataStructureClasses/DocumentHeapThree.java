@@ -5,6 +5,8 @@ import Classes.Document;
 /**
  *
  * @author B-St
+ * 
+ * CAMBIAR TODO PARA QUE FUNCIONE CON LA CLASE DE REGISTRY!!!!!!!!!!!!!!!!!!!!!
  */
 public class DocumentHeapThree {
 
@@ -59,6 +61,10 @@ public class DocumentHeapThree {
         }
     }
 
+    public boolean hasPriorityOver(Document document){
+        return false;
+    }
+    
     private void shiftDown(int i) {
 
         int maxIndex = i;
@@ -87,7 +93,7 @@ public class DocumentHeapThree {
 
     }
 
-    //funcion para insertar un elemento en el heap
+    //funcion para insertar un elemento en el heap 
     public void insert(Document document) {
         this.size++;
         this.heap[this.size] = document;
@@ -128,6 +134,18 @@ public class DocumentHeapThree {
         this.heap[i] = this.heap[j];
         this.heap[j] = temp;
 
+    }
+    
+    public void remove(int i){
+        
+        //Para que esto funcione con registry, hay que anadirle una cantidad gigante para que siempre sea el mayor hasta que suba
+//        this.heap[i] = this.getMax() + 1; 
+        
+        //Mover el nodo hasta arriba para poderlo sacar
+//        this.shiftUp(i);
+
+//        sacar el que esta arriba
+//        this.extractMax();
     }
 
 }

@@ -28,4 +28,6 @@ public interface User {
     
     public double getPriorityModifier();
     
+    public String toString();
+    
 }

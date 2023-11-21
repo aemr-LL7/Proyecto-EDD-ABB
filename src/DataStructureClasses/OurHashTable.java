@@ -1,8 +1,5 @@
 package DataStructureClasses;
 
-import Classes.Document;
-import Classes.User;
-
 /**
  *
  * @author B-St
@@ -31,70 +28,45 @@ public class OurHashTable<T> {
     Funcion para introducir documentos a la tabla, tambien maneja el cambio de tamano si se exede el limite. 
      */
     public void put(String key, T value) {
-        int inputKey = key.toLowerCase().hashCode();
-        int hash = hashFunction(inputKey);
-        hash = Math.abs(hash); 
-        OurEntry<T> newEntry = new OurEntry<>(inputKey, value);
 
-        if (table[hash] == null) {
-            table[hash] = newEntry;
-        } else {
-            OurEntry<T> current = table[hash];
-            while (current.getNext() != null) {
-                current = current.getNext();
+
+        if (!this.isKeyTaken(key)) {
+
+            int hashedKey = key.toLowerCase().hashCode();
+            int hash = hashFunction(hashedKey);
+            hash = Math.abs(hash);
+            OurEntry<T> newEntry = new OurEntry<>(key.toLowerCase(), hashedKey, value);
+
+            if (table[hash] == null) {
+                table[hash] = newEntry;
+            } else {
+                OurEntry<T> current = table[hash];
+                while (current.getNext() != null) {
+                    current = current.getNext();
+                }
+                current.setNext(newEntry);
             }
-            current.setNext(newEntry);
-        }
 
-        this.entriesList.addAtTheEnd(newEntry);
-        int filledSpots = this.entriesList.getSize();
-        if (filledSpots >= this.FILLED_TRESHOLD) {
-            this.extendTable();
+            this.entriesList.addAtTheEnd(newEntry);
+            int filledSpots = this.entriesList.getSize();
+            if (filledSpots >= this.FILLED_TRESHOLD) {
+                this.extendTable();
+            }
+        } else {
+ 
+            String capitalizedKey = key.substring(0, 1).toUpperCase() + key.substring(1); 
+            System.out.println("el nombre " + capitalizedKey + " esta tomado, por favor escoja otra.");
         }
-
     }
-    
-    public T get(String inputKey) {
 
-        int key = inputKey.hashCode();
-        int hash = hashFunction(key);
-        hash = Math.abs(hash); 
+    public T get(String key) {
+
+        int hashedKey = key.toLowerCase().hashCode();
+        int hash = Math.abs(hashFunction(hashedKey));
         OurEntry<T> returning = this.table[hash];
         while (returning != null) {
-            if (this.checkKey(key, returning)) {
-                return returning.getValue();
 
-            }
-            returning = returning.getNext();
-        }
-
-        return null;
-    }
-
-    public User getUser(String name, int CI) {
-
-        int key = name.toLowerCase().hashCode();
-        int hash = Math.abs(hashFunction(key));
-        OurEntry<User> returning = (OurEntry<User>) this.table[hash];
-        while (returning != null) {
-            if (this.checkKey(key, returning) && (returning.getValue().getDni()) == CI) {
-                return returning.getValue();
-
-            }
-            returning = returning.getNext();
-        }
-
-        return null;
-    }
-
-    public Document getDocument(String name, User creator) {
-
-        int key = name.toLowerCase().hashCode();
-        int hash = Math.abs(hashFunction(key));
-        hash = Math.abs(hash); 
-        OurEntry<Document> returning = (OurEntry<Document>) this.table[hash];
-        while (returning != null) {
-            if (this.checkKey(key, returning) && (returning.getValue().getCreatorCI() == creator.getDni())) {
+            if ((returning.getHashedKey() == hashedKey) && (returning.getKey().equals(key.toLowerCase()))) {
                 return returning.getValue();
 
             }
@@ -113,7 +85,7 @@ public class OurHashTable<T> {
 
         // Rehashing de las entradas existentes
         for (OurEntry<T> entry : this.table) {
-            int key = entry.getKey();
+            int key = entry.getHashedKey();
             int hash = hashFunction(key);
 
             if (newTable[hash] == null) {
@@ -129,12 +101,6 @@ public class OurHashTable<T> {
 
         this.table = newTable;
     }
-    
-    
-    
-    private boolean checkKey(int key, OurEntry entry) {
-        return key == entry.getKey();
-    }
 
     private int hashFunction(int key) {
         int hash = key % this.tableSize;
@@ -147,6 +113,22 @@ public class OurHashTable<T> {
 
     private void updateTableSize(int newTablesize) {
         this.tableSize = newTablesize;
+    }
+
+    public boolean isKeyTaken(String key) {
+
+        SimpleNode<OurEntry> pAux = this.entriesList.getpFirst();
+
+        while (pAux != null) {
+
+            if (pAux.getData().getKey().equals(key.toLowerCase())) {
+                return true;
+            }
+            pAux = pAux.getpNext();
+
+        }
+
+        return false;
     }
 
 }

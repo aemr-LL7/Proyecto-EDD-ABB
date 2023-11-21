@@ -34,6 +34,11 @@ public class UserHumanResources implements User {
         this.files_list = new SimpleList<Document>();
         this.dni = dni;
     }
+    
+    @Override
+    public String toString(){
+        return "Nombre del usuario: "+this.name+"\nCI del usuario: "+this.dni+"\nTipo de usuario: Recursos humanos.\n";
+    }
 
     /*
         Getters y Setters
