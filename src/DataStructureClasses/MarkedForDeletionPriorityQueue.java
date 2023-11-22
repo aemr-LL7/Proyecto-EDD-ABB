@@ -8,13 +8,13 @@ package DataStructureClasses;
  *
  * @author andre
  */
-public class PriorityQueue {
+public class MarkedForDeletionPriorityQueue {
     
     // En base al monticulo binario
-    private HeapTree heap;
+    private MarkedForDeletionHeapTree heap;
 
-    public PriorityQueue(int maxsize) {
-        this.heap = new HeapTree(maxsize);
+    public MarkedForDeletionPriorityQueue(int maxsize) {
+        this.heap = new MarkedForDeletionHeapTree(maxsize);
     }
 
     public boolean isEmpty() {

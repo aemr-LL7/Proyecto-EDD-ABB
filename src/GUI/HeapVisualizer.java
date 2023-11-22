@@ -9,7 +9,7 @@ import Classes.User;
 import Classes.UserAdministrator;
 import Classes.UserCommon;
 import Classes.UserHumanResources;
-import DataStructureClasses.RegistryHeapThree;
+import DataStructureClasses.RegistryHeapTree;
 import java.awt.BorderLayout;
 import javax.swing.JPanel;
 import org.graphstream.graph.Edge;
@@ -54,12 +54,12 @@ public class HeapVisualizer {
         }
     }
 
-    public void visualizeHeap(RegistryHeapThree heap, JPanel graphPanel) {
+    public void visualizeHeap(RegistryHeapTree heap, JPanel graphPanel) {
         this.eraseVisualizer(); // Limpiar el grafo existente
         // Nivel actual en el árbol
         int level = 0; 
         
-        for (int i = 0; i <= heap.getSize(); i++) {
+        for (int i = 0; i <= heap.getHeapSize(); i++) {
             Document document = heap.getHeapArray()[i];
             User userType = document.getCreator();
 

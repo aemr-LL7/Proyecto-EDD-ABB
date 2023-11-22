@@ -8,7 +8,7 @@ import Classes.Document;
 import Classes.UserAdministrator;
 import Classes.UserCommon;
 import Classes.UserHumanResources;
-import DataStructureClasses.RegistryHeapThree;
+import DataStructureClasses.RegistryHeapTree;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -17,7 +17,9 @@ import javax.swing.JPanel;
  * @author B-St
  */
 public class Principal extends javax.swing.JFrame {
-
+    
+    private long startingTime;
+    
     /**
      * Creates new form GUI
      */
@@ -32,7 +34,7 @@ public class Principal extends javax.swing.JFrame {
         this.setSize(800, 600);
 
         // Crear y visualizar el montículo
-        RegistryHeapThree heap = new RegistryHeapThree();
+        RegistryHeapTree heap = new RegistryHeapTree();
         // Agregar documentos al montículo
         UserCommon user1 = new UserCommon("Andru", 291);
         UserHumanResources user2 = new UserHumanResources("Luisito", 290);
@@ -56,8 +58,15 @@ public class Principal extends javax.swing.JFrame {
 
         HeapVisualizer visualizer = new HeapVisualizer();
         visualizer.visualizeHeap(heap, this.heapPanel);
-    }
+       
 
+     }
+
+    private long getCreationTime(){
+           
+        long creationTime = System.currentTimeMillis() - this.startingTime;
+        return creationTime;
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

@@ -6,6 +6,7 @@ package Classes;
  */
 public class Registry {
 
+    //Hacer timestamp con el tiempo de ejecucion
     private double timestamp;
     private Document document;
     private boolean isPriority;
@@ -24,6 +25,15 @@ public class Registry {
             this.timestamp = creationTime;
         }
     }
+    
+    // CONSTTRUCTOR DEBUG
+
+    public Registry(int timestamp , Document document, boolean isPriority) {
+        this.timestamp = timestamp;
+        this.document = document;
+        this.isPriority = isPriority;
+    }
+    
 
     //metodo usado para determinar cual tiene mayor prioridad
     public boolean isTimeLowerThan(Registry comparingRegistry) {

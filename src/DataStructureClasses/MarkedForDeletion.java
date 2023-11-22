@@ -11,7 +11,7 @@ import java.util.Comparator;
  * @author andre
  * @param <T>
  */
-public class Queue<T> {
+public class MarkedForDeletion<T> {
 
     private SimpleNode<T> pHead;
     private SimpleNode<T> pTail;
@@ -20,7 +20,7 @@ public class Queue<T> {
     /*
         Inicializar constructor
      */
-    public Queue() {
+    public MarkedForDeletion() {
         this.pHead = null;
         this.pTail = null;
         this.size = 0;

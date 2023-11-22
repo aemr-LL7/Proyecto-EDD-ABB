@@ -41,6 +41,7 @@ public class OurHashTable<T> {
                 table[hash] = newEntry;
             } else {
                 OurEntry<T> current = table[hash];
+                
                 while (current.getNext() != null) {
                     current = current.getNext();
                 }

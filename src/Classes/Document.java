@@ -31,12 +31,13 @@ public class Document {
         //Anadir el documento a la lista de documentos del creador 
         SimpleList<Document> creatorDocuments = this.creator.getFiles_list();
 
-        if (this.creator.isNameAvailable(name)) {
-            creatorDocuments.addAtTheEnd(this);
-        } else {
-            System.out.println("Error en la creacion del documento, el nombre: " + name + " ya existe para este usuario.");
-            return;
-        }
+        //WOIP comprobacion nombre duplicados
+//        if (this.creator.isNameAvailable(name)) {
+//            creatorDocuments.addAtTheEnd(this);
+//        } else {
+//            System.out.println("Error en la creacion del documento, el nombre: " + name + " ya existe para este usuario.");
+//            return;
+//        }
     }
 
     public String toString() {

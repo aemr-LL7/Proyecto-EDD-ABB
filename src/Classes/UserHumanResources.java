@@ -22,6 +22,7 @@ public class UserHumanResources implements User {
     //Lista en la que se guardan referencias a los objetos Document q creo el usuario
     private SimpleList<Document> files_list;
 
+    //Indice de prioridad el usuario
     private final int priority = 1;
     
     //modificador de prioridad para el tiempo

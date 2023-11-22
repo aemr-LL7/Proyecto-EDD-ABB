@@ -11,13 +11,13 @@ import Classes.Document;
 /*
     Dudas sobre el arbol: tiene limite establecido de arcivos? Que hacer con los archivos sobrantes?
  */
-public class HeapTree {
+public class MarkedForDeletionHeapTree {
 
     private int[] heap;
     private int size;//Cantidad de elementos del Heap
 
     //Constructor para crear Heap vacio
-    public HeapTree(int maxSize) {
+    public MarkedForDeletionHeapTree(int maxSize) {
         this.size = 0;
         this.heap = new int[maxSize];
     }
