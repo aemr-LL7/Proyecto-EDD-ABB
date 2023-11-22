@@ -25,7 +25,7 @@ public class UserHumanResources implements User {
     private final int priority = 1;
     
     //modificador de prioridad para el tiempo
-    private final double priorityModifier = 1.00;
+    private final double priorityModifier = 0.85;
 
     /*
        constructor de Usuario

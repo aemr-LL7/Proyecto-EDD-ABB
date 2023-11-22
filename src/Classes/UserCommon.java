@@ -22,7 +22,7 @@ public class UserCommon implements User {
     private final int priority = 0;
     
     //modificador de prioridad para el tiempo
-    private final double priorityModifier = 1.15;
+    private final double priorityModifier = 1.0;
 
     /*
        constructor de Usuario

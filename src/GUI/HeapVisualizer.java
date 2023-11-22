@@ -9,7 +9,7 @@ import Classes.User;
 import Classes.UserAdministrator;
 import Classes.UserCommon;
 import Classes.UserHumanResources;
-import DataStructureClasses.DocumentHeapThree;
+import DataStructureClasses.RegistryHeapThree;
 import java.awt.BorderLayout;
 import javax.swing.JPanel;
 import org.graphstream.graph.Edge;
@@ -54,7 +54,7 @@ public class HeapVisualizer {
         }
     }
 
-    public void visualizeHeap(DocumentHeapThree heap, JPanel graphPanel) {
+    public void visualizeHeap(RegistryHeapThree heap, JPanel graphPanel) {
         this.eraseVisualizer(); // Limpiar el grafo existente
         // Nivel actual en el árbol
         int level = 0; 

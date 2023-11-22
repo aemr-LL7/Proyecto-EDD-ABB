@@ -25,7 +25,7 @@ public class UserAdministrator implements User {
     private final int priority = 2;
 
     //modificador de prioridad para el tiempo
-    private final double priorityModifier = 1.30;
+    private final double priorityModifier = 0.70;
 
     /*
        constructor de Usuario

@@ -8,7 +8,7 @@ import Classes.Document;
 import Classes.UserAdministrator;
 import Classes.UserCommon;
 import Classes.UserHumanResources;
-import DataStructureClasses.DocumentHeapThree;
+import DataStructureClasses.RegistryHeapThree;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -32,7 +32,7 @@ public class Principal extends javax.swing.JFrame {
         this.setSize(800, 600);
 
         // Crear y visualizar el montículo
-        DocumentHeapThree heap = new DocumentHeapThree();
+        RegistryHeapThree heap = new RegistryHeapThree();
         // Agregar documentos al montículo
         UserCommon user1 = new UserCommon("Andru", 291);
         UserHumanResources user2 = new UserHumanResources("Luisito", 290);
