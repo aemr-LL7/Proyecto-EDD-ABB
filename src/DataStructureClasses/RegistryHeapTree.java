@@ -5,7 +5,7 @@ import Classes.Registry;
 /**
  *
  * @author B-St
- * 
+ *
  * Hola como estas
  */
 public class RegistryHeapTree {
@@ -20,20 +20,24 @@ public class RegistryHeapTree {
         this.heapSize = -1;
     }
 
+    //Conseguir el tamano del heap
     public int getHeapSize() {
         return heapSize;
     }
 
+    //conseguir el heap
     public Registry[] getHeapArray() {
         return this.heap;
     }
 
+    //revisar si el heap esta vacio
     public boolean isEmpty() {
-        return heapSize == -1;
+        return heapSize == -1 || this.heap[0] == null;
     }
 
+    //ver si el heap esta lleno revisando la ultima posicion
     public boolean isFull() {
-        return !(this.heap[MAX_SIZE - 1] == null);
+        return (this.heap[MAX_SIZE - 1] != null);
     }
 
     //funcion que retorna el padre del registro en la posicion dada
@@ -60,7 +64,8 @@ public class RegistryHeapTree {
         return false;
     }
 
-    //Intercambiar los elementos de dos posiciones dadas en el heap
+    //Intercambiar los elementos de dos posiciones dadas en el heap.
+    //se hace el cambio izquiera por derecha, en este caso heap[i] -> heap[j].
     private void swap(int i, int j) {
 
         Registry aux = this.heap[i];
@@ -69,7 +74,7 @@ public class RegistryHeapTree {
         this.heap[j] = aux;
     }
 
-    //heapificar???? el elemento en la posicion i
+    //Bajar los elementos que sean mayores y subir el menor de sus hijos
     private void minHeapify(int pos) {
         if (!isLeaf(pos)) {
             int swapPos = pos;
@@ -80,12 +85,21 @@ public class RegistryHeapTree {
             Luego se revisa si el hijo izquierdo es menor que el padre, si el hijo izquierdo es menor, se sube.
              */
             if (this.rightChildIsNull(pos)) {
+                
                 swapPos = this.leftChild(pos);
+                
+            } else if (this.leftChildIsNull(pos)) {
+                
+                //Si el hijo izquierdo es null, se cambia por el derecho 
+                this.swap(this.leftChild(pos), this.rightChild(pos));
+                swapPos = this.rightChild(pos);
+                
             } else if (this.heap[this.rightChild(pos)].isTimeLowerThan(this.heap[this.leftChild(pos)])) {
                 this.swap(this.leftChild(pos), this.rightChild(pos));
                 swapPos = this.leftChild(pos);
             }
 
+            //Se revisa el hijo derecho tambien para reducir errores en el codigo
             if (!(this.heap[pos].isTimeLowerThan(this.heap[leftChild(pos)])) || !(this.heap[pos].isTimeLowerThan(this.heap[rightChild(pos)]))) {
                 swap(pos, swapPos);
                 minHeapify(swapPos);

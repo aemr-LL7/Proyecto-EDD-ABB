@@ -20,9 +20,9 @@ public class Registry {
     }
     
 
-    //metodo usado para determinar cual tiene mayor prioridad
+    //metodo usado para determinar cual tiene mayor prioridad. Los nulos no se consideran menores para propositos de ordenamiento del arbol
     public boolean isTimeLowerThan(Registry comparingRegistry) {
-
+       
         if (this.timestamp == comparingRegistry.getTimestamp() && this.userHasPriorityOver(comparingRegistry)) {
             return true;
         } else if (this.timestamp < comparingRegistry.getTimestamp()) {

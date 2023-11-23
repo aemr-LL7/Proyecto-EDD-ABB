@@ -4,6 +4,8 @@ import Classes.Document;
 import Classes.Registry;
 import Classes.UserCommon;
 import DataStructureClasses.RegistryHeapTree;
+import java.time.Duration;
+import java.time.Instant;
 
 /**
  *
@@ -11,7 +13,7 @@ import DataStructureClasses.RegistryHeapTree;
  */
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         /*
         TODO:
         
@@ -46,17 +48,8 @@ public class Main {
 //        
 //        System.out.println("Array brah");
 //        System.out.println(manito.arrayToString());
-        long startTime = System.currentTimeMillis() / 60000;
-        
-        for(int i =0; i<10000 ; i++){
-            ;
-        }
-        
-        long endingTime = System.currentTimeMillis();
-        long executionTime = (endingTime - startTime) / 60000;
-        
-        
-        System.out.println("Tiempo de ejecucion: " + executionTime);
+    
+
         
     }
 }

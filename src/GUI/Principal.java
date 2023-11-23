@@ -9,6 +9,8 @@ import DataStructureClasses.SimpleList;
 import FileManager.FileManager;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
@@ -21,8 +23,9 @@ import javax.swing.UnsupportedLookAndFeelException;
  * @author B-St
  */
 public class Principal extends javax.swing.JFrame {
-    
-    private long startingTime;
+
+    //Variable que guarda el tiempo de inicio del programa en un objeto Instant
+    private Instant startTime;
 
     HeapVisualizer visualizer = new HeapVisualizer();
     RegistryHeapTree heapTree = new RegistryHeapTree();
@@ -30,11 +33,11 @@ public class Principal extends javax.swing.JFrame {
     public Principal() {
         // para cambiar aspecto visual antes de inicializar los componentes
         this.setSystemLookAndFeel();
-        
-        //Inicializacion del "cronometro interno". Se divide entre 60000 para que de numeros manejables por proposito de simpleza
-        this.startingTime = System.currentTimeMillis() / 60000;
+
+        //Inicializacion del "cronometro interno". 
+        this.startTime = Instant.now();
         initComponents();
-       
+
         // iniciar visual de graphsteam
         System.setProperty("org.graphstream.ui", "swing");
 
@@ -75,11 +78,13 @@ public class Principal extends javax.swing.JFrame {
         //visualizer.visualizeHeap(heap, this.heapPanel);
     }
 
-    //Se le resta al tiempo actual el tiempo del inicio del programa para obtener la diferencia en milisegundos que sera usada para las etiquetas de tiempo.
-    private long getCreationTime() {
+    //Se le resta al tiempo actual el tiempo del inicio del programa para obtener la diferencia en segundos que sera usada para las etiquetas de tiempo.
+    private long getEventTime() {
 
-        long creationTime = (System.currentTimeMillis()/ 60000) - this.startingTime;
-        return creationTime;
+        Instant currentTime = Instant.now();
+        Duration elapsedTime = Duration.between(this.startTime, currentTime);
+        return elapsedTime.getSeconds();
+        
     }
 
     private int showExitConfirmationDialog() {
@@ -105,7 +110,7 @@ public class Principal extends javax.swing.JFrame {
                 JOptionPane.INFORMATION_MESSAGE
         );
     }
-    
+
     private void setSystemLookAndFeel() {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
