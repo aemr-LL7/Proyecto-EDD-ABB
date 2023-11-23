@@ -5,8 +5,8 @@ import Classes.Registry;
 /**
  *
  * @author B-St
- *
- * Debugear con respecto al registry
+ * 
+ * Hola como estas
  */
 public class RegistryHeapTree {
 

@@ -1,15 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package GUI;
 
 import Classes.Document;
 import Classes.Registry;
-import Classes.User;
 import Classes.UserAdministrator;
 import Classes.UserCommon;
-import Classes.UserHumanResources;
 import DataStructureClasses.RegistryHeapTree;
 import DataStructureClasses.SimpleList;
 import FileManager.FileManager;
@@ -19,7 +13,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -38,7 +31,10 @@ public class Principal extends javax.swing.JFrame {
         // para cambiar aspecto visual antes de inicializar los componentes
         this.setSystemLookAndFeel();
         
+        //Inicializacion del "cronometro interno". Se divide entre 60000 para que de numeros manejables por proposito de simpleza
+        this.startingTime = System.currentTimeMillis() / 60000;
         initComponents();
+       
         // iniciar visual de graphsteam
         System.setProperty("org.graphstream.ui", "swing");
 
@@ -79,9 +75,10 @@ public class Principal extends javax.swing.JFrame {
         //visualizer.visualizeHeap(heap, this.heapPanel);
     }
 
+    //Se le resta al tiempo actual el tiempo del inicio del programa para obtener la diferencia en milisegundos que sera usada para las etiquetas de tiempo.
     private long getCreationTime() {
 
-        long creationTime = System.currentTimeMillis() - this.startingTime;
+        long creationTime = (System.currentTimeMillis()/ 60000) - this.startingTime;
         return creationTime;
     }
 

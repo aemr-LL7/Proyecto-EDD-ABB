@@ -10,23 +10,8 @@ public class Registry {
     private double timestamp;
     private Document document;
     private boolean isPriority;
-
-    public Registry(Document document, boolean isPriority) {
-        
-        long creationTime = System.currentTimeMillis();
-        double priorityModifier = document.getCreator().getPriorityModifier();
-
-        this.document = document;
-        this.isPriority = isPriority;
-
-        if (this.isPriority) {
-            this.timestamp = (long) (creationTime * priorityModifier);
-        } else {
-            this.timestamp = creationTime;
-        }
-    }
     
-    // CONSTTRUCTOR DEBUG
+    // CONSTTRUCTOR 
 
     public Registry(int timestamp , Document document, boolean isPriority) {
         this.timestamp = timestamp;

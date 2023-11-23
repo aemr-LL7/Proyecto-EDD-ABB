@@ -3,16 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/B-St/Documents/NetBeansProjects/Proyecto-2-EDD/Proyecto-EDD-ABB/src/Classes/UserAdministrator.java</file>
-            <file>file:/C:/Users/B-St/Documents/NetBeansProjects/Proyecto-2-EDD/Proyecto-EDD-ABB/src/DataStructureClasses/DocumentHeapThree.java</file>
             <file>file:/C:/Users/B-St/Documents/NetBeansProjects/Proyecto-2-EDD/Proyecto-EDD-ABB/src/Classes/Document.java</file>
             <file>file:/C:/Users/B-St/Documents/NetBeansProjects/Proyecto-2-EDD/Proyecto-EDD-ABB/src/Classes/User.java</file>
             <file>file:/C:/Users/B-St/Documents/NetBeansProjects/Proyecto-2-EDD/Proyecto-EDD-ABB/src/Main/Main.java</file>
-            <file>file:/C:/Users/B-St/Documents/NetBeansProjects/Proyecto-2-EDD/Proyecto-EDD-ABB/src/GUI/HeapVisualizer.java</file>
-            <file>file:/C:/Users/B-St/Documents/NetBeansProjects/Proyecto-2-EDD/Proyecto-EDD-ABB/src/DataStructureClasses/HeapTree.java</file>
-            <file>file:/C:/Users/B-St/Documents/NetBeansProjects/Proyecto-2-EDD/Proyecto-EDD-ABB/src/DataStructureClasses/HeapNode.java</file>
-            <file>file:/C:/Users/B-St/Documents/NetBeansProjects/Proyecto-2-EDD/Proyecto-EDD-ABB/src/Classes/UserCommon.java</file>
-            <file>file:/C:/Users/B-St/Documents/NetBeansProjects/Proyecto-2-EDD/Proyecto-EDD-ABB/src/Classes/UserHumanResources.java</file>
+            <file>file:/C:/Users/B-St/Documents/NetBeansProjects/Proyecto-2-EDD/Proyecto-EDD-ABB/src/GUI/Principal.java</file>
+            <file>file:/C:/Users/B-St/Documents/NetBeansProjects/Proyecto-2-EDD/Proyecto-EDD-ABB/src/DataStructureClasses/RegistryHeapTree.java</file>
             <file>file:/C:/Users/B-St/Documents/NetBeansProjects/Proyecto-2-EDD/Proyecto-EDD-ABB/src/Classes/Registry.java</file>
         </group>
     </open-files>
