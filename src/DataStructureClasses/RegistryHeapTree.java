@@ -38,7 +38,7 @@ public class RegistryHeapTree {
 
     //funcion que retorna el padre del registro en la posicion dada
     private int parent(int i) {
-        return (int) ((i - 1) / 2);
+        return ((i - 1) / 2);
     }
 
     //Retorna el hijo izquierdo de la posicion dada
@@ -96,26 +96,26 @@ public class RegistryHeapTree {
     private boolean rightChildIsNull(int pos) {
         return this.heap[this.rightChild(pos)] == null;
     }
-    
+
     private boolean leftChildIsNull(int pos) {
-        return this.heap[this.rightChild(pos)] == null;
+        return this.heap[this.leftChild(pos)] == null;
     }
 
     //Insertar 
     public void insert(Registry registry) {
+        if (this.heapSize == this.heap.length) {
+            System.out.println("Min-Heap está lleno!");
+        }
 
         if (this.isEmpty()) {
             this.heap[0] = registry;
             this.heapSize++;
-        } else if (this.isFull()) {
-            return;
         } else {
-
             this.heap[this.heapSize + 1] = registry;
             this.heapSize++;
             int justAddedPos = this.heapSize;
 
-            while ((this.heap[justAddedPos].isTimeLowerThan(this.heap[parent(justAddedPos)]))) {
+            while (this.heap[justAddedPos].getTimestamp() < this.heap[parent(justAddedPos)].getTimestamp()) {
                 swap(justAddedPos, parent(justAddedPos));
                 justAddedPos = parent(justAddedPos);
             }
@@ -137,34 +137,52 @@ public class RegistryHeapTree {
         return popped;
     }
 
-    public void print() {
-        
+    public void printTree() {
+
         int counter = 0;
-        while (this.heap[counter] != null){
-           
-            String fName = this.heap[(int) ((counter -1)/2)].getDocument().getName();
-            String lSonName = "nulo";
-            String rSonName = "nulo";
-            
-            
-            
-            if (this.rightChildIsNull(counter)){
-                rSonName = "nulo";
+        while (this.heap[counter] != null) {
+
+            //String fName = this.heap[((counter - 1) / 2)].getDocument().getName();
+            String parentName;
+            String lSonName = "N/A";
+            String rSonName = "N/A";
+
+            if (counter == 0) {
+                parentName = "N/A";
             } else {
-                rSonName = this.heap[(2*counter) +2].getDocument().getName();
+                parentName = this.heap[this.parent(counter)].getDocument().getName();
             }
-            
+
+            if (this.rightChildIsNull(counter)) {
+                rSonName = "N/A";
+            } else {
+                rSonName = this.heap[this.rightChild(counter)].getDocument().getName();
+            }
+
             if (this.leftChildIsNull(counter)) {
-                lSonName = "nulo";
+                lSonName = "N/A";
             } else {
-                lSonName = this.heap[(2*counter) +1].getDocument().getName();
+                lSonName = this.heap[this.leftChild(counter)].getDocument().getName();
             }
-            
-            System.out.print("Nodo (Posicion " + counter + "): " + this.heap[counter].getDocument().getName() + "\nHijo izqiuerdo: " + lSonName  +"\nHijo derecho: " + rSonName  + "\nPadre del nodo: " + fName + "\n\n");
-            counter ++;
-            
+
+            System.out.print("Nodo (Posicion " + counter + "): " + this.heap[counter].getDocument().getName() + "\nHijo izqiuerdo: " + lSonName + "\nHijo derecho: " + rSonName + "\nPadre del nodo: " + parentName + "\n\n");
+            counter++;
+
         }
 
     }
-    
+
+    public String arrayToString() {
+        StringBuilder result = new StringBuilder();
+
+        for (int i = 0; i <= this.heapSize; i++) {
+            result.append("[").append(i).append("] ").append(this.heap[i].getDocument().getName()).append("\n");
+
+//            if (i < this.heapSize) {
+//                result.append(", ");
+//            }
+        }
+
+        return result.toString();
+    }
 }

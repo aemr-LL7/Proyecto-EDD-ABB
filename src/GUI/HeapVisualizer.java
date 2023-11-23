@@ -5,6 +5,7 @@
 package GUI;
 
 import Classes.Document;
+import Classes.Registry;
 import Classes.User;
 import Classes.UserAdministrator;
 import Classes.UserCommon;
@@ -54,17 +55,17 @@ public class HeapVisualizer {
         }
     }
 
-    public void visualizeHeap(RegistryHeapTree heap, JPanel graphPanel) {
+    public void visualizeHeap(RegistryHeapTree heap) {
         this.eraseVisualizer(); // Limpiar el grafo existente
         // Nivel actual en el árbol
         int level = 0; 
         
         for (int i = 0; i <= heap.getHeapSize(); i++) {
-            Document document = heap.getHeapArray()[i];
-            User userType = document.getCreator();
+            Registry registry = heap.getHeapArray()[i];
+            User userType = registry.getDocument().getCreator();
 
             Node node = graph.addNode(Integer.toString(i));
-            node.setAttribute("ui.label", "Name: " + document.getName() + ", " + "By: " + document.getCreator().getName());
+            node.setAttribute("ui.label", "Name: " + registry.getDocument().getName() + ", " + "By: " + registry.getDocument().getCreator().getName());
 
             // Establecer un color diferente para el nombre de cada nodo según el tipo de usuario
             if (userType instanceof UserCommon) {
@@ -76,7 +77,7 @@ public class HeapVisualizer {
             }
 
             // Mas ajustes de estilo
-            if (document.isIsPriority()) {
+            if (registry.isIsPriority()) {
                 node.setAttribute("ui.style", "fill-color: red; size: 15px; text-size: 15px;");
             } else {
                 node.setAttribute("ui.style", "fill-color: green; size: 15px; text-size: 15px;");
@@ -103,10 +104,10 @@ public class HeapVisualizer {
 
         // Obtener el panel de vista y agregarlo al panel proporcionado
         ViewPanel view = (ViewPanel) viewer.getDefaultView();
-        graphPanel.setLayout(new BorderLayout());
-        graphPanel.add(view, BorderLayout.CENTER);
-        graphPanel.revalidate();
-        graphPanel.repaint();
+//        graphPanel.setLayout(new BorderLayout());
+//        graphPanel.add(view, BorderLayout.CENTER);
+//        graphPanel.revalidate();
+//        graphPanel.repaint();
 
         // Listener de la rueda del mouse para el zoom
         view.addMouseWheelListener(e -> {

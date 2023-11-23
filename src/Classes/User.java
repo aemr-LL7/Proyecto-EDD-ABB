@@ -30,4 +30,6 @@ public interface User {
     
     public String toString();
     
+    public boolean isNameAvailable(String documentName);
+    
 }
