@@ -24,8 +24,12 @@ public class OurHashTable<T> {
         this.updateTableSize();
     }
 
+    public SimpleList<OurEntry> getEntriesList() {
+        return this.entriesList;
+    }
+
     /*
-    Funcion para introducir documentos a la tabla, tambien maneja el cambio de tamano si se exede el limite. 
+    Funcion para introducir documentos a la tabla, tambien maneja el cambio de tamano si se excede el limite. 
      */
     public void put(String key, T value) {
 
@@ -59,6 +63,7 @@ public class OurHashTable<T> {
         } else {
 
             System.out.println("La key" + key + " ya esta tomada, por favor escoja otra.");
+
         }
     }
 
@@ -77,6 +82,17 @@ public class OurHashTable<T> {
         }
 
         return null;
+    }
+
+    public void showUsersTable() {
+        for (int i = 0; i < this.table.length; i++) {
+            OurEntry<T> current = this.table[i];
+
+            while (current != null) {
+                System.out.println(current.getKey() + ": " + current.getValue().toString());
+                current = current.getNext();
+            }
+        }
     }
 
     //Clona la tabla con un nuevo tamano
@@ -131,7 +147,7 @@ public class OurHashTable<T> {
         this.tableSize = newTablesize;
     }
 
-    private boolean isKeyTaken(String key) {
+    public boolean isKeyTaken(String key) {
 
         SimpleNode<OurEntry> pAux = this.entriesList.getpFirst();
 

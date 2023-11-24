@@ -4,6 +4,7 @@ import Classes.User;
 import Classes.UserAdministrator;
 import Classes.UserCommon;
 import Classes.UserHumanResources;
+import DataStructureClasses.OurHashTable;
 import DataStructureClasses.SimpleList;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -180,8 +181,9 @@ public class FileManager {
 
     // WIP Leer informacin del csv, Hace falta crear los usuarios implementando la cedula y la prioridad de las clases hermanas en su interfaz
     // WIP Leer informacin del csv
-    public SimpleList readUsersFromCSV(File inFile) {
-        SimpleList userList = new SimpleList();
+    public OurHashTable readUsersFromCSV(File inFile) {
+        // creacion de la tabla para retornar
+        OurHashTable<User> userTable = new OurHashTable();
 
         if (inFile.getName().endsWith(".csv")) {
             try {
@@ -201,17 +203,26 @@ public class FileManager {
                                 String type = data[1].trim();
                                 int dni = Integer.parseInt(data[2].trim());
 
+                                // Crear nuevo usuario
+                                User newUser;
                                 // Crear un objeto User y agregarlo a la lista
-                                if (type.equals("common")) {
-                                    UserCommon commonUser = new UserCommon(username, dni);
-                                    userList.addAtTheEnd(commonUser);
-                                } else if (type.equals("humanres")) {
-                                    UserHumanResources humanresUser = new UserHumanResources(username, dni);
-                                    userList.addAtTheEnd(humanresUser);
-                                } else if (type.equals("admin")) {
-                                    UserAdministrator adminUser = new UserAdministrator(username, dni);
-                                    userList.addAtTheEnd(adminUser);
+                                switch (type) {
+                                    case "common":
+                                        newUser = new UserCommon(username, dni);
+                                        break;
+                                    case "humanres":
+                                        newUser = new UserHumanResources(username, dni);
+                                        break;
+                                    case "admin":
+                                        newUser = new UserAdministrator(username, dni);
+                                        break;
+                                    default:
+                                        System.out.println("Tipo de usuario no reconocido: " + type);
+                                        continue; // Saltar a la siguiente iteración
                                 }
+
+                                // Añadir el nuevo usuario a la tabla
+                                userTable.put(Integer.toString(newUser.getDni()), newUser);
 
                             } else {
                                 System.out.println("Linea no reconocida! " + line);
@@ -231,7 +242,7 @@ public class FileManager {
             JOptionPane.showMessageDialog(null, "El archivo no es de tipo CSV", "Error", JOptionPane.ERROR_MESSAGE);
             System.out.println("El archivo no es de tipo CSV");
         }
-        return userList;
+        return userTable;
     }
 
     public void writeUsersToCSV(SimpleList<User> userList) {
