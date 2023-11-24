@@ -29,7 +29,6 @@ public class OurHashTable<T> {
      */
     public void put(String key, T value) {
 
-
         if (!this.isKeyTaken(key)) {
 
             int hashedKey = key.toLowerCase().hashCode();
@@ -38,14 +37,17 @@ public class OurHashTable<T> {
             OurEntry<T> newEntry = new OurEntry<>(key.toLowerCase(), hashedKey, value);
 
             if (table[hash] == null) {
+
                 table[hash] = newEntry;
+
             } else {
-                OurEntry<T> current = table[hash];
+                OurEntry<T> current = this.table[hash];
                 
-                while (current.getNext() != null) {
+                while (current != newEntry) {
+                    current.setNext(newEntry);
                     current = current.getNext();
                 }
-                current.setNext(newEntry);
+                
             }
 
             this.entriesList.addAtTheEnd(newEntry);
@@ -54,9 +56,8 @@ public class OurHashTable<T> {
                 this.extendTable();
             }
         } else {
- 
-            String capitalizedKey = key.substring(0, 1).toUpperCase() + key.substring(1); 
-            System.out.println("el nombre " + capitalizedKey + " esta tomado, por favor escoja otra.");
+
+            System.out.println("La key" + key + " ya esta tomada, por favor escoja otra.");
         }
     }
 
@@ -83,24 +84,37 @@ public class OurHashTable<T> {
         int newTableSize = tableSize + DEFAULT_EXTENSION_SIZE;
         this.updateTableSize(newTableSize);
         OurEntry<T>[] newTable = new OurEntry[newTableSize];
+        this.table = newTable;
+
+        SimpleNode<OurEntry> pAux = this.entriesList.getpFirst();
 
         // Rehashing de las entradas existentes
-        for (OurEntry<T> entry : this.table) {
-            int key = entry.getHashedKey();
-            int hash = hashFunction(key);
+        while (pAux != null) {
 
-            if (newTable[hash] == null) {
-                newTable[hash] = entry;
-            } else {
-                OurEntry<T> current = newTable[hash];
-                while (current.getNext() != null) {
-                    current = current.getNext();
-                }
-                current.setNext(entry);
+            OurEntry<T> auxEntry = pAux.getData();
+            this.putEntry(auxEntry);
+
+        }
+    }
+
+    private void putEntry(OurEntry entry) {
+
+        int hashedKey = entry.getHashedKey();
+        int hash = Math.abs(hashFunction(hashedKey));
+
+        if (this.table[hash] == null) {
+
+            this.table[hash] = entry;
+
+        } else {
+            OurEntry<T> current = this.table[hash];
+
+            while (current.getNext() != null) {
+                current = current.getNext();
             }
+            current.setNext(entry);
         }
 
-        this.table = newTable;
     }
 
     private int hashFunction(int key) {
@@ -116,7 +130,7 @@ public class OurHashTable<T> {
         this.tableSize = newTablesize;
     }
 
-    public boolean isKeyTaken(String key) {
+    private boolean isKeyTaken(String key) {
 
         SimpleNode<OurEntry> pAux = this.entriesList.getpFirst();
 

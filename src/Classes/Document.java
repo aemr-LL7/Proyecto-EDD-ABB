@@ -28,25 +28,10 @@ public class Document {
         //Creador del documento
         this.creator = creator;
 
-        //Anadir el documento a la lista de documentos del creador 
-        SimpleList<Document> creatorDocuments = this.creator.getFiles_list();
-
-        //WOIP comprobacion nombre duplicados
-//        if (this.creator.isNameAvailable(name)) {
-//            creatorDocuments.addAtTheEnd(this);
-//        } else {
-//            System.out.println("Error en la creacion del documento, el nombre: " + name + " ya existe para este usuario.");
-//            return;
-//        }
     }
 
     public String toString() {
         return "Nombre del documento: " + "\n-" + this.name + "\n\n" + "Numero de paginas: \n-" + this.docSize + "\n\nContenido: \nLorem Ipsum.\n" + "\nCreador: \n-" + this.creator.getName() + "\n\nEs prioridad?\n\n";
-    }
-
-    //Esta fnucion hay que cambiarla de lugar y funcionalidad
-    public boolean hasPriorityOver(Document document) {
-        return false;
     }
 
     public User getCreator() {
