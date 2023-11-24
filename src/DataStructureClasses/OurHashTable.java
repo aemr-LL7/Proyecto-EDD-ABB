@@ -43,10 +43,11 @@ public class OurHashTable<T> {
             } else {
                 OurEntry<T> current = this.table[hash];
                 
-                while (current != newEntry) {
-                    current.setNext(newEntry);
+                while (current.getNext() != null) {
                     current = current.getNext();
                 }
+                
+                current.setNext(newEntry);
                 
             }
 
