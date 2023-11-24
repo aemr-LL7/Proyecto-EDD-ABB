@@ -4,6 +4,7 @@ import Classes.Document;
 import Classes.Registry;
 import Classes.UserCommon;
 import DataStructureClasses.RegistryHeapTree;
+import GUI.Principal;
 import java.time.Duration;
 import java.time.Instant;
 
@@ -49,7 +50,8 @@ public class Main {
 //        System.out.println("Array brah");
 //        System.out.println(manito.arrayToString());
     
-
+        Principal main_window = new Principal();
+        main_window.setVisible(true);
         
     }
 }
