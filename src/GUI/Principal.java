@@ -2,8 +2,10 @@ package GUI;
 
 import Classes.Document;
 import Classes.Registry;
+import Classes.User;
 import Classes.UserAdministrator;
 import Classes.UserCommon;
+import DataStructureClasses.OurHashTable;
 import DataStructureClasses.RegistryHeapTree;
 import DataStructureClasses.SimpleList;
 import FileManager.FileManager;
@@ -27,16 +29,24 @@ public class Principal extends javax.swing.JFrame {
     //Variable que guarda el tiempo de inicio del programa en un objeto Instant
     private Instant startTime;
 
-    HeapVisualizer visualizer = new HeapVisualizer();
-    RegistryHeapTree heapTree = new RegistryHeapTree();
+    private HeapVisualizer visualizer = new HeapVisualizer();
+    private RegistryHeapTree heapTree = new RegistryHeapTree();
+    
+    private OurHashTable<User> usersTable;
+    private OurHashTable<Document> documentsTable;
 
     public Principal() {
+        
         // para cambiar aspecto visual antes de inicializar los componentes
         this.setSystemLookAndFeel();
 
         //Inicializacion del "cronometro interno". 
         this.startTime = Instant.now();
         initComponents();
+        
+        //Inicializar EDD donde se guardan usuarios y documentos
+        this.usersTable = new OurHashTable<User>();
+        this.documentsTable = new OurHashTable<Document>();
 
         // iniciar visual de graphsteam
         System.setProperty("org.graphstream.ui", "swing");
@@ -75,7 +85,7 @@ public class Principal extends javax.swing.JFrame {
         heap.printTree();
 
         // Visualizar en un panel
-        //visualizer.visualizeHeap(heap, this.heapPanel);
+        // visualizer.visualizeHeap(heap, this.heapPanel);
     }
 
     //Se le resta al tiempo actual el tiempo del inicio del programa para obtener la diferencia en segundos que sera usada para las etiquetas de tiempo.
