@@ -1,5 +1,10 @@
 package DataStructureClasses;
 
+import Classes.User;
+import Classes.UserAdministrator;
+import Classes.UserCommon;
+import Classes.UserHumanResources;
+
 /**
  *
  * @author B-St
@@ -46,13 +51,13 @@ public class OurHashTable<T> {
 
             } else {
                 OurEntry<T> current = this.table[hash];
-                
+
                 while (current.getNext() != null) {
                     current = current.getNext();
                 }
-                
+
                 current.setNext(newEntry);
-                
+
             }
 
             this.entriesList.addAtTheEnd(newEntry);
@@ -82,17 +87,6 @@ public class OurHashTable<T> {
         }
 
         return null;
-    }
-
-    public void showUsersTable() {
-        for (int i = 0; i < this.table.length; i++) {
-            OurEntry<T> current = this.table[i];
-
-            while (current != null) {
-                System.out.println(current.getKey() + ": " + current.getValue().toString());
-                current = current.getNext();
-            }
-        }
     }
 
     //Clona la tabla con un nuevo tamano
@@ -162,5 +156,48 @@ public class OurHashTable<T> {
 
         return false;
     }
+
+    public void clear() {
+        this.table = new OurEntry[this.DEFAULT_TABLE_SIZE];
+        this.entriesList.wipeList();
+        this.updateTableSize();
+    }
+
+    public void showUsersTable() {
+        for (int i = 0; i < this.table.length; i++) {
+            OurEntry<T> current = this.table[i];
+
+            while (current != null) {
+                System.out.println(current.getKey() + ": " + current.getValue().toString());
+                current = current.getNext();
+            }
+        }
+    }
+
+    public SimpleList<User> getUsersList() {
+        SimpleList<User> usersList = new SimpleList<>();
+
+        for (int i = 0; i < this.table.length; i++) {
+            OurEntry<T> current = this.table[i];
+
+            while (current != null) {
+                T value = current.getValue();
+
+                if (value instanceof UserCommon) {
+                    usersList.addAtTheEnd((UserCommon) value);
+                } else if (value instanceof UserHumanResources) {
+                    usersList.addAtTheEnd((UserHumanResources) value);
+                } else if (value instanceof UserAdministrator) {
+                    usersList.addAtTheEnd((UserAdministrator) value);
+                }
+
+                current = current.getNext();
+            }
+        }
+
+        return usersList;
+    }
+    
+    public void deleteUser(String userName) {}
 
 }

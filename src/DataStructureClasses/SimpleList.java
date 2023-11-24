@@ -312,6 +312,11 @@ public class SimpleList<T> {
 
     }
 
+    public void wipeList() {
+        this.pFirst = null;
+        this.size = 0;
+    }
+
     /*
         Getters y Setter
      */

@@ -273,7 +273,7 @@ public class FileManager {
             }
 
             bufferedWriter.close();
-            JOptionPane.showMessageDialog(null, "Usuarios guardados en el archivo CSV exitosamente", "Guardado con exito", JOptionPane.INFORMATION_MESSAGE);
+            //JOptionPane.showMessageDialog(null, "Usuarios guardados en el archivo CSV exitosamente", "Guardado con exito", JOptionPane.INFORMATION_MESSAGE);
             System.out.println("Usuarios guardados en el archivo CSV exitosamente");
         } catch (IOException e) {
             System.out.println("Algo salió mal:(");

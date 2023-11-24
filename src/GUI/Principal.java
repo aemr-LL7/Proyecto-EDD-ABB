@@ -61,17 +61,17 @@ public class Principal extends javax.swing.JFrame {
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         this.setTitle("Main window");
-        
+
         // TABLA USUARIOS
         DefaultTableModel model = new DefaultTableModel();
         //Inicializar Contenido
         model.setRowCount(0);
         model.addColumn("Nombre");
         model.addColumn("DNI");
-        model.addColumn("Tipo");
-        model.addColumn("Documento");
+        //model.addColumn("Tipo");
+        model.addColumn("Documentos");
         this.layoutUserTable.setModel(model);
-        
+
         // Crear y visualizar el montículo
         RegistryHeapTree heap = new RegistryHeapTree();
         // Agregar documentos al montículo
@@ -91,12 +91,11 @@ public class Principal extends javax.swing.JFrame {
         Registry reg4 = new Registry(4, doc4, false);
         Registry reg5 = new Registry(1, doc5, true);
 
-        this.heapTree.insert(reg1);
-        this.heapTree.insert(reg2);
-        this.heapTree.insert(reg3);
-        this.heapTree.insert(reg4);
-        this.heapTree.insert(reg5);
-
+//        this.heapTree.insert(reg1);
+//        this.heapTree.insert(reg2);
+//        this.heapTree.insert(reg3);
+//        this.heapTree.insert(reg4);
+//        this.heapTree.insert(reg5);
         // Visualizar en un panel
         // visualizer.visualizeHeap(heap, this.heapPanel);
     }
@@ -132,10 +131,45 @@ public class Principal extends javax.swing.JFrame {
 
     }
 
+    private void loadUserFile(File inFile) {
+        try {
+            FileManager fileManager = new FileManager();
+            if (inFile != null) {
+                this.usersTable = fileManager.readUsersFromCSV(inFile);
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Error al convertir datos: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error desconocido: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void refreshLayoutTable() {
+        DefaultTableModel model = (DefaultTableModel) this.layoutUserTable.getModel();
+        model.setRowCount(0);  // Limpiar filas actuales
+
+        // Lógica para obtener los usuarios de la tabla hash y agregarlos a la tabla
+        SimpleList<User> usersList = this.usersTable.getUsersList();
+
+        for (int i = 0; i < usersList.getSize(); i++) {
+            model.addRow(new Object[]{usersList.getValueByIndex(i).getName().toUpperCase(), usersList.getValueByIndex(i).getDni(), usersList.getValueByIndex(i).getDocumentNames()});
+        }
+    }
+
+    private void updateComboUsers() {
+        // Restablecer items del combo
+        this.comboBoxUsers.removeAllItems();
+        SimpleList<User> usersList = this.usersTable.getUsersList();
+
+        for (int i = 0; i < usersList.getSize(); i++) {
+            this.comboBoxUsers.addItem(usersList.getValueByIndex(i).getName());
+        }
+    }
+
     private int showExitConfirmationDialog() {
 
         String[] options = new String[]{"Sí, salir", "No, quedarse"};
-        int choice = JOptionPane.showOptionDialog(null, "¿Realmente quieres salir del programa?", "Confirmación de salida", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+        int choice = JOptionPane.showOptionDialog(null, "Realmente quieres salir del programa?", "Confirmación de salida", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
         return choice;
     }
 
@@ -181,14 +215,14 @@ public class Principal extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         addUser = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
+        deleteUser = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel24 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
@@ -197,13 +231,21 @@ public class Principal extends javax.swing.JFrame {
         jLabel14 = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
-        jLabel18 = new javax.swing.JLabel();
-        jLabel19 = new javax.swing.JLabel();
         jLabel20 = new javax.swing.JLabel();
         jLabel21 = new javax.swing.JLabel();
         jLabel22 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         layoutUserTable = new javax.swing.JTable();
+        jLabel23 = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        contentAreaText = new javax.swing.JTextArea();
+        titleField = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        comboBoxUsers = new javax.swing.JComboBox<>();
+        createNewDocument = new javax.swing.JButton();
+        jLabel25 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
         menubar = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         loadBtn = new javax.swing.JMenuItem();
@@ -262,23 +304,13 @@ public class Principal extends javax.swing.JFrame {
                 addUserMouseClicked(evt);
             }
         });
-        column.add(addUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 100, -1, -1));
+        column.add(addUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 100, -1, -1));
 
-        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel4.setText("Eliminar Usuario");
-        column.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 180, -1, -1));
-
-        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel5.setText("Crear nuevo");
-        column.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 220, -1, -1));
-
-        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel6.setText("documento");
-        column.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 250, -1, -1));
-
-        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel7.setText("Mostrar lista de usuarios");
-        column.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 290, -1, -1));
+        deleteUser.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
+        deleteUser.setForeground(new java.awt.Color(255, 255, 255));
+        deleteUser.setText("Eliminar Usuario");
+        deleteUser.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        column.add(deleteUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 170, -1, -1));
 
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("Enviar a Imprimir");
@@ -290,13 +322,27 @@ public class Principal extends javax.swing.JFrame {
         column.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 550, -1, -1));
 
         jLabel15.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel15.setText("Eliminar un documento de la cola");
-        column.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 340, -1, -1));
+        jLabel15.setText("Eliminar Documento de la Cola");
+        column.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 460, -1, -1));
 
         jLabel3.setBackground(new java.awt.Color(87, 169, 210));
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/images/add.png"))); // NOI18N
         jLabel3.setOpaque(true);
-        column.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 90, 180, 40));
+        column.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 90, 180, 40));
+
+        jLabel6.setBackground(new java.awt.Color(87, 169, 210));
+        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/images/delete.png"))); // NOI18N
+        jLabel6.setOpaque(true);
+        column.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 160, 190, 40));
+
+        jLabel24.setBackground(new java.awt.Color(87, 169, 210));
+        jLabel24.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/images/register.png"))); // NOI18N
+        jLabel24.setOpaque(true);
+        column.add(jLabel24, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 232, 210, 40));
+
+        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel7.setText("Eliminar Documento");
+        column.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 410, -1, -1));
 
         layout.add(column, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 250, 670));
 
@@ -305,40 +351,34 @@ public class Principal extends javax.swing.JFrame {
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel10.setText("NOTA FUNCIONES IMPORTANTES:");
-        jPanel2.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 80, -1, -1));
+        jPanel2.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 340, -1, -1));
 
         jLabel11.setText("LIBERAR o VACIAR IMPRESORA");
-        jPanel2.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 110, -1, -1));
+        jPanel2.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 390, -1, -1));
 
         jLabel12.setText("simulará el avance en la cola de impresión, es decir,");
-        jPanel2.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 140, 170, -1));
+        jPanel2.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 410, 290, -1));
 
         jLabel13.setText("se toma el elemento que tiene la etiqueta de tiempo más pequeña, se desencola y se “imprime”. ");
-        jPanel2.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 170, 170, -1));
+        jPanel2.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 430, 540, -1));
 
         jLabel14.setText("No pierda de vista que esta operación es equivalente a eliminar_min del Montículo binario. ");
-        jPanel2.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 200, 160, -1));
+        jPanel2.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 490, 520, -1));
 
         jLabel16.setText("La cola de impresión no guarda información referente a los propietarios de los documentos que contiene");
-        jPanel2.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 260, 170, -1));
+        jPanel2.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 450, 570, -1));
 
         jLabel17.setText("de manera que esto es una dificultad a la hora de mandar a eliminar un documento. TABLAS DE DISPERSOIN");
-        jPanel2.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 290, 170, -1));
-
-        jLabel18.setText("Lista de usuarios siempre se debe ver");
-        jPanel2.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 440, -1, -1));
-
-        jLabel19.setText("por cada usuario se podrán observar sus documentos creados");
-        jPanel2.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 470, -1, -1));
+        jPanel2.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 470, 590, -1));
 
         jLabel20.setText("Un usuario podrá eliminar un documento que aún no ha sido enviado a la cola de impresión.");
-        jPanel2.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 490, -1, -1));
+        jPanel2.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 350, -1, -1));
 
         jLabel21.setText("En todo momento se podrá observar la cola de impresión");
-        jPanel2.add(jLabel21, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 520, -1, -1));
+        jPanel2.add(jLabel21, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 530, -1, -1));
 
         jLabel22.setText("secuencia de registros correspondientes a los documentos agregados a la cola de impresión");
-        jPanel2.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 540, -1, -1));
+        jPanel2.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 560, -1, -1));
 
         layoutUserTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -353,7 +393,73 @@ public class Principal extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(layoutUserTable);
 
-        jPanel2.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 20, -1, -1));
+        jPanel2.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 40, 320, 300));
+
+        jLabel23.setFont(new java.awt.Font("Fira Code", 1, 16)); // NOI18N
+        jLabel23.setText("Crear Documento");
+        jPanel2.add(jLabel23, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 20, -1, 30));
+
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Seleccione", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Fira Code", 1, 12))); // NOI18N
+        jPanel3.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        contentAreaText.setColumns(20);
+        contentAreaText.setFont(new java.awt.Font("Georgia", 2, 13)); // NOI18N
+        contentAreaText.setRows(5);
+        contentAreaText.setText("Contenido...\n");
+        contentAreaText.setEnabled(false);
+        contentAreaText.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                contentAreaTextFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                contentAreaTextFocusLost(evt);
+            }
+        });
+        jScrollPane2.setViewportView(contentAreaText);
+
+        jPanel3.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 120, 270, 110));
+
+        titleField.setFont(new java.awt.Font("Roboto", 3, 13)); // NOI18N
+        titleField.setText("Titulo...");
+        titleField.setActionCommand("<Not Set>");
+        titleField.setEnabled(false);
+        titleField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                titleFieldFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                titleFieldFocusLost(evt);
+            }
+        });
+        jPanel3.add(titleField, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, 170, 30));
+
+        jLabel4.setFont(new java.awt.Font("Fira Code", 1, 12)); // NOI18N
+        jLabel4.setText("Usuario");
+        jPanel3.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 30, 50, 30));
+
+        comboBoxUsers.setFont(new java.awt.Font("Fira Code", 1, 12)); // NOI18N
+        comboBoxUsers.setEnabled(false);
+        jPanel3.add(comboBoxUsers, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 32, 130, 30));
+
+        createNewDocument.setFont(new java.awt.Font("Fira Code", 1, 12)); // NOI18N
+        createNewDocument.setText("Crear");
+        createNewDocument.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        createNewDocument.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                createNewDocumentActionPerformed(evt);
+            }
+        });
+        jPanel3.add(createNewDocument, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 60, -1, -1));
+
+        jPanel2.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 70, 340, 250));
+
+        jLabel25.setFont(new java.awt.Font("Fira Code", 1, 16)); // NOI18N
+        jLabel25.setText("Lista de Usuarios");
+        jPanel2.add(jLabel25, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 10, -1, -1));
+
+        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/images/register.png"))); // NOI18N
+        jPanel2.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 20, 40, 30));
 
         layout.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 40, 860, 590));
 
@@ -370,6 +476,11 @@ public class Principal extends javax.swing.JFrame {
         jMenu1.add(loadBtn);
 
         saveBtn.setText("Guardar");
+        saveBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveBtnActionPerformed(evt);
+            }
+        });
         jMenu1.add(saveBtn);
 
         exitBtn.setText("Salir...");
@@ -414,37 +525,73 @@ public class Principal extends javax.swing.JFrame {
     private void loadBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadBtnActionPerformed
         if (evt.getSource() == this.loadBtn) {
             // seleccionar el archivo
+            FileManager fileManager = new FileManager();
+
             if (this.changesWereMade) {
                 int option = JOptionPane.showConfirmDialog(null, "Hay cambios sin guardar. Desea guardar antes de cargar otro archivo?", "Guardar cambios", JOptionPane.YES_NO_CANCEL_OPTION);
-                
+
                 if (option == JOptionPane.YES_OPTION) {
-                    // Aquí puedes agregar la lógica para guardar los cambios
                     // Después de guardar, establece changesMade a false
+                    File file = fileManager.selectFile();
+
+                    SimpleList<User> userAuxList = this.usersTable.getUsersList();
+                    fileManager.writeUsersToCSV(userAuxList);
+                    this.usersTable.clear();
+                    JOptionPane.showMessageDialog(null, "Usuarios guardados en el archivo CSV exitosamente", "Guardado con exito", JOptionPane.INFORMATION_MESSAGE);
+
+                    // CARGAR ARCHIVO
+                    this.loadUserFile(file);
+
+                    // Actualizar tabla y cambios
+                    this.refreshLayoutTable();
+                    this.updateComboUsers();
+                    this.titleField.setEnabled(true);
+                    this.contentAreaText.setEnabled(true);
+                    this.comboBoxUsers.setEnabled(true);
+                    this.usersTable.showUsersTable();
                     this.changesWereMade = false;
+
+                    JOptionPane.showMessageDialog(null, "Los usuarios se han cargado con exito!", "Carga de archivo", JOptionPane.INFORMATION_MESSAGE);
+                    System.out.println("Guardar y cargar - limpiar hash\n");
+
                 } else if (option == JOptionPane.NO_OPTION) {
                     // No se guardan los cambios, permite cargar otro archivo
-                    // Aquí puedes agregar la lógica para cargar otro archivo
+                    this.usersTable.clear();
+                    File file = fileManager.selectFile();
+
+                    // CARGAR ARCHIVO
+                    this.loadUserFile(file);
+
+                    // Actualizar tabla y cambios
+                    this.refreshLayoutTable();
+                    this.updateComboUsers();
+                    this.titleField.setEnabled(true);
+                    this.contentAreaText.setEnabled(true);
+                    this.comboBoxUsers.setEnabled(true);
+                    this.changesWereMade = false;
+                    this.usersTable.showUsersTable();
+
+                    JOptionPane.showMessageDialog(null, "Los usuarios se han cargado con exito!", "Carga de archivo", JOptionPane.INFORMATION_MESSAGE);
+                    System.out.println("Cargar sin guardar - limpiar hash\n");
+
                 } else {
                     // Cancelar la operación
-                    // Puedes decidir cómo manejar la cancelación (por ejemplo, no cargar el nuevo archivo)
+                    JOptionPane.showMessageDialog(null, "Operacion cancelada! ", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
             } else {
-                // En caso de que no se haya realizado ningun cambio
-                FileManager fileManager = new FileManager();
+                // En caso de que sea la primera vez cargando archivo (no se ha realizado ningun cambio al incio)
                 File file = fileManager.selectFile();
+                this.loadUserFile(file);
 
-                try {
-                    if (file != null) {
-                        this.usersTable = fileManager.readUsersFromCSV(file);
-                    }
-                } catch (NumberFormatException e) {
-                    JOptionPane.showMessageDialog(null, "Error al convertir datos: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                } catch (Exception e) {
-                    JOptionPane.showMessageDialog(null, "Error desconocido: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                }
-
-                JOptionPane.showMessageDialog(null, "Los usuarios se han cargado con exito!", "Carga de archivo", JOptionPane.INFORMATION_MESSAGE);
+                this.refreshLayoutTable();
+                this.updateComboUsers();
+                this.titleField.setEnabled(true);
+                this.contentAreaText.setEnabled(true);
+                this.comboBoxUsers.setEnabled(true);
+                this.changesWereMade = true;
                 this.usersTable.showUsersTable();
+                JOptionPane.showMessageDialog(null, "Los usuarios se han cargado con exito!", "Carga de archivo", JOptionPane.INFORMATION_MESSAGE);
             }
 
         }
@@ -476,48 +623,134 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_aboutMsgBtnActionPerformed
 
     private void addUserMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addUserMouseClicked
-        try {
-            JOptionPane.showMessageDialog(null, "Creando un nuevo usuario...", "Atencion!", JOptionPane.INFORMATION_MESSAGE);
+        if (evt.getButton() == MouseEvent.BUTTON1) {
+            try {
+                JOptionPane.showMessageDialog(null, "Creando un nuevo usuario...", "Atencion!", JOptionPane.INFORMATION_MESSAGE);
 
-            String userName = JOptionPane.showInputDialog(null, "Por favor ingrese el nombre del usuario: ");
-            if (userName == null || userName.trim().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Nombre de usuario invalido.", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
+                String userName = JOptionPane.showInputDialog(null, "Por favor ingrese el nombre del usuario: ");
+                if (userName == null || userName.trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Nombre de usuario invalido.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                int userDni = Integer.parseInt(JOptionPane.showInputDialog(null, "Indique el numero de cedula del usuario: "));
+                if (userDni < 0) {
+                    JOptionPane.showMessageDialog(null, "Número de cédula invalido.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                } else if (this.usersTable.isKeyTaken(Integer.toString(userDni))) {
+                    JOptionPane.showMessageDialog(null, "El usuario con cedula '" + userDni + "'\nya se encuentra en la base de datos", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                int userType = Integer.parseInt(JOptionPane.showInputDialog(null, "Indique el tipo de usuario...\n[0]: Usuario Comun\n[1]: Usuario Recursos Humanos\n[2]: Adminsitrador\n"));
+                if (userType < 0 || userType > 2) {
+                    JOptionPane.showMessageDialog(null, "Tipo de usuario invalido.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Crear usuarios para añadir a la tabla hash
+                this.createUser(userName, userDni, userType);
+                // indicar cambios
+                this.changesWereMade = true;
+                this.refreshLayoutTable();
+                this.updateComboUsers();
+                this.titleField.setEnabled(true);
+                this.contentAreaText.setEnabled(true);
+                this.comboBoxUsers.setEnabled(true);
+                System.out.println(this.changesWereMade);
+                this.usersTable.showUsersTable();
+
+                JOptionPane.showMessageDialog(null, "Usuario registrado con exito!", "Añadir usuario", JOptionPane.INFORMATION_MESSAGE);
+
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Formato invalido para el DNI o tipo de usuario.", "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (NullPointerException n) {
+                JOptionPane.showMessageDialog(null, "Cancelando operacion.");
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Error desconocido: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
-
-            int userDni = Integer.parseInt(JOptionPane.showInputDialog(null, "Indique el numero de cedula del usuario: "));
-            if (userDni < 0) {
-                JOptionPane.showMessageDialog(null, "Número de cédula invalido.", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            } else if (this.usersTable.isKeyTaken(Integer.toString(userDni))) {
-                JOptionPane.showMessageDialog(null, "El usuario con cedula '" + userDni + "'\nya se encuentra en la base de datos", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            int userType = Integer.parseInt(JOptionPane.showInputDialog(null, "Indique el tipo de usuario...\n[0]: Usuario Comun\n[1]: Usuario Recursos Humanos\n[2]: Adminsitrador\n"));
-            if (userType < 0 || userType > 2) {
-                JOptionPane.showMessageDialog(null, "Tipo de usuario invalido.", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            // Crear usuarios para añadir a la tabla hash
-            this.createUser(userName, userDni, userType);
-            // indicar cambios
-            this.changesWereMade = true;
-            System.out.println(this.changesWereMade);
-            
-            JOptionPane.showMessageDialog(null, "Usuario registrado con exito!", "Añadir usuario", JOptionPane.INFORMATION_MESSAGE);
-            this.usersTable.showUsersTable();
-
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "Formato invalido para el DNI o tipo de usuario.", "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (NullPointerException n) {
-            JOptionPane.showMessageDialog(null, "Cancelando operacion.");
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error desconocido: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
 
+
     }//GEN-LAST:event_addUserMouseClicked
+
+    private void saveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBtnActionPerformed
+        // TODO add your handling code here:
+        if (evt.getSource() == this.saveBtn) {
+            if (this.usersTable.getUsersList().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Error: El proyecto se encuentra sin ningun dato!", "Mensaje de Error", JOptionPane.WARNING_MESSAGE);
+                return;
+            } else {
+                FileManager fileManager = new FileManager();
+                SimpleList<User> userAuxList = this.usersTable.getUsersList();
+                fileManager.writeUsersToCSV(userAuxList);
+                JOptionPane.showMessageDialog(null, "Se han guardado los datos con exito!", "Guardar Informacion", JOptionPane.INFORMATION_MESSAGE);
+
+            }
+        }
+    }//GEN-LAST:event_saveBtnActionPerformed
+
+    private void titleFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_titleFieldFocusGained
+        // Cuando el JTextField obtiene foco, eliminar el texto predeterminado
+        if (this.titleField.getText().equals("Titulo...")) {
+            this.titleField.setText("");
+        }
+    }//GEN-LAST:event_titleFieldFocusGained
+
+    private void titleFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_titleFieldFocusLost
+        // Cuando el JTextField pierde foco, restaurar el texto predeterminado si esta vacio
+        if (this.titleField.getText().isEmpty()) {
+            this.titleField.setText("Titulo...");
+        }
+    }//GEN-LAST:event_titleFieldFocusLost
+
+    private void contentAreaTextFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_contentAreaTextFocusGained
+
+        if (this.contentAreaText.getText().equals("Contenido...")) {
+            this.contentAreaText.setText("");
+        }
+    }//GEN-LAST:event_contentAreaTextFocusGained
+
+    private void contentAreaTextFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_contentAreaTextFocusLost
+        if (this.contentAreaText.getText().isEmpty()) {
+            this.contentAreaText.setText("Contenido...");
+        }
+    }//GEN-LAST:event_contentAreaTextFocusLost
+
+    private void createNewDocumentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createNewDocumentActionPerformed
+        // TODO add your handling code here:
+        if (evt.getSource() == this.createNewDocument) {
+            SimpleList<User> userList = this.usersTable.getUsersList();
+            String titleDocument = this.titleField.getText().toLowerCase();
+            Document createdDocument = null;
+
+            for (int i = 0; i < userList.getSize(); i++) {
+                User user = userList.getValueByIndex(i);
+
+                if (this.comboBoxUsers.getSelectedItem().equals(user.getName())) {
+                    createdDocument = new Document(titleDocument, user);
+                    user.addDocument(createdDocument);
+                }
+            }
+
+            if (createdDocument != null) {
+                /*
+                    Se debe indicar la prioridad (de alguna forma)
+                */
+                Registry registeredDocument = new Registry((int) this.getEventTime(), createdDocument, true);
+                
+                // añadir registro de documentos al heapmin
+                this.heapTree.insert(registeredDocument);
+                this.refreshLayoutTable();
+                JOptionPane.showMessageDialog(null, "El usuario '' ha creado un nuevo documento!", "Creacion de Documentos", JOptionPane.INFORMATION_MESSAGE);
+
+            } else {
+                // Manejar el caso en el que no se crea un documento
+                JOptionPane.showMessageDialog(null, "Error: No se pudo crear el documento.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
+    }//GEN-LAST:event_createNewDocumentActionPerformed
 
     /**
      * @param args the command line arguments
@@ -560,6 +793,10 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JLabel addUser;
     private javax.swing.JPanel bgHeap;
     private javax.swing.JPanel column;
+    private javax.swing.JComboBox<String> comboBoxUsers;
+    private javax.swing.JTextArea contentAreaText;
+    private javax.swing.JButton createNewDocument;
+    private javax.swing.JLabel deleteUser;
     private javax.swing.JMenuItem exitBtn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -570,12 +807,13 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
-    private javax.swing.JLabel jLabel18;
-    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
+    private javax.swing.JLabel jLabel24;
+    private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -587,13 +825,16 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JPanel layout;
     private javax.swing.JTable layoutUserTable;
     private javax.swing.JMenuItem loadBtn;
     private javax.swing.JMenuBar menubar;
     private javax.swing.JMenuItem saveBtn;
     private javax.swing.JLabel showHeapTreeLabel;
+    private javax.swing.JTextField titleField;
     // End of variables declaration//GEN-END:variables
 
 }
