@@ -192,6 +192,9 @@ public class FileManager {
 
                 String line;
                 //String parts[];
+                String originalFileName = inFile.getName().replaceFirst("[.][^.]+$", "");
+                userTable.setOriginalFileName(originalFileName);
+
                 while ((line = bufferedReader.readLine()) != null) {
                     if (line.contains("usuario") && line.contains("tipo") && line.contains("cedula")) {
                         ;
@@ -245,17 +248,35 @@ public class FileManager {
         return userTable;
     }
 
-    public void writeUsersToCSV(SimpleList<User> userList) {
+    public void writeUsersToCSV(OurHashTable<User> userTable) {
         try {
-            FileWriter fileWriter = new FileWriter("usuarios.csv");
+            // Verificar si la carpeta "saved" existe, y crearla si no lo esta
+            File savedFolder = new File(SAVED_DIRECTORY);
+            if (!savedFolder.exists()) {
+                savedFolder.mkdir();
+            }
+            // Obtener el nombre del archivo original
+            String originalFileName = userTable.getOriginalFileName();
+
+            if (originalFileName == null || originalFileName.isEmpty()) {
+                // Si no hay nombre asignado, genera un nuevo nombre basado en la fecha actual
+                originalFileName = this.generateFileName();
+                userTable.setOriginalFileName(originalFileName);
+            }
+
+            File outFile = new File(savedFolder, originalFileName + ".csv");
+            FileWriter fileWriter = new FileWriter(outFile);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 
             // Etiquetas
             bufferedWriter.write("usuario, tipo, cedula");
             bufferedWriter.newLine();
 
-            for (int i = 0; i < userList.getSize(); i++) {
-                User retrievedUser = userList.getValueByIndex(i);
+            // Cargar la lista de usuarios del hash
+            SimpleList<User> userAuxList = userTable.getUsersList();
+
+            for (int i = 0; i < userAuxList.getSize(); i++) {
+                User retrievedUser = userAuxList.getValueByIndex(i);
 
                 // Obtener tipo de usuario específico
                 String userType = "";
@@ -278,6 +299,14 @@ public class FileManager {
         } catch (IOException e) {
             System.out.println("Algo salió mal:(");
         }
+    }
+
+    // Método para generar un nombre unico basado en la fecha actual
+    private String generateFileName() {
+        // Puedes personalizar este método para crear un nombre único basado en la fecha actual
+        // Aquí, por ejemplo, se utiliza el timestamp actual en milisegundos
+        long timestamp = System.currentTimeMillis();
+        return "usuarios_" + timestamp;
     }
 
 }

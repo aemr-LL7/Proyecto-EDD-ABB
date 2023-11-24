@@ -533,9 +533,9 @@ public class Principal extends javax.swing.JFrame {
                 if (option == JOptionPane.YES_OPTION) {
                     // Después de guardar, establece changesMade a false
                     File file = fileManager.selectFile();
-
-                    SimpleList<User> userAuxList = this.usersTable.getUsersList();
-                    fileManager.writeUsersToCSV(userAuxList);
+                    
+                    //SimpleList<User> userAuxList = this.usersTable.getUsersList();
+                    fileManager.writeUsersToCSV(this.usersTable);
                     this.usersTable.clear();
                     JOptionPane.showMessageDialog(null, "Usuarios guardados en el archivo CSV exitosamente", "Guardado con exito", JOptionPane.INFORMATION_MESSAGE);
 
@@ -682,8 +682,8 @@ public class Principal extends javax.swing.JFrame {
                 return;
             } else {
                 FileManager fileManager = new FileManager();
-                SimpleList<User> userAuxList = this.usersTable.getUsersList();
-                fileManager.writeUsersToCSV(userAuxList);
+                //SimpleList<User> userAuxList = this.usersTable.getUsersList();
+                fileManager.writeUsersToCSV(this.usersTable);
                 JOptionPane.showMessageDialog(null, "Se han guardado los datos con exito!", "Guardar Informacion", JOptionPane.INFORMATION_MESSAGE);
 
             }

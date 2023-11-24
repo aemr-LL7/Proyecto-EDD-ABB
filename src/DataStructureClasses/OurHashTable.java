@@ -23,6 +23,9 @@ public class OurHashTable<T> {
     //Lista de entradas para la reduccion de la complejidad a la hora de recorrer
     private final SimpleList<OurEntry> entriesList;
 
+    // Nombre del archivo original
+    private String originalFileName;
+
     public OurHashTable() {
         this.table = new OurEntry[this.DEFAULT_TABLE_SIZE];
         this.entriesList = new SimpleList<>();
@@ -31,6 +34,16 @@ public class OurHashTable<T> {
 
     public SimpleList<OurEntry> getEntriesList() {
         return this.entriesList;
+    }
+    
+    // Método para obtener el nombre del archivo original
+    public String getOriginalFileName() {
+        return originalFileName;
+    }
+
+    // Método para establecer el nombre del archivo original
+    public void setOriginalFileName(String originalFileName) {
+        this.originalFileName = originalFileName;
     }
 
     /*
@@ -197,7 +210,8 @@ public class OurHashTable<T> {
 
         return usersList;
     }
-    
-    public void deleteUser(String userName) {}
+
+    public void deleteUser(String userName) {
+    }
 
 }
