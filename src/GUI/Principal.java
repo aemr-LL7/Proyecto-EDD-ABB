@@ -72,32 +72,6 @@ public class Principal extends javax.swing.JFrame {
         model.addColumn("Documentos");
         this.layoutUserTable.setModel(model);
 
-        // Crear y visualizar el montículo
-        RegistryHeapTree heap = new RegistryHeapTree();
-        // Agregar documentos al montículo
-        UserCommon user1 = new UserCommon("Danny", 29986549);
-        UserCommon user2 = new UserCommon("Herosland", 29986549);
-        UserAdministrator user3 = new UserAdministrator("Yisus", 1);
-
-        Document doc1 = new Document("Pajarito", user1);
-        Document doc2 = new Document("Amarillo los platano", user1);
-        Document doc3 = new Document("La odisea", user2);
-        Document doc4 = new Document("Las desventuras de eduardo", user2);
-        Document doc5 = new Document("Aminoacidos traviesos", user3);
-
-        Registry reg1 = new Registry(1, doc1, true);
-        Registry reg2 = new Registry(2, doc2, false);
-        Registry reg3 = new Registry(3, doc3, false);
-        Registry reg4 = new Registry(4, doc4, false);
-        Registry reg5 = new Registry(1, doc5, true);
-
-//        this.heapTree.insert(reg1);
-//        this.heapTree.insert(reg2);
-//        this.heapTree.insert(reg3);
-//        this.heapTree.insert(reg4);
-//        this.heapTree.insert(reg5);
-        // Visualizar en un panel
-        // visualizer.visualizeHeap(heap, this.heapPanel);
     }
 
     //Se le resta al tiempo actual el tiempo del inicio del programa para obtener la diferencia en segundos que sera usada para las etiquetas de tiempo.
@@ -218,11 +192,15 @@ public class Principal extends javax.swing.JFrame {
         deleteUser = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
-        jLabel15 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jLabel24 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
+        jLabel19 = new javax.swing.JLabel();
+        jLabel26 = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
+        deleteDocument = new javax.swing.JLabel();
+        jPanel5 = new javax.swing.JPanel();
+        deleteFromQueue = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
@@ -312,18 +290,16 @@ public class Principal extends javax.swing.JFrame {
         deleteUser.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         column.add(deleteUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 170, -1, -1));
 
+        jLabel8.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("Enviar a Imprimir");
-        column.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 510, -1, -1));
+        jLabel8.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        column.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 473, -1, 30));
 
         jLabel9.setBackground(new java.awt.Color(255, 255, 255));
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
         jLabel9.setText("Mostar Cola de Impresion");
-        column.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 550, -1, -1));
-
-        jLabel15.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel15.setText("Eliminar Documento de la Cola");
-        column.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 460, -1, -1));
+        column.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 540, -1, -1));
 
         jLabel3.setBackground(new java.awt.Color(87, 169, 210));
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/images/add.png"))); // NOI18N
@@ -335,14 +311,51 @@ public class Principal extends javax.swing.JFrame {
         jLabel6.setOpaque(true);
         column.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 160, 190, 40));
 
-        jLabel24.setBackground(new java.awt.Color(87, 169, 210));
-        jLabel24.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/images/register.png"))); // NOI18N
-        jLabel24.setOpaque(true);
-        column.add(jLabel24, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 232, 210, 40));
+        jLabel18.setBackground(new java.awt.Color(114, 172, 202));
+        jLabel18.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/images/send.png"))); // NOI18N
+        jLabel18.setOpaque(true);
+        column.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 470, 200, 40));
 
-        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel7.setText("Eliminar Documento");
-        column.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 410, -1, -1));
+        jLabel19.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/images/lista.png"))); // NOI18N
+        jLabel19.setOpaque(true);
+        column.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 260, -1, -1));
+
+        jLabel26.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/images/delete cola.png"))); // NOI18N
+        jLabel26.setOpaque(true);
+        column.add(jLabel26, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 350, -1, -1));
+
+        jPanel4.setBackground(new java.awt.Color(87, 169, 210));
+        jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        deleteDocument.setBackground(new java.awt.Color(87, 169, 210));
+        deleteDocument.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
+        deleteDocument.setForeground(new java.awt.Color(255, 255, 255));
+        deleteDocument.setText("Eliminar Documento");
+        deleteDocument.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        deleteDocument.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                deleteDocumentMouseClicked(evt);
+            }
+        });
+        jPanel4.add(deleteDocument, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, -1, -1));
+
+        column.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 300, 200, 30));
+
+        jPanel5.setBackground(new java.awt.Color(87, 169, 210));
+        jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        deleteFromQueue.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
+        deleteFromQueue.setForeground(new java.awt.Color(255, 255, 255));
+        deleteFromQueue.setText("Eliminar de la Cola");
+        deleteFromQueue.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        deleteFromQueue.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                deleteFromQueueMouseClicked(evt);
+            }
+        });
+        jPanel5.add(deleteFromQueue, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 180, -1));
+
+        column.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 390, 200, 30));
 
         layout.add(column, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 250, 670));
 
@@ -406,7 +419,6 @@ public class Principal extends javax.swing.JFrame {
         contentAreaText.setColumns(20);
         contentAreaText.setFont(new java.awt.Font("Georgia", 2, 13)); // NOI18N
         contentAreaText.setRows(5);
-        contentAreaText.setText("Contenido...\n");
         contentAreaText.setEnabled(false);
         contentAreaText.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -533,7 +545,7 @@ public class Principal extends javax.swing.JFrame {
                 if (option == JOptionPane.YES_OPTION) {
                     // Después de guardar, establece changesMade a false
                     File file = fileManager.selectFile();
-                    
+
                     //SimpleList<User> userAuxList = this.usersTable.getUsersList();
                     fileManager.writeUsersToCSV(this.usersTable);
                     this.usersTable.clear();
@@ -568,7 +580,7 @@ public class Principal extends javax.swing.JFrame {
                     this.titleField.setEnabled(true);
                     this.contentAreaText.setEnabled(true);
                     this.comboBoxUsers.setEnabled(true);
-                    this.changesWereMade = false;
+                    this.changesWereMade = true;
                     this.usersTable.showUsersTable();
 
                     JOptionPane.showMessageDialog(null, "Los usuarios se han cargado con exito!", "Carga de archivo", JOptionPane.INFORMATION_MESSAGE);
@@ -657,7 +669,6 @@ public class Principal extends javax.swing.JFrame {
                 this.titleField.setEnabled(true);
                 this.contentAreaText.setEnabled(true);
                 this.comboBoxUsers.setEnabled(true);
-                System.out.println(this.changesWereMade);
                 this.usersTable.showUsersTable();
 
                 JOptionPane.showMessageDialog(null, "Usuario registrado con exito!", "Añadir usuario", JOptionPane.INFORMATION_MESSAGE);
@@ -699,22 +710,22 @@ public class Principal extends javax.swing.JFrame {
 
     private void titleFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_titleFieldFocusLost
         // Cuando el JTextField pierde foco, restaurar el texto predeterminado si esta vacio
-        if (this.titleField.getText().isEmpty()) {
-            this.titleField.setText("Titulo...");
-        }
+//        if (this.titleField.getText().isEmpty()) {
+//            this.titleField.setText("Titulo...");
+//        }
     }//GEN-LAST:event_titleFieldFocusLost
 
     private void contentAreaTextFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_contentAreaTextFocusGained
 
-        if (this.contentAreaText.getText().equals("Contenido...")) {
-            this.contentAreaText.setText("");
-        }
+//        if (this.contentAreaText.getText().equals("Contenido...")) {
+//            this.contentAreaText.setText("");
+//        }
     }//GEN-LAST:event_contentAreaTextFocusGained
 
     private void contentAreaTextFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_contentAreaTextFocusLost
-        if (this.contentAreaText.getText().isEmpty()) {
-            this.contentAreaText.setText("Contenido...");
-        }
+//        if (this.contentAreaText.getText().isEmpty()) {
+//            this.contentAreaText.setText("Contenido...");
+//        }
     }//GEN-LAST:event_contentAreaTextFocusLost
 
     private void createNewDocumentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createNewDocumentActionPerformed
@@ -722,35 +733,51 @@ public class Principal extends javax.swing.JFrame {
         if (evt.getSource() == this.createNewDocument) {
             SimpleList<User> userList = this.usersTable.getUsersList();
             String titleDocument = this.titleField.getText().toLowerCase();
+            String contentDocument = this.contentAreaText.getText();
             Document createdDocument = null;
 
-            for (int i = 0; i < userList.getSize(); i++) {
-                User user = userList.getValueByIndex(i);
+            if (this.comboBoxUsers.isEnabled()) {
+                if (this.titleField.getText().equals("") && this.titleField.getText().equals("Titulo...")) {
+                    JOptionPane.showMessageDialog(null, "Error: El titulo o el contenido del documento no puede estar vacio.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                } else {
 
-                if (this.comboBoxUsers.getSelectedItem().equals(user.getName())) {
-                    createdDocument = new Document(titleDocument, user);
-                    user.addDocument(createdDocument);
+                    for (int i = 0; i < userList.getSize(); i++) {
+                        User user = userList.getValueByIndex(i);
+
+                        if (this.comboBoxUsers.getSelectedItem().equals(user.getName())) {
+                            // Creacion del documento
+                            if (user.getDocumentNames().equals(titleDocument)) {
+                                JOptionPane.showMessageDialog(null, "Error: El documento ya existe en la lista del usuario.", "Error", JOptionPane.ERROR_MESSAGE);
+                                return;
+                            } else {
+                                createdDocument = new Document(titleDocument, contentDocument, user);
+                                // añadir documento a la lista de documentos del usuario
+                                user.addDocument(createdDocument);
+                                System.out.println(createdDocument.getContent());
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Error: El usuario no esta disponible.", "Error", JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+                    }
+                    this.refreshLayoutTable();
+                    JOptionPane.showMessageDialog(null, "El usuario '' ha creado un nuevo documento!", "Creacion de Documentos", JOptionPane.INFORMATION_MESSAGE);
                 }
-            }
-
-            if (createdDocument != null) {
-                /*
-                    Se debe indicar la prioridad (de alguna forma)
-                */
-                Registry registeredDocument = new Registry((int) this.getEventTime(), createdDocument, true);
-                
-                // añadir registro de documentos al heapmin
-                this.heapTree.insert(registeredDocument);
-                this.refreshLayoutTable();
-                JOptionPane.showMessageDialog(null, "El usuario '' ha creado un nuevo documento!", "Creacion de Documentos", JOptionPane.INFORMATION_MESSAGE);
-
             } else {
-                // Manejar el caso en el que no se crea un documento
                 JOptionPane.showMessageDialog(null, "Error: No se pudo crear el documento.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
         }
     }//GEN-LAST:event_createNewDocumentActionPerformed
+
+    private void deleteDocumentMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_deleteDocumentMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_deleteDocumentMouseClicked
+
+    private void deleteFromQueueMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_deleteFromQueueMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_deleteFromQueueMouseClicked
 
     /**
      * @param args the command line arguments
@@ -796,6 +823,8 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> comboBoxUsers;
     private javax.swing.JTextArea contentAreaText;
     private javax.swing.JButton createNewDocument;
+    private javax.swing.JLabel deleteDocument;
+    private javax.swing.JLabel deleteFromQueue;
     private javax.swing.JLabel deleteUser;
     private javax.swing.JMenuItem exitBtn;
     private javax.swing.JLabel jLabel1;
@@ -804,21 +833,21 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel23;
-    private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;
+    private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JMenu jMenu1;
@@ -826,6 +855,8 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JPanel layout;
