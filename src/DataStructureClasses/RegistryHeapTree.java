@@ -147,7 +147,7 @@ public class RegistryHeapTree {
     }
 
     //Eliminar y retornar el inimo
-    public Registry remove() {
+    public Registry removeMin() {
 
         //Devolver el elemento en la cima
         Registry popped = this.heap[0];
@@ -157,50 +157,91 @@ public class RegistryHeapTree {
         minHeapify(0);
         this.heapSize--;
 
+        this.registryTable.delete(popped.getDocument().getName().toLowerCase());
+        
         return popped;
     }
 
     //Eliminar del monticulo.
     public void eliminateRegistry(String documentName) {
 
-        if (this.registryTable.isKeyTaken(documentName.toLowerCase())){
-            
+        if (this.registryTable.isKeyTaken(documentName.toLowerCase())) {
+
             //Copia fea del registro encontrado, fue hecho a las 3am en desesperacion.
             Registry foundRegistry = this.registryTable.get(documentName.toLowerCase());
             boolean newIsPiority = foundRegistry.isPriority();
             Registry foundRegistryCopy = new Registry(-1, foundRegistry.getDocument(), newIsPiority);
-            
+
             //Cambiar el objeto que esta guardado a null. El programa tiene a los null en consideracion.
             foundRegistry = null;
-            
-                        
+
             //insertar un nuevo registry con el nuevo tiempo para que se balancee el arbol solo
             this.insert(foundRegistryCopy);
-            
+
             //Quitar el registro de la hashtable usando el nombre del documento almacenado.
             this.registryTable.delete(documentName.toLowerCase());
-            
+
         } else {
             System.out.println("El documento no esta en la cola.");
         }
-        
+
     }
-    
-    
+
     //funcion para limpiar el heap de todos sus elementos
     public void clearHeap() {
 
         //Mientras el heap no este vacio se extrae el elemento con mayor prioridad y se imprime
         while (!this.isEmpty()) {
-            Registry removingRegistry = this.remove();
+            Registry removingRegistry = this.removeMin();
             System.out.println("Documento impreso: " + removingRegistry.getDocument().getName());
+        }
+
+    }
+
+    //para limpiar una cantidad especifica de elementos
+    public void clearHeap(int ammount) {
+
+        if (this.isEmpty()) {
+            System.out.println("No hay nada en el arbol");
+        } else {
+            //Mientras el heap no este vacio se extrae el elemento con mayor prioridad y se imprime
+            for (int i = ammount; i > 0; i--) {
+                Registry removingRegistry = this.removeMin();
+                System.out.println("Documento impreso: " + removingRegistry.getDocument().getName());
+            }
         }
 
     }
 
     public void printTree() {
 
-        int counter = 0;
+        if (this.isEmpty()) {
+            System.out.println("No hay nada en el arbol");
+        } else {
+
+            OurQueue<Registry> auxQueue = new OurQueue();
+
+            while (!this.isEmpty()) {
+
+                Registry popped = this.removeMin();
+                auxQueue.insert(popped);
+                System.out.println(popped);
+            }
+            
+            while (!auxQueue.isEmpty()){
+                
+                Registry popped = auxQueue.pop();
+                this.insert(popped);
+                
+            }
+
+        }
+    }
+
+    //version antigua del print
+    private void oldPrint() {
+
+                int counter = 0;
         while (this.heap[counter] != null) {
 
             //String fName = this.heap[((counter - 1) / 2)].getDocument().getName();
@@ -230,7 +271,6 @@ public class RegistryHeapTree {
             counter++;
 
         }
-
     }
 
     public String arrayToString() {
