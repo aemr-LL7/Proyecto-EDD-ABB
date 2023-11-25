@@ -112,6 +112,9 @@ public class OurHashTable<T> {
         } else {
 
             OurEntry<T> bucketedEntry = this.table[hash].getNext();
+            
+            //Eliminamos la entry de la lista de entries
+            this.entriesList.delete(bucketedEntry);
             this.table[hash] = null;
 
             while (bucketedEntry != null) {
