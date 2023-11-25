@@ -191,7 +191,7 @@ public class Principal extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         addUser = new javax.swing.JLabel();
         deleteUser = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
+        sendToQueue = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
@@ -292,11 +292,16 @@ public class Principal extends javax.swing.JFrame {
         });
         column.add(deleteUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 170, -1, -1));
 
-        jLabel8.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
-        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel8.setText("Enviar a Imprimir");
-        jLabel8.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        column.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 490, -1, 30));
+        sendToQueue.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
+        sendToQueue.setForeground(new java.awt.Color(255, 255, 255));
+        sendToQueue.setText("Enviar a Imprimir");
+        sendToQueue.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        sendToQueue.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                sendToQueueMouseClicked(evt);
+            }
+        });
+        column.add(sendToQueue, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 490, -1, 30));
 
         jLabel3.setBackground(new java.awt.Color(87, 169, 210));
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/images/add.png"))); // NOI18N
@@ -742,7 +747,7 @@ public class Principal extends javax.swing.JFrame {
                             System.out.println(createdDocument.getContent());
                         }
                     }
-                    
+
                 }
                 this.refreshLayoutTable();
                 JOptionPane.showMessageDialog(null, "Se ha creado un nuevo documento!", "Creacion de Documentos", JOptionPane.INFORMATION_MESSAGE);
@@ -825,21 +830,16 @@ public class Principal extends javax.swing.JFrame {
                 if (option == JOptionPane.YES_OPTION) {
                     // Eliminar documentos del usuario
                     SimpleList<Document> userDocumentList = selectedUser.getFiles_list();
-                    for (int i = 0; i < userDocumentList.getSize(); i++) {
-                        Document document = userDocumentList.getValueByIndex(i);
-                        // Aquí puedes agregar lógica para manejar documentos que ya están en la cola de impresión
-                        // Si no están en la cola, podrías eliminarlos, de lo contrario, hacer lo necesario según el enunciado
-                        // ...
-
-                        // Simplemente eliminar por ahora
-                        userDocumentList.deleteByIndex(i);
-                    }
+                    userDocumentList.wipeList();
 
                     // Eliminar al usuario de la tabla y de la tabla hash
-                    //userList.remove(selectedUser);
+                    userList.delete(selectedUser);
+                    this.usersTable.delete(Integer.toString(selectedUser.getDni()));
+                    // Actualizar la informacion de la tabla
                     this.updateComboUsers();
                     this.refreshLayoutTable();
                     System.out.println("\n\nTabla nueva:");
+                    JOptionPane.showMessageDialog(null, "El usuario seleccionado ha sido eliminado de la base de datos!", "Eliminar Usuario", JOptionPane.INFORMATION_MESSAGE);
                     this.usersTable.showUsersTable();
 
                 } else {
@@ -852,6 +852,12 @@ public class Principal extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_deleteUserMouseClicked
+
+    private void sendToQueueMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sendToQueueMouseClicked
+        // TODO add your handling code here:
+        
+        
+    }//GEN-LAST:event_sendToQueueMouseClicked
 
     /**
      * @param args the command line arguments
@@ -918,7 +924,6 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JPanel jPanel1;
@@ -934,6 +939,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JMenuItem loadBtn;
     private javax.swing.JMenuBar menubar;
     private javax.swing.JMenuItem saveBtn;
+    private javax.swing.JLabel sendToQueue;
     private javax.swing.JLabel showHeapTreeLabel;
     private javax.swing.JTextField titleField;
     // End of variables declaration//GEN-END:variables

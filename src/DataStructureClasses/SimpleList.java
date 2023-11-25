@@ -329,6 +329,25 @@ public class SimpleList<T> {
         return array;
     }
 
+    public void delete(T data) {
+        SimpleNode<T> currentNode = this.pFirst;
+        SimpleNode<T> previousNode = null;
+
+        while (currentNode != null && !currentNode.getData().equals(data)) {
+            previousNode = currentNode;
+            currentNode = currentNode.getpNext();
+        }
+
+        if (currentNode != null) {
+            if (previousNode == null) {
+                this.pFirst = currentNode.getpNext();
+            } else {
+                previousNode.setpNext(currentNode.getpNext());
+            }
+            this.size--;
+        }
+    }
+
     /*
         Getters y Setter
      */
