@@ -10,20 +10,20 @@ public class Registry {
     private double timestamp;
     private Document document;
     private boolean isPriority;
-    
-    // CONSTTRUCTOR 
 
-    public Registry(int timestamp , Document document, boolean isPriority) {
+    // CONSTTRUCTOR 
+    public Registry(int timestamp, Document document, boolean isPriority) {
         this.timestamp = timestamp;
         this.document = document;
         this.isPriority = isPriority;
     }
-    
 
     //metodo usado para determinar cual tiene mayor prioridad. Los nulos no se consideran menores para propositos de ordenamiento del arbol
     public boolean isTimeLowerThan(Registry comparingRegistry) {
-       
-        if (this.timestamp == comparingRegistry.getTimestamp() && this.userHasPriorityOver(comparingRegistry)) {
+
+        if (comparingRegistry == null) {
+            return true;
+        } else if (this.timestamp == comparingRegistry.getTimestamp() && this.userHasPriorityOver(comparingRegistry)) {
             return true;
         } else if (this.timestamp < comparingRegistry.getTimestamp()) {
             return true;

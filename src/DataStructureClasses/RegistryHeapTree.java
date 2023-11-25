@@ -58,7 +58,7 @@ public class RegistryHeapTree {
     //comprueba si el elemento en la posicion es una hoja
     private boolean isLeaf(int i) {
 
-        if (i > (this.heapSize / 2)) {
+        if (i > (int) (this.heapSize / 2)) {
             return true;
         }
         return false;
@@ -85,15 +85,15 @@ public class RegistryHeapTree {
             Luego se revisa si el hijo izquierdo es menor que el padre, si el hijo izquierdo es menor, se sube.
              */
             if (this.rightChildIsNull(pos)) {
-                
+
                 swapPos = this.leftChild(pos);
-                
+
             } else if (this.leftChildIsNull(pos)) {
-                
+
                 //Si el hijo izquierdo es null, se cambia por el derecho 
                 this.swap(this.leftChild(pos), this.rightChild(pos));
                 swapPos = this.rightChild(pos);
-                
+
             } else if (this.heap[this.rightChild(pos)].isTimeLowerThan(this.heap[this.leftChild(pos)])) {
                 this.swap(this.leftChild(pos), this.rightChild(pos));
                 swapPos = this.leftChild(pos);
@@ -149,6 +149,22 @@ public class RegistryHeapTree {
         this.heapSize--;
 
         return popped;
+    }
+    
+    //Eliminar del monticulo.
+    public void eliminateRegistry(String documentName) {
+        
+    }
+
+    //funcion para limpiar el heap de todos sus elementos
+    public void clearHeap() {
+        
+        //Mientras el heap no este vacio se extrae el elemento con mayor prioridad y se imprime
+        while (!this.isEmpty()) {
+            Registry removingRegistry = this.remove();
+            System.out.println("Documento impreso: " + removingRegistry.getDocument().getName());
+        }
+
     }
 
     public void printTree() {
