@@ -53,7 +53,9 @@ public class UserHumanResources implements User {
 
     @Override
     public String toString() {
-        return "Nombre del usuario: " + this.name + "\nCI del usuario: " + this.dni + "\nTipo de usuario: Recursos humanos.\n";
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("Nombre del usuario: ").append(this.name).append("\nCI del usuario: ").append(this.dni).append("\nTipo de usuario: Recursos Humanos.\n");
+        return stringBuilder.toString();
     }
 
     @Override

@@ -50,7 +50,9 @@ public class UserCommon implements User {
 
     @Override
     public String toString() {
-        return "Nombre del usuario: " + this.name + "\nCI del usuario: " + this.dni + "\nTipo de usuario: Comun.\n";
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("Nombre del usuario: ").append(this.name).append("\nCI del usuario: ").append(this.dni).append("\nTipo de usuario: Comun.\n");
+        return stringBuilder.toString();
     }
 
     @Override

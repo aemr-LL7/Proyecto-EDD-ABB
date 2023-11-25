@@ -317,6 +317,37 @@ public class SimpleList<T> {
         this.size = 0;
     }
 
+    public Object[] toArray() {
+        Object[] array = new Object[this.size];
+        SimpleNode<T> pAux = this.pFirst;
+
+        for (int i = 0; i < this.size; i++) {
+            array[i] = pAux.getData();
+            pAux = pAux.getpNext();
+        }
+
+        return array;
+    }
+
+    public void delete(T data) {
+        SimpleNode<T> currentNode = this.pFirst;
+        SimpleNode<T> previousNode = null;
+
+        while (currentNode != null && !currentNode.getData().equals(data)) {
+            previousNode = currentNode;
+            currentNode = currentNode.getpNext();
+        }
+
+        if (currentNode != null) {
+            if (previousNode == null) {
+                this.pFirst = currentNode.getpNext();
+            } else {
+                previousNode.setpNext(currentNode.getpNext());
+            }
+            this.size--;
+        }
+    }
+
     /*
         Getters y Setter
      */
