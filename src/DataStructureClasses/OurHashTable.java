@@ -101,6 +101,27 @@ public class OurHashTable<T> {
 
         return null;
     }
+    
+    public void delete(String key) {
+        
+        int hashedKey = key.toLowerCase().hashCode();
+        int hash = Math.abs(hashFunction(hashedKey));
+        
+        if (this.table[hash] == null) {
+            System.out.println("No hay elemento asociado con esa key.");
+        } else {
+            
+            OurEntry<T> bucketedEntry = this.table[hash].getNext();
+            this.table[hash] = null;
+            
+            while (bucketedEntry != null){
+                this.putEntry(bucketedEntry);
+                bucketedEntry = bucketedEntry.getNext();
+            }
+            
+        }
+        
+    }
 
     //Clona la tabla con un nuevo tamano
     private void extendTable() {
