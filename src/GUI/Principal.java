@@ -23,6 +23,7 @@ import javax.swing.JScrollPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.JList;
 
 /**
  *
@@ -191,7 +192,6 @@ public class Principal extends javax.swing.JFrame {
         addUser = new javax.swing.JLabel();
         deleteUser = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
@@ -201,14 +201,9 @@ public class Principal extends javax.swing.JFrame {
         deleteDocument = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         deleteFromQueue = new javax.swing.JLabel();
+        jPanel6 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
-        jLabel14 = new javax.swing.JLabel();
-        jLabel16 = new javax.swing.JLabel();
-        jLabel17 = new javax.swing.JLabel();
         jLabel20 = new javax.swing.JLabel();
         jLabel21 = new javax.swing.JLabel();
         jLabel22 = new javax.swing.JLabel();
@@ -224,6 +219,8 @@ public class Principal extends javax.swing.JFrame {
         createNewDocument = new javax.swing.JButton();
         jLabel25 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
         menubar = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         loadBtn = new javax.swing.JMenuItem();
@@ -288,18 +285,18 @@ public class Principal extends javax.swing.JFrame {
         deleteUser.setForeground(new java.awt.Color(255, 255, 255));
         deleteUser.setText("Eliminar Usuario");
         deleteUser.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        deleteUser.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                deleteUserMouseClicked(evt);
+            }
+        });
         column.add(deleteUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 170, -1, -1));
 
         jLabel8.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("Enviar a Imprimir");
         jLabel8.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        column.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 473, -1, 30));
-
-        jLabel9.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel9.setText("Mostar Cola de Impresion");
-        column.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 540, -1, -1));
+        column.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 490, -1, 30));
 
         jLabel3.setBackground(new java.awt.Color(87, 169, 210));
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/images/add.png"))); // NOI18N
@@ -314,7 +311,7 @@ public class Principal extends javax.swing.JFrame {
         jLabel18.setBackground(new java.awt.Color(114, 172, 202));
         jLabel18.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/images/send.png"))); // NOI18N
         jLabel18.setOpaque(true);
-        column.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 470, 200, 40));
+        column.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 490, 200, 40));
 
         jLabel19.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/images/lista.png"))); // NOI18N
         jLabel19.setOpaque(true);
@@ -353,9 +350,12 @@ public class Principal extends javax.swing.JFrame {
                 deleteFromQueueMouseClicked(evt);
             }
         });
-        jPanel5.add(deleteFromQueue, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 180, -1));
+        jPanel5.add(deleteFromQueue, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 180, 30));
 
         column.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 390, 200, 30));
+
+        jPanel6.setBackground(new java.awt.Color(38, 87, 135));
+        column.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 230, 250, 230));
 
         layout.add(column, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 250, 670));
 
@@ -365,24 +365,6 @@ public class Principal extends javax.swing.JFrame {
 
         jLabel10.setText("NOTA FUNCIONES IMPORTANTES:");
         jPanel2.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 340, -1, -1));
-
-        jLabel11.setText("LIBERAR o VACIAR IMPRESORA");
-        jPanel2.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 390, -1, -1));
-
-        jLabel12.setText("simulará el avance en la cola de impresión, es decir,");
-        jPanel2.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 410, 290, -1));
-
-        jLabel13.setText("se toma el elemento que tiene la etiqueta de tiempo más pequeña, se desencola y se “imprime”. ");
-        jPanel2.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 430, 540, -1));
-
-        jLabel14.setText("No pierda de vista que esta operación es equivalente a eliminar_min del Montículo binario. ");
-        jPanel2.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 490, 520, -1));
-
-        jLabel16.setText("La cola de impresión no guarda información referente a los propietarios de los documentos que contiene");
-        jPanel2.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 450, 570, -1));
-
-        jLabel17.setText("de manera que esto es una dificultad a la hora de mandar a eliminar un documento. TABLAS DE DISPERSOIN");
-        jPanel2.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 470, 590, -1));
 
         jLabel20.setText("Un usuario podrá eliminar un documento que aún no ha sido enviado a la cola de impresión.");
         jPanel2.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 350, -1, -1));
@@ -404,6 +386,7 @@ public class Principal extends javax.swing.JFrame {
 
             }
         ));
+        layoutUserTable.setShowGrid(true);
         jScrollPane1.setViewportView(layoutUserTable);
 
         jPanel2.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 40, 320, 300));
@@ -472,6 +455,12 @@ public class Principal extends javax.swing.JFrame {
 
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/images/register.png"))); // NOI18N
         jPanel2.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 20, 40, 30));
+
+        jButton1.setText("Vaciar Impresora");
+        jPanel2.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 410, -1, -1));
+
+        jButton2.setText("Imprimir");
+        jPanel2.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 410, -1, -1));
 
         layout.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 40, 860, 590));
 
@@ -737,33 +726,27 @@ public class Principal extends javax.swing.JFrame {
             Document createdDocument = null;
 
             if (this.comboBoxUsers.isEnabled()) {
-                if (this.titleField.getText().equals("") && this.titleField.getText().equals("Titulo...")) {
-                    JOptionPane.showMessageDialog(null, "Error: El titulo o el contenido del documento no puede estar vacio.", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                } else {
 
-                    for (int i = 0; i < userList.getSize(); i++) {
-                        User user = userList.getValueByIndex(i);
+                for (int i = 0; i < userList.getSize(); i++) {
+                    User user = userList.getValueByIndex(i);
 
-                        if (this.comboBoxUsers.getSelectedItem().equals(user.getName())) {
-                            // Creacion del documento
-                            if (user.getDocumentNames().equals(titleDocument)) {
-                                JOptionPane.showMessageDialog(null, "Error: El documento ya existe en la lista del usuario.", "Error", JOptionPane.ERROR_MESSAGE);
-                                return;
-                            } else {
-                                createdDocument = new Document(titleDocument, contentDocument, user);
-                                // añadir documento a la lista de documentos del usuario
-                                user.addDocument(createdDocument);
-                                System.out.println(createdDocument.getContent());
-                            }
-                        } else {
-                            JOptionPane.showMessageDialog(null, "Error: El usuario no esta disponible.", "Error", JOptionPane.ERROR_MESSAGE);
+                    if (this.comboBoxUsers.getSelectedItem().equals(user.getName())) {
+                        // Creacion del documento
+                        if (user.getDocumentNames().equals(titleDocument)) {
+                            JOptionPane.showMessageDialog(null, "Error: El documento ya existe en la lista del usuario.", "Error", JOptionPane.ERROR_MESSAGE);
                             return;
+                        } else {
+                            createdDocument = new Document(titleDocument, contentDocument, user);
+                            // añadir documento a la lista de documentos del usuario
+                            user.addDocument(createdDocument);
+                            System.out.println(createdDocument.getContent());
                         }
                     }
-                    this.refreshLayoutTable();
-                    JOptionPane.showMessageDialog(null, "El usuario '' ha creado un nuevo documento!", "Creacion de Documentos", JOptionPane.INFORMATION_MESSAGE);
+                    
                 }
+                this.refreshLayoutTable();
+                JOptionPane.showMessageDialog(null, "Se ha creado un nuevo documento!", "Creacion de Documentos", JOptionPane.INFORMATION_MESSAGE);
+
             } else {
                 JOptionPane.showMessageDialog(null, "Error: No se pudo crear el documento.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -773,11 +756,102 @@ public class Principal extends javax.swing.JFrame {
 
     private void deleteDocumentMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_deleteDocumentMouseClicked
         // TODO add your handling code here:
+        if (evt.getButton() == MouseEvent.BUTTON1) {
+            SimpleList<User> userList = this.usersTable.getUsersList();
+            int selectedRowIndex = this.layoutUserTable.getSelectedRow();
+
+            if (selectedRowIndex != -1) {
+                User selectedUser = userList.getValueByIndex(selectedRowIndex);
+
+                if (selectedUser != null) {
+                    SimpleList<Document> userDocumentList = selectedUser.getFiles_list();
+
+                    // Verificar si el usuario tiene documentos antes de continuar
+                    if (userDocumentList.getSize() > 0) {
+                        Object[] documentsArray = userDocumentList.toArray(); // Obtener una matriz de documentos
+
+                        // Mostrar un cuadro de lista para que el usuario elija un documento a eliminar
+                        JList<Object> documentList = new JList<>(documentsArray);
+                        JScrollPane scrollPane = new JScrollPane(documentList);
+
+                        int option = JOptionPane.showOptionDialog(
+                                null,
+                                scrollPane,
+                                "Selecciona el documento a eliminar:",
+                                JOptionPane.OK_CANCEL_OPTION,
+                                JOptionPane.QUESTION_MESSAGE,
+                                null,
+                                null,
+                                null
+                        );
+
+                        if (option == JOptionPane.OK_OPTION) {
+                            // Obtener el documento seleccionado apartir del indice
+                            Object selectedDocument = documentList.getSelectedValue();
+                            int documentIndex = userDocumentList.indexOf((Document) selectedDocument);
+
+                            // Eliminar el documento del usuario
+                            userDocumentList.deleteByIndex(documentIndex);
+
+                            // Actualizar la interfaz después de eliminar el documento
+                            this.refreshLayoutTable();
+                            JOptionPane.showMessageDialog(null, "Documento eliminado exitosamente!", "Eliminar Documento", JOptionPane.INFORMATION_MESSAGE);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "El usuario no tiene documentos para eliminar.", "Eliminar Documento", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Por favor, selecciona un usuario desde la tabla para eliminar documentos.", "Eliminar Documento", JOptionPane.INFORMATION_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Por favor, selecciona un usuario desde la tabla para eliminar documentos.", "Eliminar Documento", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
     }//GEN-LAST:event_deleteDocumentMouseClicked
 
     private void deleteFromQueueMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_deleteFromQueueMouseClicked
         // TODO add your handling code here:
     }//GEN-LAST:event_deleteFromQueueMouseClicked
+
+    private void deleteUserMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_deleteUserMouseClicked
+        // TODO add your handling code here:
+        if (evt.getButton() == MouseEvent.BUTTON1) {
+            SimpleList<User> userList = this.usersTable.getUsersList();
+            User selectedUser = userList.getValueByIndex(this.layoutUserTable.getSelectedRow());
+
+            if (selectedUser != null) {
+                int option = JOptionPane.showConfirmDialog(null, "\nUsuario seleccionado => " + selectedUser.getName().toUpperCase() + "\n\nEstas seguro de que deseas eliminar al usuario?\n", "Eliminar Usuario", JOptionPane.YES_NO_OPTION);
+
+                if (option == JOptionPane.YES_OPTION) {
+                    // Eliminar documentos del usuario
+                    SimpleList<Document> userDocumentList = selectedUser.getFiles_list();
+                    for (int i = 0; i < userDocumentList.getSize(); i++) {
+                        Document document = userDocumentList.getValueByIndex(i);
+                        // Aquí puedes agregar lógica para manejar documentos que ya están en la cola de impresión
+                        // Si no están en la cola, podrías eliminarlos, de lo contrario, hacer lo necesario según el enunciado
+                        // ...
+
+                        // Simplemente eliminar por ahora
+                        userDocumentList.deleteByIndex(i);
+                    }
+
+                    // Eliminar al usuario de la tabla y de la tabla hash
+                    //userList.remove(selectedUser);
+                    this.updateComboUsers();
+                    this.refreshLayoutTable();
+                    System.out.println("\n\nTabla nueva:");
+                    this.usersTable.showUsersTable();
+
+                } else {
+                    JOptionPane.showMessageDialog(null, "Atencion! Cancelando Operacion.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Por favor, selecciona un usuario desde la tabla para eliminar.", "Eliminar Usuario", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+
+    }//GEN-LAST:event_deleteUserMouseClicked
 
     /**
      * @param args the command line arguments
@@ -827,14 +901,10 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JLabel deleteFromQueue;
     private javax.swing.JLabel deleteUser;
     private javax.swing.JMenuItem exitBtn;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
@@ -849,7 +919,6 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JPanel jPanel1;
@@ -857,6 +926,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JPanel layout;

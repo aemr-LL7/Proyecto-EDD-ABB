@@ -12,7 +12,7 @@ public class Document {
     private String name;
     private int docSize;
     private String content;
-    
+
     //Apuntador al usuario que creo el documento
     private User creator;
 
@@ -20,7 +20,7 @@ public class Document {
 
         //Nombre del documento
         this.name = name.toLowerCase();
-        
+
         //Contenido del documento
         this.content = content;
 
@@ -34,7 +34,10 @@ public class Document {
     }
 
     public String toString() {
-        return "Nombre del documento: " + "\n-" + this.name + "\n\n" + "Numero de paginas: \n-" + this.docSize + "\n\nContenido: \nLorem Ipsum.\n" + "\nCreador: \n-" + this.creator.getName() + "\n\nEs prioridad?\n\n";
+        // Usar StringBuilder para construir el formato personalizado
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("Nombre: ").append(this.name).append(" - Creado por: ").append(this.creator);
+        return stringBuilder.toString();
     }
 
     public User getCreator() {
@@ -64,7 +67,7 @@ public class Document {
     public String getContent() {
         return content;
     }
-    
+
     public void setContent(String content) {
         this.content = content;
     }

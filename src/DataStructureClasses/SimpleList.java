@@ -317,6 +317,18 @@ public class SimpleList<T> {
         this.size = 0;
     }
 
+    public Object[] toArray() {
+        Object[] array = new Object[this.size];
+        SimpleNode<T> pAux = this.pFirst;
+
+        for (int i = 0; i < this.size; i++) {
+            array[i] = pAux.getData();
+            pAux = pAux.getpNext();
+        }
+
+        return array;
+    }
+
     /*
         Getters y Setter
      */
