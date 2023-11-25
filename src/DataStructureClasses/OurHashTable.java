@@ -35,7 +35,7 @@ public class OurHashTable<T> {
     public SimpleList<OurEntry> getEntriesList() {
         return this.entriesList;
     }
-    
+
     // Método para obtener el nombre del archivo original
     public String getOriginalFileName() {
         return originalFileName;
@@ -101,26 +101,26 @@ public class OurHashTable<T> {
 
         return null;
     }
-    
+
     public void delete(String key) {
-        
+
         int hashedKey = key.toLowerCase().hashCode();
         int hash = Math.abs(hashFunction(hashedKey));
-        
+
         if (this.table[hash] == null) {
             System.out.println("No hay elemento asociado con esa key.");
         } else {
-            
+
             OurEntry<T> bucketedEntry = this.table[hash].getNext();
             this.table[hash] = null;
-            
-            while (bucketedEntry != null){
+
+            while (bucketedEntry != null) {
                 this.putEntry(bucketedEntry);
                 bucketedEntry = bucketedEntry.getNext();
             }
-            
+
         }
-        
+
     }
 
     //Clona la tabla con un nuevo tamano
@@ -177,18 +177,25 @@ public class OurHashTable<T> {
 
     public boolean isKeyTaken(String key) {
 
-        SimpleNode<OurEntry> pAux = this.entriesList.getpFirst();
+        int hashedKey = key.toLowerCase().hashCode();
+        int hash = Math.abs(hashFunction(hashedKey));
 
-        while (pAux != null) {
+        if (this.table[hash] == null) {
+            return false;
+        } else {
 
-            if (pAux.getData().getKey().equals(key.toLowerCase())) {
-                return true;
+            OurEntry<T> bucketedEntry = this.table[hash].getNext();
+
+            while (bucketedEntry != null) {
+                if ((bucketedEntry.getHashedKey() == hashedKey) && (bucketedEntry.getKey().equals(key.toLowerCase()))) {
+                    return true;
+
+                }
+                bucketedEntry = bucketedEntry.getNext();
             }
-            pAux = pAux.getpNext();
 
+            return false;
         }
-
-        return false;
     }
 
     public void clear() {

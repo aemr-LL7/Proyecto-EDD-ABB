@@ -77,7 +77,7 @@ public class HeapVisualizer {
             }
 
             // Mas ajustes de estilo
-            if (registry.isIsPriority()) {
+            if (registry.isPriority()) {
                 node.setAttribute("ui.style", "fill-color: red; size: 15px; text-size: 15px;");
             } else {
                 node.setAttribute("ui.style", "fill-color: green; size: 15px; text-size: 15px;");

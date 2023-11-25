@@ -16,6 +16,7 @@ public class Registry {
         this.timestamp = timestamp;
         this.document = document;
         this.isPriority = isPriority;
+
     }
 
     //metodo usado para determinar cual tiene mayor prioridad. Los nulos no se consideran menores para propositos de ordenamiento del arbol
@@ -53,12 +54,14 @@ public class Registry {
         this.document = document;
     }
 
-    public boolean isIsPriority() {
+    public boolean isPriority() {
         return isPriority;
     }
 
     public void setIsPriority(boolean isPriority) {
         this.isPriority = isPriority;
     }
+
+
 
 }

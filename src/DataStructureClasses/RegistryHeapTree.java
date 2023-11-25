@@ -11,12 +11,14 @@ import Classes.Registry;
 public class RegistryHeapTree {
 
     private Registry[] heap;
+    private OurHashTable<Registry> registryTable;
     private int heapSize; //Cantidad de elementos del Heap
     private static final int MAX_SIZE = 128;
 
     //Constructor para crear Heap vacio
     public RegistryHeapTree() {
         this.heap = new Registry[this.MAX_SIZE];
+        this.registryTable = new OurHashTable();
         this.heapSize = -1;
     }
 
@@ -117,22 +119,29 @@ public class RegistryHeapTree {
 
     //Insertar 
     public void insert(Registry registry) {
-        if (this.heapSize == this.heap.length) {
-            System.out.println("Min-Heap está lleno!");
-        }
-
-        if (this.isEmpty()) {
-            this.heap[0] = registry;
-            this.heapSize++;
-        } else {
-            this.heap[this.heapSize + 1] = registry;
-            this.heapSize++;
-            int justAddedPos = this.heapSize;
-
-            while (this.heap[justAddedPos].getTimestamp() < this.heap[parent(justAddedPos)].getTimestamp()) {
-                swap(justAddedPos, parent(justAddedPos));
-                justAddedPos = parent(justAddedPos);
+        if (!this.registryTable.isKeyTaken(registry.getDocument().getName().toLowerCase())) {
+            if (this.heapSize == this.heap.length) {
+                System.out.println("Min-Heap está lleno!");
             }
+
+            if (this.isEmpty()) {
+                this.heap[0] = registry;
+                this.heapSize++;
+            } else {
+                this.heap[this.heapSize + 1] = registry;
+                this.heapSize++;
+                int justAddedPos = this.heapSize;
+
+                while (this.heap[justAddedPos].getTimestamp() < this.heap[parent(justAddedPos)].getTimestamp()) {
+                    swap(justAddedPos, parent(justAddedPos));
+                    justAddedPos = parent(justAddedPos);
+                }
+            }
+
+            //Anadir el registro a la hashtable 
+            this.registryTable.put(registry.getDocument().getName(), registry);
+        } else {
+            System.out.println("El documento ya se ha enviado a imprimir.");
         }
 
     }
@@ -150,15 +159,37 @@ public class RegistryHeapTree {
 
         return popped;
     }
-    
+
     //Eliminar del monticulo.
     public void eliminateRegistry(String documentName) {
+
+        if (this.registryTable.isKeyTaken(documentName.toLowerCase())){
+            
+            //Copia fea del registro encontrado, fue hecho a las 3am en desesperacion.
+            Registry foundRegistry = this.registryTable.get(documentName.toLowerCase());
+            boolean newIsPiority = foundRegistry.isPriority();
+            Registry foundRegistryCopy = new Registry(-1, foundRegistry.getDocument(), newIsPiority);
+            
+            //Cambiar el objeto que esta guardado a null. El programa tiene a los null en consideracion.
+            foundRegistry = null;
+            
+                        
+            //insertar un nuevo registry con el nuevo tiempo para que se balancee el arbol solo
+            this.insert(foundRegistryCopy);
+            
+            //Quitar el registro de la hashtable usando el nombre del documento almacenado.
+            this.registryTable.delete(documentName.toLowerCase());
+            
+        } else {
+            System.out.println("El documento no esta en la cola.");
+        }
         
     }
-
+    
+    
     //funcion para limpiar el heap de todos sus elementos
     public void clearHeap() {
-        
+
         //Mientras el heap no este vacio se extrae el elemento con mayor prioridad y se imprime
         while (!this.isEmpty()) {
             Registry removingRegistry = this.remove();
