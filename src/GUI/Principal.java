@@ -795,8 +795,17 @@ public class Principal extends javax.swing.JFrame {
                             Object selectedDocument = documentList.getSelectedValue();
                             int documentIndex = userDocumentList.indexOf((Document) selectedDocument);
 
+                            //Conseguir el documento
+                            Document poppedDocument = userDocumentList.getValueByIndex(documentIndex);
+                            
                             // Eliminar el documento del usuario
                             userDocumentList.deleteByIndex(documentIndex);
+                            
+                            //Eliminar el documento de la cola
+                            this.heapTree.eliminateRegistry(poppedDocument.getName().toLowerCase());
+                            
+                            //Eliminar el documento de la hashTable;
+                            this.documentsTable.delete(poppedDocument.getName());
 
                             // Actualizar la interfaz después de eliminar el documento
                             this.refreshLayoutTable();

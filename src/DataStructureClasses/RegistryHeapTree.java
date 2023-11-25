@@ -158,7 +158,7 @@ public class RegistryHeapTree {
         this.heapSize--;
 
         this.registryTable.delete(popped.getDocument().getName().toLowerCase());
-        
+
         return popped;
     }
 
@@ -175,11 +175,16 @@ public class RegistryHeapTree {
             //Cambiar el objeto que esta guardado a null. El programa tiene a los null en consideracion.
             foundRegistry = null;
 
-            //insertar un nuevo registry con el nuevo tiempo para que se balancee el arbol solo
+            //insertar un nuevo registry con el nuevo tiempo para que suba al tope del arbol
             this.insert(foundRegistryCopy);
+            
+            //sacar el documento al tope
+            Registry eliminatedRegistry = this.removeMin();
 
             //Quitar el registro de la hashtable usando el nombre del documento almacenado.
             this.registryTable.delete(documentName.toLowerCase());
+            
+            System.out.println("Documento eliminado de la cola: " + eliminatedRegistry.getDocument().getName());
 
         } else {
             System.out.println("El documento no esta en la cola.");
@@ -227,12 +232,12 @@ public class RegistryHeapTree {
                 auxQueue.insert(popped);
                 System.out.println(popped);
             }
-            
-            while (!auxQueue.isEmpty()){
-                
+
+            while (!auxQueue.isEmpty()) {
+
                 Registry popped = auxQueue.pop();
                 this.insert(popped);
-                
+
             }
 
         }
@@ -241,7 +246,7 @@ public class RegistryHeapTree {
     //version antigua del print
     private void oldPrint() {
 
-                int counter = 0;
+        int counter = 0;
         while (this.heap[counter] != null) {
 
             //String fName = this.heap[((counter - 1) / 2)].getDocument().getName();
