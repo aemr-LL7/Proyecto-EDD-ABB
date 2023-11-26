@@ -295,7 +295,8 @@ public class FileManager {
                 bufferedWriter.write(retrievedUser.getName() + ", " + userType + ", " + retrievedUser.getDni());
                 bufferedWriter.newLine();
                 
-                pAux.getpNext();
+                // AVANZAR AL SIGUIENTE!!!
+                pAux = pAux.getpNext();
             }
 
             bufferedWriter.close();

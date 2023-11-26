@@ -129,31 +129,31 @@ public class RegistryHeapTree {
 
     //Insertar 
     public void insert(Registry registry) {
-        if (!this.registryTable.isKeyTaken(registry.getDocument().getName().toLowerCase())) {
-            if (this.heapSize == this.heap.length) {
-                System.out.println("Min-Heap está lleno!");
-            }
-
-            if (this.isEmpty()) {
-                this.heap[0] = registry;
-                this.heapSize++;
-            } else {
-                this.heap[this.heapSize + 1] = registry;
-                this.heapSize++;
-                int justAddedPos = this.heapSize;
-
-                while (this.heap[justAddedPos].getTimestamp() < this.heap[parent(justAddedPos)].getTimestamp()) {
-                    swap(justAddedPos, parent(justAddedPos));
-                    justAddedPos = parent(justAddedPos);
-                }
-            }
-
-            //Anadir el registro a la hashtable 
-            this.registryTable.put(registry.getDocument().getName(), registry);
-        } else {
-            System.out.println("El documento ya se ha enviado a imprimir.");
+        if (this.heapSize == this.heap.length) {
+            System.out.println("Min-Heap está lleno!");
+            return;
         }
 
+        if (this.isEmpty()) {
+            this.heap[0] = registry;
+            this.heapSize++;
+        } else {
+            // Verificar si el documento ya está en la cola
+            if (containsDocument(registry.getDocument().getName())) {
+                System.out.println("El documento '" + registry.getDocument().getName() + "' ya está en la cola de impresión.");
+                return;
+            }
+
+            this.heap[this.heapSize] = registry;
+            this.heapSize++;
+
+            int justAddedPos = this.heapSize - 1;
+
+            while (justAddedPos > 0 && this.heap[justAddedPos].getTimestamp() < this.heap[parent(justAddedPos)].getTimestamp()) {
+                swap(justAddedPos, parent(justAddedPos));
+                justAddedPos = parent(justAddedPos);
+            }
+        }
     }
 
     //Eliminar y retornar el minimo
@@ -190,11 +190,10 @@ public class RegistryHeapTree {
 
             //Eliminar el minimo elemento de la cola
             Registry eliminated = this.removeMin();
-         
+
             //Para el debug.
 //            boolean isKeyGone = !(this.registryTable.isKeyTaken(documentName));
 //            System.out.println("La key se borro? " + isKeyGone + "\n");
-
             System.out.println("Documento eliminado de la cola: " + eliminated.getDocument().getName() + "\n");
 
         } else {
@@ -254,23 +253,10 @@ public class RegistryHeapTree {
         }
     }
 
-    public String arrayToString() {
-        StringBuilder result = new StringBuilder();
-
-        for (int i = 0; i <= this.heapSize; i++) {
-            result.append("[").append(i).append("] ").append(this.heap[i].getDocument().getName()).append("\n");
-
-//            if (i < this.heapSize) {
-//                result.append(", ");
-//            }
-        }
-
-        return result.toString();
-    }
-
     public boolean containsDocument(String documentName) {
         for (int i = 0; i <= this.heapSize; i++) {
-            if (this.heap[i] != null && this.heap[i].getDocument().getName().equalsIgnoreCase(documentName)) {
+            if (this.heap[i] != null && this.heap[i].getDocument() != null
+                    && this.heap[i].getDocument().getName().equalsIgnoreCase(documentName)) {
                 return true;
             }
         }

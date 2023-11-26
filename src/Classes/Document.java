@@ -1,6 +1,7 @@
 package Classes;
 
 import DataStructureClasses.SimpleList;
+import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -38,6 +39,27 @@ public class Document {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("Nombre: ").append(this.name).append(" - Creado por: ").append(this.creator);
         return stringBuilder.toString();
+    }
+
+    // En la clase Document garantizar que las comparaciones y la gestión de igualdad en tus clases sean más robustas
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Document document = (Document) obj;
+        return docSize == document.docSize
+                && Objects.equals(name, document.name)
+                && Objects.equals(content, document.content)
+                && Objects.equals(creator, document.creator);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, docSize, content, creator);
     }
 
     public User getCreator() {

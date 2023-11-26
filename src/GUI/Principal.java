@@ -17,6 +17,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -73,6 +74,10 @@ public class Principal extends javax.swing.JFrame {
         model.addColumn("Documentos");
         this.layoutUserTable.setModel(model);
 
+        // LISTA REGISTROS
+        DefaultListModel listmodel = new DefaultListModel();
+        this.registryLayoutList.setModel(listmodel);
+
     }
 
     //Se le resta al tiempo actual el tiempo del inicio del programa para obtener la diferencia en segundos que sera usada para las etiquetas de tiempo.
@@ -119,6 +124,54 @@ public class Principal extends javax.swing.JFrame {
         }
     }
 
+    private void deleteASingleDocument(User selectedUser) {
+        SimpleList<Document> userDocumentList = selectedUser.getFiles_list();
+
+        // Verificar si el usuario tiene documentos antes de continuar
+        if (userDocumentList.getSize() > 0) {
+            Object[] documentsArray = userDocumentList.toArray(); // Obtener una matriz de documentos
+
+            // Mostrar un cuadro de lista para que el usuario elija un documento a eliminar
+            JList<Object> documentList = new JList<>(documentsArray);
+            JScrollPane scrollPane = new JScrollPane(documentList);
+
+            int option = JOptionPane.showOptionDialog(
+                    null,
+                    scrollPane,
+                    "Selecciona el documento a eliminar:",
+                    JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    null,
+                    null
+            );
+
+            if (option == JOptionPane.OK_OPTION) {
+                // Obtener el documento seleccionado apartir del indice
+                Object selectedDocument = documentList.getSelectedValue();
+                int documentIndex = userDocumentList.indexOf((Document) selectedDocument);
+
+                //Conseguir el documento
+                Document poppedDocument = userDocumentList.getValueByIndex(documentIndex);
+
+                // Eliminar el documento del usuario
+                userDocumentList.deleteByIndex(documentIndex);
+
+                //Eliminar el documento de la cola
+                this.heapTree.eliminateRegistry(poppedDocument.getName().toLowerCase());
+
+                //Eliminar el documento de la hashTable;
+                this.documentsTable.delete(poppedDocument.getName());
+
+                // Actualizar la interfaz después de eliminar el documento
+                this.refreshLayoutTable();
+                JOptionPane.showMessageDialog(null, "Documento eliminado exitosamente!", "Eliminar Documento", JOptionPane.INFORMATION_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "El usuario no tiene documentos para eliminar.", "Eliminar Documento", JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
     private void addToPrintQueue(User selectedUser) {
         SimpleList<Document> userDocumentList = selectedUser.getFiles_list();
 
@@ -162,26 +215,25 @@ public class Principal extends javax.swing.JFrame {
                             JOptionPane.YES_NO_OPTION
                     );
 
-                    boolean isPriority;
-                    if (priorityOption == JOptionPane.YES_OPTION) {
-                        isPriority = true;
-                    } else {
-                        isPriority = false;
-                    }
+                    boolean isPriority = (priorityOption == JOptionPane.YES_OPTION);
 
                     // Crear registro y añadir a la cola
                     Registry newDocRegister = new Registry((int) this.getEventTime(), toSentDocument, isPriority);
                     this.heapTree.insert(newDocRegister);
 
-                    JOptionPane.showMessageDialog(null, "El documento está preparado en la cola para ser impreso!", "Cola de impresión", JOptionPane.INFORMATION_MESSAGE);
-                    this.heapTree.printTree();
+                    // actualizar lista de registros
+                    this.refreshLayoutList();
+                    System.out.println("Se hara?");
 
+                    JOptionPane.showMessageDialog(null, "El documento está preparado en la cola para ser impreso!", "Cola de impresión", JOptionPane.INFORMATION_MESSAGE);
+
+                    //this.heapTree.oldPrint();
                 } else {
-                    JOptionPane.showMessageDialog(null, "El documento '" + toSentDocument.getName() + "' ya está en la cola de impresión.", "Cola de impresión", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "El documento '" + toSentDocument.getName() + "' ya está en la cola de impresión.", "Cola de impresión", JOptionPane.ERROR_MESSAGE);
                 }
             }
         } else {
-            JOptionPane.showMessageDialog(null, "El usuario no tiene documentos para enviar a la cola.", "Eliminar Documento", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "El usuario no tiene documentos para enviar a la cola.", "Cola de impresión", JOptionPane.WARNING_MESSAGE);
         }
     }
 
@@ -190,17 +242,35 @@ public class Principal extends javax.swing.JFrame {
         model.setRowCount(0);  // Limpiar filas actuales
 
         // Lógica para obtener los usuarios de la tabla hash y agregarlos a la tabla
-        SimpleList<User> usersList = this.usersTable.getUsersList();
+        SimpleList<User> usersList = this.usersTable.getEntriesList();
 
         for (int i = 0; i < usersList.getSize(); i++) {
             model.addRow(new Object[]{usersList.getValueByIndex(i).getName().toUpperCase(), usersList.getValueByIndex(i).getDni(), usersList.getValueByIndex(i).getDocumentNames()});
         }
     }
 
+    private void refreshLayoutList() {
+        DefaultListModel<String> listModel = new DefaultListModel<>();
+        listModel.clear();
+
+        // Recorrer el HeapTree y añadir los elementos al modelo del JList
+        for (int i = 0; i < this.heapTree.getHeapArray().length; i++) {
+            if (this.heapTree.getHeapArray()[i] != null) {
+                String documentInfo = this.heapTree.getHeapArray()[i].getDocument().getName() + " By " + this.heapTree.getHeapArray()[i].getDocument().getCreator().getName();
+                listModel.addElement(documentInfo);
+            }
+        }
+        // Establecer el nuevo modelo en el JList
+        this.registryLayoutList.setModel(listModel);
+        this.registryLayoutList.revalidate();
+        this.registryLayoutList.repaint();
+
+    }
+
     private void updateComboUsers() {
         // Restablecer items del combo
         this.comboBoxUsers.removeAllItems();
-        SimpleList<User> usersList = this.usersTable.getUsersList();
+        SimpleList<User> usersList = this.usersTable.getEntriesList();
 
         for (int i = 0; i < usersList.getSize(); i++) {
             this.comboBoxUsers.addItem(usersList.getValueByIndex(i).getName());
@@ -258,16 +328,16 @@ public class Principal extends javax.swing.JFrame {
         addUser = new javax.swing.JLabel();
         deleteUser = new javax.swing.JLabel();
         sendToQueue = new javax.swing.JLabel();
+        deleteDocument = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
-        jLabel26 = new javax.swing.JLabel();
-        jPanel4 = new javax.swing.JPanel();
-        deleteDocument = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         deleteFromQueue = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
+        jPanel4 = new javax.swing.JPanel();
+        jLabel26 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
         jLabel20 = new javax.swing.JLabel();
@@ -287,6 +357,11 @@ public class Principal extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        registryLayoutList = new javax.swing.JList<>();
+        jLabel27 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
         menubar = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         loadBtn = new javax.swing.JMenuItem();
@@ -302,6 +377,7 @@ public class Principal extends javax.swing.JFrame {
         layout.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         column.setBackground(new java.awt.Color(25, 68, 110));
+        column.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         column.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         bgHeap.setBackground(new java.awt.Color(52, 76, 124));
@@ -311,6 +387,7 @@ public class Principal extends javax.swing.JFrame {
         showHeapTreeLabel.setForeground(new java.awt.Color(255, 255, 255));
         showHeapTreeLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/images/icon_structure.png"))); // NOI18N
         showHeapTreeLabel.setText("Show Heap");
+        showHeapTreeLabel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         showHeapTreeLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         showHeapTreeLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -322,6 +399,7 @@ public class Principal extends javax.swing.JFrame {
         column.add(bgHeap, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 590, 250, 80));
 
         jPanel1.setBackground(new java.awt.Color(36, 120, 175));
+        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel2.setBackground(new java.awt.Color(36, 120, 175));
@@ -332,7 +410,7 @@ public class Principal extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("MENU");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 20, -1, -1));
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 15, -1, 30));
 
         column.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 250, 60));
 
@@ -345,7 +423,7 @@ public class Principal extends javax.swing.JFrame {
                 addUserMouseClicked(evt);
             }
         });
-        column.add(addUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 100, -1, -1));
+        column.add(addUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 100, -1, 30));
 
         deleteUser.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
         deleteUser.setForeground(new java.awt.Color(255, 255, 255));
@@ -356,7 +434,7 @@ public class Principal extends javax.swing.JFrame {
                 deleteUserMouseClicked(evt);
             }
         });
-        column.add(deleteUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 170, -1, -1));
+        column.add(deleteUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 150, -1, 30));
 
         sendToQueue.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
         sendToQueue.setForeground(new java.awt.Color(255, 255, 255));
@@ -367,33 +445,7 @@ public class Principal extends javax.swing.JFrame {
                 sendToQueueMouseClicked(evt);
             }
         });
-        column.add(sendToQueue, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 490, -1, 30));
-
-        jLabel3.setBackground(new java.awt.Color(87, 169, 210));
-        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/images/add.png"))); // NOI18N
-        jLabel3.setOpaque(true);
-        column.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 90, 180, 40));
-
-        jLabel6.setBackground(new java.awt.Color(87, 169, 210));
-        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/images/delete.png"))); // NOI18N
-        jLabel6.setOpaque(true);
-        column.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 160, 190, 40));
-
-        jLabel18.setBackground(new java.awt.Color(114, 172, 202));
-        jLabel18.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/images/send.png"))); // NOI18N
-        jLabel18.setOpaque(true);
-        column.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 490, 200, 40));
-
-        jLabel19.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/images/lista.png"))); // NOI18N
-        jLabel19.setOpaque(true);
-        column.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 260, -1, -1));
-
-        jLabel26.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/images/delete cola.png"))); // NOI18N
-        jLabel26.setOpaque(true);
-        column.add(jLabel26, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 350, -1, -1));
-
-        jPanel4.setBackground(new java.awt.Color(87, 169, 210));
-        jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        column.add(sendToQueue, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 490, -1, 40));
 
         deleteDocument.setBackground(new java.awt.Color(87, 169, 210));
         deleteDocument.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
@@ -405,9 +457,27 @@ public class Principal extends javax.swing.JFrame {
                 deleteDocumentMouseClicked(evt);
             }
         });
-        jPanel4.add(deleteDocument, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, -1, -1));
+        column.add(deleteDocument, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 200, -1, 30));
 
-        column.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 300, 200, 30));
+        jLabel3.setBackground(new java.awt.Color(87, 169, 210));
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/images/add.png"))); // NOI18N
+        jLabel3.setOpaque(true);
+        column.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 100, 190, 30));
+
+        jLabel6.setBackground(new java.awt.Color(87, 169, 210));
+        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/images/delete.png"))); // NOI18N
+        jLabel6.setOpaque(true);
+        column.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 150, 200, 30));
+
+        jLabel18.setBackground(new java.awt.Color(114, 172, 202));
+        jLabel18.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/images/send.png"))); // NOI18N
+        jLabel18.setOpaque(true);
+        column.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 490, 200, 40));
+
+        jLabel19.setBackground(new java.awt.Color(87, 169, 210));
+        jLabel19.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/images/lista.png"))); // NOI18N
+        jLabel19.setOpaque(true);
+        column.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 200, 230, -1));
 
         jPanel5.setBackground(new java.awt.Color(87, 169, 210));
         jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -423,10 +493,21 @@ public class Principal extends javax.swing.JFrame {
         });
         jPanel5.add(deleteFromQueue, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 180, 30));
 
-        column.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 390, 200, 30));
+        column.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 390, 190, 30));
 
         jPanel6.setBackground(new java.awt.Color(38, 87, 135));
-        column.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 230, 250, 230));
+        jPanel6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel6.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel4.setBackground(new java.awt.Color(73, 135, 196));
+        jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel26.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/images/delete cola.png"))); // NOI18N
+        jPanel4.add(jLabel26, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 20, 50, -1));
+
+        jPanel6.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 20, 110, 60));
+
+        column.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 310, 250, 140));
 
         layout.add(column, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 250, 670));
 
@@ -435,16 +516,16 @@ public class Principal extends javax.swing.JFrame {
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel10.setText("NOTA FUNCIONES IMPORTANTES:");
-        jPanel2.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 340, -1, -1));
+        jPanel2.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 330, -1, -1));
 
         jLabel20.setText("Un usuario podrá eliminar un documento que aún no ha sido enviado a la cola de impresión.");
-        jPanel2.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 350, -1, -1));
+        jPanel2.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 350, -1, -1));
 
         jLabel21.setText("En todo momento se podrá observar la cola de impresión");
-        jPanel2.add(jLabel21, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 530, -1, -1));
+        jPanel2.add(jLabel21, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 370, 290, -1));
 
         jLabel22.setText("secuencia de registros correspondientes a los documentos agregados a la cola de impresión");
-        jPanel2.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 560, -1, -1));
+        jPanel2.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 390, 290, -1));
 
         layoutUserTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -460,13 +541,13 @@ public class Principal extends javax.swing.JFrame {
         layoutUserTable.setShowGrid(true);
         jScrollPane1.setViewportView(layoutUserTable);
 
-        jPanel2.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 40, 320, 300));
+        jPanel2.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 60, 320, 260));
 
         jLabel23.setFont(new java.awt.Font("Fira Code", 1, 16)); // NOI18N
         jLabel23.setText("Crear Documento");
         jPanel2.add(jLabel23, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 20, -1, 30));
 
-        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Seleccione", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Fira Code", 1, 12))); // NOI18N
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Seleccione...", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Fira Code", 1, 12))); // NOI18N
         jPanel3.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -521,17 +602,37 @@ public class Principal extends javax.swing.JFrame {
         jPanel2.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 70, 340, 250));
 
         jLabel25.setFont(new java.awt.Font("Fira Code", 1, 16)); // NOI18N
-        jLabel25.setText("Lista de Usuarios");
-        jPanel2.add(jLabel25, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 10, -1, -1));
+        jLabel25.setText("Cola de Impresión");
+        jPanel2.add(jLabel25, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 340, -1, -1));
 
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/images/register.png"))); // NOI18N
         jPanel2.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 20, 40, 30));
 
+        jButton1.setFont(new java.awt.Font("Fira Code", 1, 12)); // NOI18N
         jButton1.setText("Vaciar Impresora");
-        jPanel2.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 410, -1, -1));
+        jPanel2.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 380, 150, 30));
 
+        jButton2.setFont(new java.awt.Font("Fira Code", 1, 12)); // NOI18N
         jButton2.setText("Imprimir");
-        jPanel2.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 410, -1, -1));
+        jPanel2.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 440, 150, 30));
+
+        registryLayoutList.setFont(new java.awt.Font("Fira Code Light", 1, 13)); // NOI18N
+        registryLayoutList.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        registryLayoutList.setFocusable(false);
+        registryLayoutList.setRequestFocusEnabled(false);
+        jScrollPane3.setViewportView(registryLayoutList);
+
+        jPanel2.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 380, 340, 190));
+
+        jLabel27.setFont(new java.awt.Font("Fira Code", 1, 16)); // NOI18N
+        jLabel27.setText("Lista de Usuarios");
+        jPanel2.add(jLabel27, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 20, -1, -1));
+
+        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/images/print.png"))); // NOI18N
+        jPanel2.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 330, 40, 40));
+
+        jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/images/listusers.png"))); // NOI18N
+        jPanel2.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 10, 40, 40));
 
         layout.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 40, 860, 590));
 
@@ -616,6 +717,7 @@ public class Principal extends javax.swing.JFrame {
 
                     // Actualizar tabla y cambios
                     this.refreshLayoutTable();
+                    this.refreshLayoutList();
                     this.updateComboUsers();
                     this.titleField.setEnabled(true);
                     this.contentAreaText.setEnabled(true);
@@ -636,6 +738,7 @@ public class Principal extends javax.swing.JFrame {
 
                     // Actualizar tabla y cambios
                     this.refreshLayoutTable();
+                    this.refreshLayoutList();
                     this.updateComboUsers();
                     this.titleField.setEnabled(true);
                     this.contentAreaText.setEnabled(true);
@@ -657,6 +760,7 @@ public class Principal extends javax.swing.JFrame {
                 this.loadUserFile(file);
 
                 this.refreshLayoutTable();
+                this.refreshLayoutList();
                 this.updateComboUsers();
                 this.titleField.setEnabled(true);
                 this.contentAreaText.setEnabled(true);
@@ -748,7 +852,7 @@ public class Principal extends javax.swing.JFrame {
     private void saveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBtnActionPerformed
         // TODO add your handling code here:
         if (evt.getSource() == this.saveBtn) {
-            if (this.usersTable.getUsersList().isEmpty()) {
+            if (this.usersTable.getEntriesList().isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Error: El proyecto se encuentra sin ningun dato!", "Mensaje de Error", JOptionPane.WARNING_MESSAGE);
                 return;
             } else {
@@ -791,7 +895,7 @@ public class Principal extends javax.swing.JFrame {
     private void createNewDocumentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createNewDocumentActionPerformed
         // TODO add your handling code here:
         if (evt.getSource() == this.createNewDocument) {
-            SimpleList<User> userList = this.usersTable.getUsersList();
+            SimpleList<User> userList = this.usersTable.getEntriesList();
             String titleDocument = this.titleField.getText().toLowerCase();
             String contentDocument = this.contentAreaText.getText();
             Document createdDocument = null;
@@ -803,7 +907,7 @@ public class Principal extends javax.swing.JFrame {
 
                     if (this.comboBoxUsers.getSelectedItem().equals(user.getName())) {
                         // Creacion del documento
-                        if (user.getDocumentNames().equals(titleDocument)) {
+                        if (user.getDocumentNames().equalsIgnoreCase(titleDocument)) {
                             JOptionPane.showMessageDialog(null, "Error: El documento ya existe en la lista del usuario.", "Error", JOptionPane.ERROR_MESSAGE);
                             return;
                         } else {
@@ -828,63 +932,20 @@ public class Principal extends javax.swing.JFrame {
     private void deleteDocumentMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_deleteDocumentMouseClicked
         // TODO add your handling code here:
         if (evt.getButton() == MouseEvent.BUTTON1) {
-            SimpleList<User> userList = this.usersTable.getUsersList();
+            SimpleList<User> userList = this.usersTable.getEntriesList();
             int selectedRowIndex = this.layoutUserTable.getSelectedRow();
 
             if (selectedRowIndex != -1) {
                 User selectedUser = userList.getValueByIndex(selectedRowIndex);
 
                 if (selectedUser != null) {
-                    SimpleList<Document> userDocumentList = selectedUser.getFiles_list();
+                    this.deleteASingleDocument(selectedUser);
 
-                    // Verificar si el usuario tiene documentos antes de continuar
-                    if (userDocumentList.getSize() > 0) {
-                        Object[] documentsArray = userDocumentList.toArray(); // Obtener una matriz de documentos
-
-                        // Mostrar un cuadro de lista para que el usuario elija un documento a eliminar
-                        JList<Object> documentList = new JList<>(documentsArray);
-                        JScrollPane scrollPane = new JScrollPane(documentList);
-
-                        int option = JOptionPane.showOptionDialog(
-                                null,
-                                scrollPane,
-                                "Selecciona el documento a eliminar:",
-                                JOptionPane.OK_CANCEL_OPTION,
-                                JOptionPane.QUESTION_MESSAGE,
-                                null,
-                                null,
-                                null
-                        );
-
-                        if (option == JOptionPane.OK_OPTION) {
-                            // Obtener el documento seleccionado apartir del indice
-                            Object selectedDocument = documentList.getSelectedValue();
-                            int documentIndex = userDocumentList.indexOf((Document) selectedDocument);
-
-                            //Conseguir el documento
-                            Document poppedDocument = userDocumentList.getValueByIndex(documentIndex);
-
-                            // Eliminar el documento del usuario
-                            userDocumentList.deleteByIndex(documentIndex);
-
-                            //Eliminar el documento de la cola
-                            this.heapTree.eliminateRegistry(poppedDocument.getName().toLowerCase());
-
-                            //Eliminar el documento de la hashTable;
-                            this.documentsTable.delete(poppedDocument.getName());
-
-                            // Actualizar la interfaz después de eliminar el documento
-                            this.refreshLayoutTable();
-                            JOptionPane.showMessageDialog(null, "Documento eliminado exitosamente!", "Eliminar Documento", JOptionPane.INFORMATION_MESSAGE);
-                        }
-                    } else {
-                        JOptionPane.showMessageDialog(null, "El usuario no tiene documentos para eliminar.", "Eliminar Documento", JOptionPane.INFORMATION_MESSAGE);
-                    }
                 } else {
-                    JOptionPane.showMessageDialog(null, "Por favor, selecciona un usuario desde la tabla para eliminar documentos.", "Eliminar Documento", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Por favor, selecciona un usuario desde la tabla para eliminar documentos.", "Eliminar Documento", JOptionPane.WARNING_MESSAGE);
                 }
             } else {
-                JOptionPane.showMessageDialog(null, "Por favor, selecciona un usuario desde la tabla para eliminar documentos.", "Eliminar Documento", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Por favor, selecciona un usuario desde la tabla para eliminar documentos.", "Eliminar Documento", JOptionPane.WARNING_MESSAGE);
             }
         }
     }//GEN-LAST:event_deleteDocumentMouseClicked
@@ -892,14 +953,14 @@ public class Principal extends javax.swing.JFrame {
     private void deleteFromQueueMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_deleteFromQueueMouseClicked
         // TODO add your handling code here:
         if (evt.getButton() == MouseEvent.BUTTON1) {
-            
+
         }
     }//GEN-LAST:event_deleteFromQueueMouseClicked
 
     private void deleteUserMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_deleteUserMouseClicked
         // TODO add your handling code here:
         if (evt.getButton() == MouseEvent.BUTTON1) {
-            SimpleList<User> userList = this.usersTable.getUsersList();
+            SimpleList<User> userList = this.usersTable.getEntriesList();
             User selectedUser = userList.getValueByIndex(this.layoutUserTable.getSelectedRow());
 
             if (selectedUser != null) {
@@ -925,7 +986,7 @@ public class Principal extends javax.swing.JFrame {
                     return;
                 }
             } else {
-                JOptionPane.showMessageDialog(null, "Por favor, selecciona un usuario desde la tabla para eliminar.", "Eliminar Usuario", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Por favor, selecciona un usuario desde la tabla para eliminar.", "Eliminar Usuario", JOptionPane.WARNING_MESSAGE);
             }
         }
 
@@ -934,7 +995,7 @@ public class Principal extends javax.swing.JFrame {
     private void sendToQueueMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sendToQueueMouseClicked
         // TODO add your handling code here:
         if (evt.getButton() == MouseEvent.BUTTON1) {
-            SimpleList<User> userList = this.usersTable.getUsersList();
+            SimpleList<User> userList = this.usersTable.getEntriesList();
             int selectedRowIndex = this.layoutUserTable.getSelectedRow();
 
             if (selectedRowIndex != -1) {
@@ -944,10 +1005,10 @@ public class Principal extends javax.swing.JFrame {
                     // ENVIAR A LA COLA
                     this.addToPrintQueue(selectedUser);
                 } else {
-                    JOptionPane.showMessageDialog(null, "Por favor, selecciona un usuario desde la tabla para eliminar documentos.", "Eliminar Documento", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Por favor, seleccione un usuario desde la tabla.", "Cola de Impresion", JOptionPane.INFORMATION_MESSAGE);
                 }
             } else {
-                JOptionPane.showMessageDialog(null, "Por favor, selecciona un usuario desde la tabla para eliminar documentos.", "Eliminar Documento", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Por favor, seleccione un usuario desde la tabla para enviar documentos.", "Eliminar Documento", JOptionPane.WARNING_MESSAGE);
             }
 
         }
@@ -1015,10 +1076,13 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel26;
+    private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JPanel jPanel1;
@@ -1029,10 +1093,12 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JPanel layout;
     private javax.swing.JTable layoutUserTable;
     private javax.swing.JMenuItem loadBtn;
     private javax.swing.JMenuBar menubar;
+    private javax.swing.JList<String> registryLayoutList;
     private javax.swing.JMenuItem saveBtn;
     private javax.swing.JLabel sendToQueue;
     private javax.swing.JLabel showHeapTreeLabel;

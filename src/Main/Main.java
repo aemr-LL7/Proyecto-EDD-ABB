@@ -8,6 +8,8 @@ import Classes.UserCommon;
 import Classes.UserHumanResources;
 import DataStructureClasses.OurHashTable;
 import DataStructureClasses.RegistryHeapTree;
+import DataStructureClasses.SimpleList;
+import GUI.Principal;
 
 
 /**
@@ -22,6 +24,7 @@ public class Main {
         
             -Interfaz
          */
+
         
 //        User user = new UserCommon("Pavo", 20);
 //        User user1 = new UserAdministrator("Pave", 21);
@@ -69,5 +72,7 @@ public class Main {
 //        tree.printTree();
         
         
+        Principal main = new Principal();
+        main.setVisible(true);
     }
 }
