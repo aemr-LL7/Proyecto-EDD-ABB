@@ -1,11 +1,5 @@
 package DataStructureClasses;
 
-import Classes.Registry;
-import Classes.User;
-import Classes.UserAdministrator;
-import Classes.UserCommon;
-import Classes.UserHumanResources;
-
 /**
  *
  * @author B-St
@@ -14,15 +8,13 @@ public class OurHashTable<T> {
 
     //dimesiones originales de la tabla, el tamano inicial y un tamano de extension.
     private final int DEFAULT_TABLE_SIZE = 256;
-    private final int DEFAULT_EXTENSION_SIZE = 64;
     private int tableSize;
-
-    //Limite del 70% de la tabla para extenderla dinamicamente
-    private final int FILLED_TRESHOLD = (int) (this.DEFAULT_TABLE_SIZE * 0.7);
+    
+    //Array donde se almacenararn las entries
     private OurEntry<T>[] table;
 
     //Lista de entradas para la reduccion de la complejidad a la hora de recorrer
-    private final SimpleList<OurEntry> entriesList;
+    private final SimpleList<T> entriesList;
 
     // Nombre del archivo original
     private String originalFileName;
@@ -33,7 +25,7 @@ public class OurHashTable<T> {
         this.updateTableSize();
     }
 
-    public SimpleList<OurEntry> getEntriesList() {
+    public SimpleList<T> getEntriesList() {
         return this.entriesList;
     }
 
@@ -75,11 +67,7 @@ public class OurHashTable<T> {
 
             }
 
-            this.entriesList.addAtTheEnd(newEntry);
-            int filledSpots = this.entriesList.getSize();
-            if (filledSpots >= this.FILLED_TRESHOLD) {
-                this.extendTable();
-            }
+            this.entriesList.addAtTheEnd(value);
         } else {
 
             System.out.println("La key " + key + " ya esta tomada, por favor escoja otra.");
@@ -117,57 +105,18 @@ public class OurHashTable<T> {
             OurEntry<T> bucketedEntry = this.table[hash].getNext();
 
             //Eliminamos la entry de la lista de entries
-            this.entriesList.delete(this.table[hash]);
+            this.entriesList.delete(this.table[hash].getValue());
             this.table[hash] = null;
 
             //Re introducir toda la lista de clisiones a la hashtable
             while (bucketedEntry != null) {
-                this.putEntry(bucketedEntry);
+                this.put(bucketedEntry.getKey(), bucketedEntry.getValue());
                 bucketedEntry = bucketedEntry.getNext();
             }
             
             System.out.println();
 
 
-        }
-
-    }
-
-    //Clona la tabla con un nuevo tamano
-    private void extendTable() {
-
-        int newTableSize = tableSize + DEFAULT_EXTENSION_SIZE;
-        this.updateTableSize(newTableSize);
-        OurEntry<T>[] newTable = new OurEntry[newTableSize];
-        this.table = newTable;
-
-        SimpleNode<OurEntry> pAux = this.entriesList.getpFirst();
-
-        // Rehashing de las entradas existentes
-        while (pAux != null) {
-
-            OurEntry<T> auxEntry = pAux.getData();
-            this.putEntry(auxEntry);
-
-        }
-    }
-
-    private void putEntry(OurEntry entry) {
-
-        int hashedKey = entry.getHashedKey();
-        int hash = Math.abs(hashFunction(hashedKey));
-
-        if (this.table[hash] == null) {
-
-            this.table[hash] = entry;
-
-        } else {
-            OurEntry<T> current = this.table[hash];
-
-            while (current.getNext() != null) {
-                current = current.getNext();
-            }
-            current.setNext(entry);
         }
 
     }
@@ -181,9 +130,6 @@ public class OurHashTable<T> {
         this.tableSize = this.table.length;
     }
 
-    private void updateTableSize(int newTablesize) {
-        this.tableSize = newTablesize;
-    }
 
     public boolean isKeyTaken(String key) {
 
