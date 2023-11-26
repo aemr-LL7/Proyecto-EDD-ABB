@@ -63,7 +63,7 @@ public class RegistryHeapTree {
     //comprueba si el elemento en la posicion es una hoja
     private boolean isLeaf(int i) {
 
-        if (i > (int) (this.heapSize / 2)) {
+        if (this.rightChildIsNull(i) && this.leftChildIsNull(i)) {
             return true;
         }
         return false;
@@ -81,7 +81,11 @@ public class RegistryHeapTree {
 
     //Bajar los elementos que sean mayores y subir el menor de sus hijos
     private void minHeapify(int pos) {
+
+        boolean isPosLeaf = this.isLeaf(pos);
+
         if (!isLeaf(pos)) {
+
             int swapPos = pos;
 
             /*
@@ -104,8 +108,10 @@ public class RegistryHeapTree {
                 swapPos = this.leftChild(pos);
             }
 
+            swapPos = this.leftChild(pos);
+
             //Se revisa el hijo derecho tambien para reducir errores en el codigo
-            if (!(this.heap[pos].isTimeLowerThan(this.heap[leftChild(pos)])) || !(this.heap[pos].isTimeLowerThan(this.heap[rightChild(pos)]))) {
+            if (!(this.heap[pos].isTimeLowerThan(this.heap[leftChild(pos)]))) {
                 swap(pos, swapPos);
                 minHeapify(swapPos);
             }
@@ -113,6 +119,7 @@ public class RegistryHeapTree {
     }
 
     private boolean rightChildIsNull(int pos) {
+
         return this.heap[this.rightChild(pos)] == null;
     }
 
@@ -157,6 +164,7 @@ public class RegistryHeapTree {
 
         //Cambiar el front por la hoja mas lejana
         this.heap[0] = this.heap[heapSize];
+        this.heap[this.heapSize] = null;
         minHeapify(0);
         this.heapSize--;
 
@@ -172,22 +180,22 @@ public class RegistryHeapTree {
 
             //Copia fea del registro encontrado, fue hecho a las 3am en desesperacion.
             Registry foundRegistry = this.registryTable.get(documentName.toLowerCase());
-            boolean newIsPiority = foundRegistry.isPriority();
-            Registry foundRegistryCopy = new Registry(-1, foundRegistry.getDocument(), newIsPiority);
-
-            //Cambiar el objeto que esta guardado a null. El programa tiene a los null en consideracion.
-            foundRegistry = null;
-
-            //insertar un nuevo registry con el nuevo tiempo para que suba al tope del arbol
-            this.insert(foundRegistryCopy);
+            foundRegistry.setIsPriority(true);
+            foundRegistry.setTimestamp(-1);
 
             //sacar el documento al tope
             Registry eliminatedRegistry = this.removeMin();
+            //Reinsertar el elemento para que se balancee el arbol otra vez
+            this.insert(eliminatedRegistry);
 
-            //Quitar el registro de la hashtable usando el nombre del documento almacenado.
-            this.registryTable.delete(documentName.toLowerCase());
+            //Eliminar el minimo elemento de la cola
+            Registry eliminated = this.removeMin();
+         
+            //Para el debug.
+//            boolean isKeyGone = !(this.registryTable.isKeyTaken(documentName));
+//            System.out.println("La key se borro? " + isKeyGone + "\n");
 
-            System.out.println("Documento eliminado de la cola: " + eliminatedRegistry.getDocument().getName());
+            System.out.println("Documento eliminado de la cola: " + eliminated.getDocument().getName() + "\n");
 
         } else {
             System.out.println("El documento no esta en la cola.");
@@ -233,7 +241,7 @@ public class RegistryHeapTree {
 
                 Registry popped = this.removeMin();
                 auxQueue.insert(popped);
-                System.out.println(popped);
+                System.out.println(popped.toString());
             }
 
             while (!auxQueue.isEmpty()) {
@@ -242,41 +250,6 @@ public class RegistryHeapTree {
                 this.insert(popped);
 
             }
-
-        }
-    }
-
-    //version antigua del print
-    private void oldPrint() {
-
-        int counter = 0;
-        while (this.heap[counter] != null) {
-
-            //String fName = this.heap[((counter - 1) / 2)].getDocument().getName();
-            String parentName;
-            String lSonName = "N/A";
-            String rSonName = "N/A";
-
-            if (counter == 0) {
-                parentName = "N/A";
-            } else {
-                parentName = this.heap[this.parent(counter)].getDocument().getName();
-            }
-
-            if (this.rightChildIsNull(counter)) {
-                rSonName = "N/A";
-            } else {
-                rSonName = this.heap[this.rightChild(counter)].getDocument().getName();
-            }
-
-            if (this.leftChildIsNull(counter)) {
-                lSonName = "N/A";
-            } else {
-                lSonName = this.heap[this.leftChild(counter)].getDocument().getName();
-            }
-
-            System.out.print("Nodo (Posicion " + counter + "): " + this.heap[counter].getDocument().getName() + "\nHijo izqiuerdo: " + lSonName + "\nHijo derecho: " + rSonName + "\nPadre del nodo: " + parentName + "\n\n");
-            counter++;
 
         }
     }

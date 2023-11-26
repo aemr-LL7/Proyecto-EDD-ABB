@@ -30,6 +30,7 @@ public class OurQueue<T> {
 
         } else {
             this.pLast.setpNext(newNode);
+            this.pLast = newNode;
 
         }
 

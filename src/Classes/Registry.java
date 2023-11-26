@@ -7,13 +7,13 @@ package Classes;
 public class Registry {
 
     //Hacer timestamp con el tiempo de ejecucion
-    private double timestamp;
+    private double timesTamp;
     private Document document;
     private boolean isPriority;
 
     // CONSTTRUCTOR 
     public Registry(int timestamp, Document document, boolean isPriority) {
-        this.timestamp = timestamp;
+        this.timesTamp = timestamp;
         this.document = document;
         this.isPriority = isPriority;
 
@@ -22,11 +22,13 @@ public class Registry {
     //metodo usado para determinar cual tiene mayor prioridad. Los nulos no se consideran menores para propositos de ordenamiento del arbol
     public boolean isTimeLowerThan(Registry comparingRegistry) {
 
-        if (comparingRegistry == null) {
+        if (this == null) {
+            return false;
+        } else if (comparingRegistry == null) {
             return true;
-        } else if (this.timestamp == comparingRegistry.getTimestamp() && this.userHasPriorityOver(comparingRegistry)) {
+        } else if (this.timesTamp == comparingRegistry.getTimestamp() && this.userHasPriorityOver(comparingRegistry)) {
             return true;
-        } else if (this.timestamp < comparingRegistry.getTimestamp()) {
+        } else if (this.timesTamp < comparingRegistry.getTimestamp()) {
             return true;
         } else {
             return false;
@@ -38,12 +40,25 @@ public class Registry {
         return this.document.getCreator().getPriority() > comparingRegistry.getDocument().getCreator().getPriority();
     }
 
+    public String toString() {
+
+        String prio;
+        if (this.isPriority) {
+            prio = " Si";
+        } else {
+            prio = " No";
+        }
+
+        return "Timestamp: " + this.timesTamp + " Nombre del documento: " + this.document.getName() + " Prioridad? -> " + prio + ".";
+
+    }
+
     public double getTimestamp() {
-        return timestamp;
+        return timesTamp;
     }
 
     public void setTimestamp(double timestamp) {
-        this.timestamp = timestamp;
+        this.timesTamp = timestamp;
     }
 
     public Document getDocument() {
@@ -61,7 +76,5 @@ public class Registry {
     public void setIsPriority(boolean isPriority) {
         this.isPriority = isPriority;
     }
-
-
 
 }

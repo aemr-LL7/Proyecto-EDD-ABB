@@ -98,7 +98,7 @@ public class OurHashTable<T> {
         int hash = Math.abs(hashFunction(hashedKey));
 
         if (this.table[hash] == null) {
-            System.out.println("No hay elemento asociado con esa key.");
+            System.out.println("No hay elemento asociado con la key: " + key.toLowerCase() );
         } else {
 
             //Conseguir el siguiente elemento en la lista de colisiones si existe
