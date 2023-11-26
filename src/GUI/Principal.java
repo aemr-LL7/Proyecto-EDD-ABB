@@ -7,6 +7,7 @@ import Classes.UserAdministrator;
 import Classes.UserCommon;
 import Classes.UserHumanResources;
 import DataStructureClasses.OurHashTable;
+import DataStructureClasses.OurQueue;
 import DataStructureClasses.RegistryHeapTree;
 import DataStructureClasses.SimpleList;
 import FileManager.FileManager;
@@ -19,12 +20,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
 
 /**
  *
@@ -41,6 +45,7 @@ public class Principal extends javax.swing.JFrame {
 
     private OurHashTable<User> usersTable;
     private OurHashTable<Document> documentsTable;
+    private static int windowCount = 0;
 
     public Principal() {
 
@@ -166,9 +171,13 @@ public class Principal extends javax.swing.JFrame {
                 // Actualizar la interfaz después de eliminar el documento
                 this.refreshLayoutTable();
                 JOptionPane.showMessageDialog(null, "Documento eliminado exitosamente!", "Eliminar Documento", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(null, "Cancelando Operacion...", "Cancelar", JOptionPane.ERROR_MESSAGE);
+                return;
             }
         } else {
-            JOptionPane.showMessageDialog(null, "El usuario no tiene documentos para eliminar.", "Eliminar Documento", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "El usuario no tiene documentos para eliminar.", "Eliminar Documento", JOptionPane.ERROR_MESSAGE);
+            return;
         }
     }
 
@@ -238,6 +247,54 @@ public class Principal extends javax.swing.JFrame {
         }
     }
 
+    private void eliminateRegistryQueue() {
+
+        Object[] registryArray = this.heapTree.getRegistryNamesArray();
+        JList<Object> registryList = new JList<>(registryArray);
+        JScrollPane scrollPane = new JScrollPane(registryList);
+
+        int option = JOptionPane.showOptionDialog(
+                null,
+                scrollPane,
+                "Selecciona el registro a eliminar:",
+                JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                null,
+                null
+        );
+
+        if (option == JOptionPane.OK_OPTION) {
+            // Obtener el registro seleccionado a partir del índice
+            Object selectedRegistry = registryList.getSelectedValue();
+            String registryName = selectedRegistry.toString();
+
+            // Validar si el usuario realmente quiere eliminar el registro
+            int confirmOption = JOptionPane.showConfirmDialog(
+                    null,
+                    "Estas seguro de que quieres eliminar el registro para el documento '" + registryName + "'?",
+                    "Eliminar Registro",
+                    JOptionPane.YES_NO_OPTION
+            );
+
+            if (confirmOption == JOptionPane.YES_OPTION) {
+                // Llamar al método para eliminar el registro
+                System.out.println("REGISTRO PARA ELIMINAR: ");
+                System.out.println(registryName);
+                this.heapTree.eliminateRegistry(registryName);
+                JOptionPane.showMessageDialog(null, "El documento se ha eliminado del registro!", "Cola de Impresion", JOptionPane.INFORMATION_MESSAGE);
+
+            } else {
+                JOptionPane.showMessageDialog(null, "No se eliminará del registro.\nCancelando Operacion...", "Cancelar", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Cancelando Operacion...", "Cancelar", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+    }
+
     private void refreshLayoutTable() {
         DefaultTableModel model = (DefaultTableModel) this.layoutUserTable.getModel();
         model.setRowCount(0);  // Limpiar filas actuales
@@ -254,18 +311,13 @@ public class Principal extends javax.swing.JFrame {
         DefaultListModel<String> listModel = new DefaultListModel<>();
         listModel.clear();
 
-        // Recorrer el HeapTree y añadir los elementos al modelo del JList
-        for (int i = 0; i < this.heapTree.getHeapArray().length; i++) {
-            if (this.heapTree.getHeapArray()[i] != null) {
-                String documentInfo = this.heapTree.getHeapArray()[i].getDocument().getName() + " By " + this.heapTree.getHeapArray()[i].getDocument().getCreator().getName();
-                listModel.addElement(documentInfo);
-            }
-        }
-        // Establecer el nuevo modelo en el JList
+        // prueba
+        OurQueue<Registry> auxQueue = new OurQueue<>();
+        this.heapTree.printTreeAndUpdateList(auxQueue, listModel);
         this.registryLayoutList.setModel(listModel);
+
         this.registryLayoutList.revalidate();
         this.registryLayoutList.repaint();
-
     }
 
     private void updateComboUsers() {
@@ -276,6 +328,43 @@ public class Principal extends javax.swing.JFrame {
         for (int i = 0; i < usersList.getSize(); i++) {
             this.comboBoxUsers.addItem(usersList.getValueByIndex(i).getName());
         }
+    }
+
+    private void showPrintedDocumentInfo(Document document) {
+        // Incrementar el recuento de ventanas emergentes
+        windowCount++;
+
+        // Calcular la posición ajustada en función del recuento
+        int xOffset = 20 * windowCount;
+        int yOffset = 20 * windowCount;
+
+        // Crear una ventana para mostrar la información del documento
+        JFrame frame = new JFrame("Información del Documento");
+        frame.setSize(400, 300);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setResizable(false);
+
+        // Ajustar la posición de la ventana
+        frame.setLocationRelativeTo(null);  // Centrar en la pantalla
+        frame.setLocation(frame.getLocation().x + xOffset, frame.getLocation().y + yOffset);
+
+        JPanel panel = new JPanel();
+        frame.add(panel);
+
+        // Crear etiquetas para mostrar la información
+        JLabel nameLabel = new JLabel("Nombre del Documento: " + document.getName());
+        JLabel creatorLabel = new JLabel("Creado por: " + document.getCreator().getName());
+
+        JTextArea contentArea = new JTextArea(document.getContent());
+        contentArea.setEditable(false);
+
+        // Agregar etiquetas y área de contenido al panel
+        panel.add(nameLabel);
+        panel.add(creatorLabel);
+        panel.add(contentArea);
+
+        // Hacer visible la ventana
+        frame.setVisible(true);
     }
 
     private int showExitConfirmationDialog() {
@@ -340,13 +429,8 @@ public class Principal extends javax.swing.JFrame {
         jPanel4 = new javax.swing.JPanel();
         jLabel26 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
-        jLabel10 = new javax.swing.JLabel();
-        jLabel20 = new javax.swing.JLabel();
-        jLabel21 = new javax.swing.JLabel();
-        jLabel22 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         layoutUserTable = new javax.swing.JTable();
-        jLabel23 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         contentAreaText = new javax.swing.JTextArea();
@@ -355,14 +439,27 @@ public class Principal extends javax.swing.JFrame {
         comboBoxUsers = new javax.swing.JComboBox<>();
         createNewDocument = new javax.swing.JButton();
         jLabel25 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        printQueueBtn = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         registryLayoutList = new javax.swing.JList<>();
         jLabel27 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
+        jPanel7 = new javax.swing.JPanel();
+        jLabel12 = new javax.swing.JLabel();
+        jPanel8 = new javax.swing.JPanel();
+        jLabel15 = new javax.swing.JLabel();
+        jPanel9 = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel23 = new javax.swing.JLabel();
+        jPanel13 = new javax.swing.JPanel();
+        jPanel10 = new javax.swing.JPanel();
+        jPanel11 = new javax.swing.JPanel();
+        jPanel12 = new javax.swing.JPanel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
         menubar = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         loadBtn = new javax.swing.JMenuItem();
@@ -406,12 +503,12 @@ public class Principal extends javax.swing.JFrame {
         jLabel2.setBackground(new java.awt.Color(36, 120, 175));
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/images/menu_icon.png"))); // NOI18N
         jLabel2.setOpaque(true);
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 10, 40, 40));
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 10, 40, 40));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("MENU");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 15, -1, 30));
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 10, -1, 40));
 
         column.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 250, 60));
 
@@ -424,7 +521,7 @@ public class Principal extends javax.swing.JFrame {
                 addUserMouseClicked(evt);
             }
         });
-        column.add(addUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 100, -1, 30));
+        column.add(addUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 90, -1, 40));
 
         deleteUser.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
         deleteUser.setForeground(new java.awt.Color(255, 255, 255));
@@ -435,7 +532,7 @@ public class Principal extends javax.swing.JFrame {
                 deleteUserMouseClicked(evt);
             }
         });
-        column.add(deleteUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 150, -1, 30));
+        column.add(deleteUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 150, -1, 40));
 
         sendToQueue.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
         sendToQueue.setForeground(new java.awt.Color(255, 255, 255));
@@ -458,17 +555,17 @@ public class Principal extends javax.swing.JFrame {
                 deleteDocumentMouseClicked(evt);
             }
         });
-        column.add(deleteDocument, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 200, -1, 30));
+        column.add(deleteDocument, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 210, -1, 40));
 
         jLabel3.setBackground(new java.awt.Color(87, 169, 210));
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/images/add.png"))); // NOI18N
         jLabel3.setOpaque(true);
-        column.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 100, 190, 30));
+        column.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 90, 190, 40));
 
         jLabel6.setBackground(new java.awt.Color(87, 169, 210));
         jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/images/delete.png"))); // NOI18N
         jLabel6.setOpaque(true);
-        column.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 150, 200, 30));
+        column.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 150, 200, 40));
 
         jLabel18.setBackground(new java.awt.Color(114, 172, 202));
         jLabel18.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/images/send.png"))); // NOI18N
@@ -478,7 +575,7 @@ public class Principal extends javax.swing.JFrame {
         jLabel19.setBackground(new java.awt.Color(87, 169, 210));
         jLabel19.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/images/lista.png"))); // NOI18N
         jLabel19.setOpaque(true);
-        column.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 200, 230, -1));
+        column.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 210, 230, 40));
 
         jPanel5.setBackground(new java.awt.Color(87, 169, 210));
         jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -508,7 +605,7 @@ public class Principal extends javax.swing.JFrame {
 
         jPanel6.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 20, 110, 60));
 
-        column.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 310, 250, 140));
+        column.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 300, 250, 150));
 
         layout.add(column, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 250, 670));
 
@@ -516,18 +613,7 @@ public class Principal extends javax.swing.JFrame {
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel10.setText("NOTA FUNCIONES IMPORTANTES:");
-        jPanel2.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 330, -1, -1));
-
-        jLabel20.setText("Un usuario podrá eliminar un documento que aún no ha sido enviado a la cola de impresión.");
-        jPanel2.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 350, -1, -1));
-
-        jLabel21.setText("En todo momento se podrá observar la cola de impresión");
-        jPanel2.add(jLabel21, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 370, 290, -1));
-
-        jLabel22.setText("secuencia de registros correspondientes a los documentos agregados a la cola de impresión");
-        jPanel2.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 390, 290, -1));
-
+        layoutUserTable.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         layoutUserTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {},
@@ -542,11 +628,7 @@ public class Principal extends javax.swing.JFrame {
         layoutUserTable.setShowGrid(true);
         jScrollPane1.setViewportView(layoutUserTable);
 
-        jPanel2.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 60, 320, 260));
-
-        jLabel23.setFont(new java.awt.Font("Fira Code", 1, 16)); // NOI18N
-        jLabel23.setText("Crear Documento");
-        jPanel2.add(jLabel23, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 20, -1, 30));
+        jPanel2.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 380, 340, 190));
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Seleccione...", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Fira Code", 1, 12))); // NOI18N
         jPanel3.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -600,23 +682,22 @@ public class Principal extends javax.swing.JFrame {
         });
         jPanel3.add(createNewDocument, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 60, -1, -1));
 
-        jPanel2.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 70, 340, 250));
+        jPanel2.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 70, 340, 250));
 
         jLabel25.setFont(new java.awt.Font("Fira Code", 1, 16)); // NOI18N
         jLabel25.setText("Cola de Impresión");
         jPanel2.add(jLabel25, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 340, -1, -1));
 
-        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/images/register.png"))); // NOI18N
-        jPanel2.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 20, 40, 30));
+        printQueueBtn.setFont(new java.awt.Font("Fira Code", 1, 12)); // NOI18N
+        printQueueBtn.setText("Imprimir!");
+        printQueueBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                printQueueBtnActionPerformed(evt);
+            }
+        });
+        jPanel2.add(printQueueBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 340, 110, 30));
 
-        jButton1.setFont(new java.awt.Font("Fira Code", 1, 12)); // NOI18N
-        jButton1.setText("Vaciar Impresora");
-        jPanel2.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 380, 150, 30));
-
-        jButton2.setFont(new java.awt.Font("Fira Code", 1, 12)); // NOI18N
-        jButton2.setText("Imprimir");
-        jPanel2.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 440, 150, 30));
-
+        registryLayoutList.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         registryLayoutList.setFont(new java.awt.Font("Fira Code Light", 1, 13)); // NOI18N
         registryLayoutList.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         registryLayoutList.setFocusable(false);
@@ -627,15 +708,65 @@ public class Principal extends javax.swing.JFrame {
 
         jLabel27.setFont(new java.awt.Font("Fira Code", 1, 16)); // NOI18N
         jLabel27.setText("Lista de Usuarios");
-        jPanel2.add(jLabel27, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 20, -1, -1));
+        jPanel2.add(jLabel27, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 340, -1, -1));
 
         jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/images/print.png"))); // NOI18N
         jPanel2.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 330, 40, 40));
 
         jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/images/listusers.png"))); // NOI18N
-        jPanel2.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 10, 40, 40));
+        jPanel2.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 330, 40, 40));
+
+        jPanel7.setBackground(new java.awt.Color(227, 223, 232));
+
+        jLabel12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/images/enlace.png"))); // NOI18N
+        jPanel7.add(jLabel12);
+
+        jPanel2.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 160, 230, 60));
+
+        jPanel8.setBackground(new java.awt.Color(227, 223, 232));
+
+        jLabel15.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/images/enlace.png"))); // NOI18N
+        jPanel8.add(jLabel15);
+
+        jPanel2.add(jPanel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 160, 230, 60));
+
+        jPanel9.setBackground(new java.awt.Color(202, 196, 209));
+        jPanel9.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/images/register.png"))); // NOI18N
+        jPanel9.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 10, 40, 30));
+
+        jLabel23.setFont(new java.awt.Font("Fira Code", 1, 16)); // NOI18N
+        jLabel23.setText("Crear Documento");
+        jPanel9.add(jLabel23, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 10, 190, 30));
+        jPanel9.add(jPanel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 10, 210, 30));
+
+        jPanel2.add(jPanel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 820, 130));
+
+        jPanel10.setBackground(new java.awt.Color(202, 196, 209));
+        jPanel10.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jPanel2.add(jPanel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 410, 820, 130));
+
+        jPanel11.setBackground(new java.awt.Color(227, 216, 241));
+        jPanel2.add(jPanel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 220, 80, 40));
+
+        jPanel12.setBackground(new java.awt.Color(227, 216, 241));
+        jPanel2.add(jPanel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 220, 80, 40));
 
         layout.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 40, 860, 590));
+
+        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/images/nubes.png"))); // NOI18N
+        layout.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 10, -1, -1));
+
+        jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/images/nubes.png"))); // NOI18N
+        jLabel9.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        layout.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(1150, 140, -1, -1));
+
+        jLabel13.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/images/montanas.png"))); // NOI18N
+        layout.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 420, -1, -1));
+
+        jLabel14.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/images/montanas.png"))); // NOI18N
+        layout.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(1090, 420, -1, -1));
 
         getContentPane().add(layout, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1220, 670));
 
@@ -689,6 +820,7 @@ public class Principal extends javax.swing.JFrame {
         if (evt.getButton() == MouseEvent.BUTTON1) {
             if (this.heapTree.getHeapSize() < 0) {
                 JOptionPane.showMessageDialog(null, "\nERROR: No se puede mostrar el arbol.\nEl arbol se encuentra vacio!\n", "Advertencia", JOptionPane.ERROR_MESSAGE);
+                return;
             } else {
                 this.visualizer.visualizeHeap(heapTree);
             }
@@ -954,7 +1086,18 @@ public class Principal extends javax.swing.JFrame {
     private void deleteFromQueueMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_deleteFromQueueMouseClicked
         // TODO add your handling code here:
         if (evt.getButton() == MouseEvent.BUTTON1) {
+            if (!this.heapTree.isEmpty()) {
+                System.out.println("Delete that thing");
+                this.eliminateRegistryQueue();
 
+                // Actualizar la visualización de la cola y el JList
+                this.refreshLayoutList();
+                this.refreshLayoutTable();
+
+            } else {
+                JOptionPane.showMessageDialog(null, "Error: La cola de impresión está vacía!\nNo hay registros para eliminar.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
         }
     }//GEN-LAST:event_deleteFromQueueMouseClicked
 
@@ -1016,6 +1159,48 @@ public class Principal extends javax.swing.JFrame {
 
     }//GEN-LAST:event_sendToQueueMouseClicked
 
+    private void printQueueBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printQueueBtnActionPerformed
+        // TODO add your handling code here:
+        if (evt.getSource() == this.printQueueBtn) {
+            if (!this.heapTree.isEmpty()) {
+                // Mostrar mensaje de confirmacion
+                int confirmOption = JOptionPane.showConfirmDialog(
+                        null,
+                        "Estas seguro de que quieres imprimir los documentos en la cola?",
+                        "Imprimir Documentos",
+                        JOptionPane.YES_NO_OPTION
+                );
+
+                if (confirmOption == JOptionPane.YES_OPTION) {
+                    while (!this.heapTree.isEmpty()) {
+                        // Extraer el documento con mayor prioridad de la cola
+                        Registry removingRegistry = this.heapTree.removeMin();
+                        Document printedDocument = removingRegistry.getDocument();
+
+                        // actualizar tablas
+                        this.refreshLayoutList();
+                        this.refreshLayoutTable();
+
+                        // Mostrar ventana con la informacion del documento
+                        this.showPrintedDocumentInfo(printedDocument);
+
+                        // Mostrar mensaje de éxito para cada documento
+                        JOptionPane.showMessageDialog(null, "Documento impreso con éxito: " + printedDocument.getName(), "Impresión Exitosa", JOptionPane.INFORMATION_MESSAGE);
+                    }
+
+                    //JOptionPane.showMessageDialog(null, "Documentos impresos con exito.", "Impresión Exitosa", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Operación de impresion cancelada.", "Cancelar", JOptionPane.WARNING_MESSAGE);
+                }
+
+            } else {
+                JOptionPane.showMessageDialog(null, "Error: La cola de impresion está vacía. No hay documentos para imprimir.", "Cola de Impresion Vacía", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+        }
+    }//GEN-LAST:event_printQueueBtnActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1064,16 +1249,15 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JLabel deleteFromQueue;
     private javax.swing.JLabel deleteUser;
     private javax.swing.JMenuItem exitBtn;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel20;
-    private javax.swing.JLabel jLabel21;
-    private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel26;
@@ -1084,14 +1268,22 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel10;
+    private javax.swing.JPanel jPanel11;
+    private javax.swing.JPanel jPanel12;
+    private javax.swing.JPanel jPanel13;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
+    private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
@@ -1099,6 +1291,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JTable layoutUserTable;
     private javax.swing.JMenuItem loadBtn;
     private javax.swing.JMenuBar menubar;
+    private javax.swing.JButton printQueueBtn;
     private javax.swing.JList<String> registryLayoutList;
     private javax.swing.JMenuItem saveBtn;
     private javax.swing.JLabel sendToQueue;

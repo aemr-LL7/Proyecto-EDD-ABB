@@ -3,6 +3,7 @@ package DataStructureClasses;
 import Classes.Document;
 import Classes.Registry;
 import Classes.User;
+import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 
 /**
@@ -253,18 +254,53 @@ public class RegistryHeapTree {
         }
     }
 
-    public String arrayToString() {
-        StringBuilder result = new StringBuilder();
+    public void printTreeAndUpdateList(OurQueue<Registry> auxQueue, DefaultListModel<String> listModel) {
+        if (this.isEmpty()) {
+            System.out.println("No hay nada en el arbol");
+        } else {
+            // almacenar los elementos en la cola temporal
+            while (!this.isEmpty()) {
+                Registry popped = this.removeMin();
+                auxQueue.insert(popped);
+                System.out.println(popped.toString());
+            }
 
-        for (int i = 0; i <= this.heapSize; i++) {
-            result.append("[").append(i).append("] ").append(this.heap[i].getDocument().getName()).append("\n");
+            // Insertar los elementos nuevamente en el heap y en el JList
+            while (!auxQueue.isEmpty()) {
+                Registry popped = auxQueue.pop();
+                this.insert(popped);
+                String documentInfo = popped.getDocument().getName() + " By " + popped.getDocument().getCreator().getName();
+                listModel.addElement(documentInfo);
+            }
+        }
+    }
 
-//            if (i < this.heapSize) {
-//                result.append(", ");
-//            }
+    public String[] getRegistryNamesArray() {
+        OurQueue<Registry> auxQueue = new OurQueue<>();
+        DefaultListModel<String> listModel = new DefaultListModel<>();
+
+        // Almacenar los elementos en la cola temporal y en el DefaultListModel
+        while (!this.isEmpty()) {
+            Registry popped = this.removeMin();
+            auxQueue.insert(popped);
+            String documentInfo = popped.getDocument().getName();
+//            String documentInfo = popped.getDocument().getName() + " By " + popped.getDocument().getCreator().getName();
+            listModel.addElement(documentInfo);
         }
 
-        return result.toString();
+        // Insertar los elementos nuevamente en el heap
+        while (!auxQueue.isEmpty()) {
+            Registry popped = auxQueue.pop();
+            this.insert(popped);
+        }
+
+        // Convertir el DefaultListModel a un array de cadenas
+        String[] registryNamesArray = new String[listModel.getSize()];
+        for (int i = 0; i < listModel.getSize(); i++) {
+            registryNamesArray[i] = listModel.get(i);
+        }
+
+        return registryNamesArray;
     }
 
     public boolean containsDocument(String documentName) {
