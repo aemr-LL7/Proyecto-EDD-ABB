@@ -1,6 +1,9 @@
 package DataStructureClasses;
 
+import Classes.Document;
 import Classes.Registry;
+import Classes.User;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -146,7 +149,7 @@ public class RegistryHeapTree {
 
     }
 
-    //Eliminar y retornar el inimo
+    //Eliminar y retornar el minimo
     public Registry removeMin() {
 
         //Devolver el elemento en la cima
@@ -177,13 +180,13 @@ public class RegistryHeapTree {
 
             //insertar un nuevo registry con el nuevo tiempo para que suba al tope del arbol
             this.insert(foundRegistryCopy);
-            
+
             //sacar el documento al tope
             Registry eliminatedRegistry = this.removeMin();
 
             //Quitar el registro de la hashtable usando el nombre del documento almacenado.
             this.registryTable.delete(documentName.toLowerCase());
-            
+
             System.out.println("Documento eliminado de la cola: " + eliminatedRegistry.getDocument().getName());
 
         } else {
@@ -291,4 +294,14 @@ public class RegistryHeapTree {
 
         return result.toString();
     }
+
+    public boolean containsDocument(String documentName) {
+        for (int i = 0; i <= this.heapSize; i++) {
+            if (this.heap[i] != null && this.heap[i].getDocument().getName().equalsIgnoreCase(documentName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

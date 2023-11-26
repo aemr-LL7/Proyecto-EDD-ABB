@@ -1,5 +1,6 @@
 package DataStructureClasses;
 
+import Classes.Registry;
 import Classes.User;
 import Classes.UserAdministrator;
 import Classes.UserCommon;
@@ -114,7 +115,7 @@ public class OurHashTable<T> {
 
             //Conseguir el siguiente elemento en la lista de colisiones si existe
             OurEntry<T> bucketedEntry = this.table[hash].getNext();
-            
+
             //Eliminamos la entry de la lista de entries
             this.entriesList.delete(this.table[hash]);
             this.table[hash] = null;
@@ -224,4 +225,31 @@ public class OurHashTable<T> {
         }
     }
 
+<<<<<<< HEAD
+=======
+    public SimpleList<User> getUsersList() {
+        SimpleList<User> usersList = new SimpleList<>();
+
+        for (int i = 0; i < this.table.length; i++) {
+            OurEntry<T> current = this.table[i];
+
+            while (current != null) {
+                T value = current.getValue();
+
+                if (value instanceof UserCommon) {
+                    usersList.addAtTheEnd((UserCommon) value);
+                } else if (value instanceof UserHumanResources) {
+                    usersList.addAtTheEnd((UserHumanResources) value);
+                } else if (value instanceof UserAdministrator) {
+                    usersList.addAtTheEnd((UserAdministrator) value);
+                }
+
+                current = current.getNext();
+            }
+        }
+
+        return usersList;
+    }
+
+>>>>>>> aa2598d05aa6cedf603ac63802c3f4a8fce1c02b
 }
