@@ -6,6 +6,7 @@ import Classes.UserCommon;
 import Classes.UserHumanResources;
 import DataStructureClasses.OurHashTable;
 import DataStructureClasses.SimpleList;
+import DataStructureClasses.SimpleNode;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -273,10 +274,12 @@ public class FileManager {
             bufferedWriter.newLine();
 
             // Cargar la lista de usuarios del hash
-            SimpleList<User> userAuxList = userTable.getUsersList();
+            SimpleList userAuxList = userTable.getEntriesList();
+            
+            SimpleNode<User> pAux = userAuxList.getpFirst();
 
-            for (int i = 0; i < userAuxList.getSize(); i++) {
-                User retrievedUser = userAuxList.getValueByIndex(i);
+            while (pAux != null) {
+                User retrievedUser = pAux.getData();
 
                 // Obtener tipo de usuario específico
                 String userType = "";
@@ -291,6 +294,8 @@ public class FileManager {
                 // Escribir en el archivo CSV
                 bufferedWriter.write(retrievedUser.getName() + ", " + userType + ", " + retrievedUser.getDni());
                 bufferedWriter.newLine();
+                
+                pAux.getpNext();
             }
 
             bufferedWriter.close();

@@ -29,7 +29,7 @@ public class OurHashTable<T> {
 
     public OurHashTable() {
         this.table = new OurEntry[this.DEFAULT_TABLE_SIZE];
-        this.entriesList = new SimpleList<>();
+        this.entriesList = new SimpleList();
         this.updateTableSize();
     }
 
@@ -225,31 +225,5 @@ public class OurHashTable<T> {
         }
     }
 
-<<<<<<< HEAD
-=======
-    public SimpleList<User> getUsersList() {
-        SimpleList<User> usersList = new SimpleList<>();
 
-        for (int i = 0; i < this.table.length; i++) {
-            OurEntry<T> current = this.table[i];
-
-            while (current != null) {
-                T value = current.getValue();
-
-                if (value instanceof UserCommon) {
-                    usersList.addAtTheEnd((UserCommon) value);
-                } else if (value instanceof UserHumanResources) {
-                    usersList.addAtTheEnd((UserHumanResources) value);
-                } else if (value instanceof UserAdministrator) {
-                    usersList.addAtTheEnd((UserAdministrator) value);
-                }
-
-                current = current.getNext();
-            }
-        }
-
-        return usersList;
-    }
-
->>>>>>> aa2598d05aa6cedf603ac63802c3f4a8fce1c02b
 }
