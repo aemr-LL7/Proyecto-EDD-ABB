@@ -119,6 +119,68 @@ public class Principal extends javax.swing.JFrame {
         }
     }
 
+    private void addToPrintQueue(User selectedUser) {
+        SimpleList<Document> userDocumentList = selectedUser.getFiles_list();
+
+        // Verificar si el usuario tiene documentos antes de continuar
+        if (userDocumentList.getSize() > 0) {
+            Object[] documentsArray = userDocumentList.toArray(); // Obtener una matriz de documentos
+
+            // Mostrar un cuadro de lista para que el usuario elija un documento a enviar a la cola
+            JList<Object> documentList = new JList<>(documentsArray);
+            JScrollPane scrollPane = new JScrollPane(documentList);
+
+            JOptionPane.showMessageDialog(null, "Por favor, selecciona el documento deseado...", "Enviar a la Cola", JOptionPane.INFORMATION_MESSAGE);
+
+            int option = JOptionPane.showOptionDialog(
+                    null,
+                    scrollPane,
+                    "Selecciona el documento a enviar a la cola:",
+                    JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    null,
+                    null
+            );
+
+            if (option == JOptionPane.OK_OPTION) {
+                // Obtener el documento seleccionado a partir del índice
+                Object selectedDocument = documentList.getSelectedValue();
+                int documentIndex = userDocumentList.indexOf((Document) selectedDocument);
+
+                // Conseguir el documento
+                Document toSentDocument = userDocumentList.getValueByIndex(documentIndex);
+
+                // Añadir el documento del usuario a la cola de impresión
+                if (!this.heapTree.containsDocument(toSentDocument.getName().toLowerCase())) {
+
+                    // Prioridad del documento
+                    int priorityOption = JOptionPane.showConfirmDialog(
+                            null,
+                            "¿Este documento es prioritario?",
+                            "Prioridad del Documento",
+                            JOptionPane.YES_NO_OPTION
+                    );
+
+                    boolean isPriority;
+                    isPriority = priorityOption == JOptionPane.YES_OPTION;
+
+                    // Crear registro y añadir a la cola
+                    Registry newDocRegister = new Registry((int) this.getEventTime(), toSentDocument, isPriority);
+                    this.heapTree.insert(newDocRegister);
+
+                    JOptionPane.showMessageDialog(null, "El documento está preparado en la cola para ser impreso!", "Cola de impresión", JOptionPane.INFORMATION_MESSAGE);
+                    this.heapTree.printTree();
+
+                } else {
+                    JOptionPane.showMessageDialog(null, "El documento '" + toSentDocument.getName() + "' ya está en la cola de impresión.", "Cola de impresión", JOptionPane.WARNING_MESSAGE);
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "El usuario no tiene documentos para enviar a la cola.", "Eliminar Documento", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
     private void refreshLayoutTable() {
         DefaultTableModel model = (DefaultTableModel) this.layoutUserTable.getModel();
         model.setRowCount(0);  // Limpiar filas actuales
@@ -769,51 +831,7 @@ public class Principal extends javax.swing.JFrame {
                 User selectedUser = userList.getValueByIndex(selectedRowIndex);
 
                 if (selectedUser != null) {
-                    SimpleList<Document> userDocumentList = selectedUser.getFiles_list();
-
-                    // Verificar si el usuario tiene documentos antes de continuar
-                    if (userDocumentList.getSize() > 0) {
-                        Object[] documentsArray = userDocumentList.toArray(); // Obtener una matriz de documentos
-
-                        // Mostrar un cuadro de lista para que el usuario elija un documento a eliminar
-                        JList<Object> documentList = new JList<>(documentsArray);
-                        JScrollPane scrollPane = new JScrollPane(documentList);
-
-                        int option = JOptionPane.showOptionDialog(
-                                null,
-                                scrollPane,
-                                "Selecciona el documento a eliminar:",
-                                JOptionPane.OK_CANCEL_OPTION,
-                                JOptionPane.QUESTION_MESSAGE,
-                                null,
-                                null,
-                                null
-                        );
-
-                        if (option == JOptionPane.OK_OPTION) {
-                            // Obtener el documento seleccionado apartir del indice
-                            Object selectedDocument = documentList.getSelectedValue();
-                            int documentIndex = userDocumentList.indexOf((Document) selectedDocument);
-
-                            //Conseguir el documento
-                            Document poppedDocument = userDocumentList.getValueByIndex(documentIndex);
-                            
-                            // Eliminar el documento del usuario
-                            userDocumentList.deleteByIndex(documentIndex);
-                            
-                            //Eliminar el documento de la cola
-                            this.heapTree.eliminateRegistry(poppedDocument.getName().toLowerCase());
-                            
-                            //Eliminar el documento de la hashTable;
-                            this.documentsTable.delete(poppedDocument.getName());
-
-                            // Actualizar la interfaz después de eliminar el documento
-                            this.refreshLayoutTable();
-                            JOptionPane.showMessageDialog(null, "Documento eliminado exitosamente!", "Eliminar Documento", JOptionPane.INFORMATION_MESSAGE);
-                        }
-                    } else {
-                        JOptionPane.showMessageDialog(null, "El usuario no tiene documentos para eliminar.", "Eliminar Documento", JOptionPane.INFORMATION_MESSAGE);
-                    }
+                    this.addToPrintQueue(selectedUser);
                 } else {
                     JOptionPane.showMessageDialog(null, "Por favor, selecciona un usuario desde la tabla para eliminar documentos.", "Eliminar Documento", JOptionPane.INFORMATION_MESSAGE);
                 }
@@ -825,6 +843,7 @@ public class Principal extends javax.swing.JFrame {
 
     private void deleteFromQueueMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_deleteFromQueueMouseClicked
         // TODO add your handling code here:
+
     }//GEN-LAST:event_deleteFromQueueMouseClicked
 
     private void deleteUserMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_deleteUserMouseClicked
@@ -864,8 +883,89 @@ public class Principal extends javax.swing.JFrame {
 
     private void sendToQueueMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sendToQueueMouseClicked
         // TODO add your handling code here:
-        
-        
+        if (evt.getButton() == MouseEvent.BUTTON1) {
+            SimpleList<User> userList = this.usersTable.getUsersList();
+            int selectedRowIndex = this.layoutUserTable.getSelectedRow();
+
+            if (selectedRowIndex != -1) {
+                User selectedUser = userList.getValueByIndex(selectedRowIndex);
+
+                if (selectedUser != null) {
+                    SimpleList<Document> userDocumentList = selectedUser.getFiles_list();
+
+                    // Verificar si el usuario tiene documentos antes de continuar
+                    if (userDocumentList.getSize() > 0) {
+                        Object[] documentsArray = userDocumentList.toArray(); // Obtener una matriz de documentos
+
+                        // Mostrar un cuadro de lista para que el usuario elija un documento a eliminar
+                        JList<Object> documentList = new JList<>(documentsArray);
+                        JScrollPane scrollPane = new JScrollPane(documentList);
+
+                        JOptionPane.showMessageDialog(null, "Por favor, selecciona el documento deseado...", "Enviar a la Cola", JOptionPane.INFORMATION_MESSAGE);
+
+                        int option = JOptionPane.showOptionDialog(
+                                null,
+                                scrollPane,
+                                "Selecciona el documento a enviar a la cola:",
+                                JOptionPane.OK_CANCEL_OPTION,
+                                JOptionPane.QUESTION_MESSAGE,
+                                null,
+                                null,
+                                null
+                        );
+
+                        if (option == JOptionPane.OK_OPTION) {
+                            // Obtener el documento seleccionado apartir del indice
+                            Object selectedDocument = documentList.getSelectedValue();
+                            int documentIndex = userDocumentList.indexOf((Document) selectedDocument);
+
+                            //Conseguir el documento
+                            Document toSentDocument = userDocumentList.getValueByIndex(documentIndex);
+
+                            // Añadir el documento del usuario a la cola de impresion
+                            if (!this.heapTree.containsDocument(toSentDocument.getName())) {
+                                System.out.println(this.heapTree.containsDocument(toSentDocument.getName()));
+
+                                // Prioridad del documento
+                                int priorityOption = JOptionPane.showConfirmDialog(
+                                        null,
+                                        "¿Este documento es prioritario?",
+                                        "Prioridad del Documento",
+                                        JOptionPane.YES_NO_OPTION
+                                );
+
+                                boolean isPriority;
+
+                                if (priorityOption == JOptionPane.YES_OPTION) {
+                                    isPriority = true;
+                                } else {
+                                    isPriority = false;
+                                }
+
+                                // Crear registro y añadir a la cola
+                                Registry newDocRegister = new Registry((int) this.getEventTime(), toSentDocument, isPriority);
+                                this.heapTree.insert(newDocRegister);
+
+                                JOptionPane.showMessageDialog(null, "El documento esta preparado en la cola para ser impreso!", "Cola de impresion", JOptionPane.INFORMATION_MESSAGE);
+                                this.heapTree.printTree();
+
+                            } else {
+
+                                JOptionPane.showMessageDialog(null, "El documento '" + toSentDocument.getName() + "' ya esta en la cola de impresión.", "Cola de impresión", JOptionPane.WARNING_MESSAGE);
+                            }
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "El usuario no tiene documentos para enviar a la cola.", "Eliminar Documento", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Por favor, selecciona un usuario desde la tabla para eliminar documentos.", "Eliminar Documento", JOptionPane.INFORMATION_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Por favor, selecciona un usuario desde la tabla para eliminar documentos.", "Eliminar Documento", JOptionPane.INFORMATION_MESSAGE);
+            }
+
+        }
+
     }//GEN-LAST:event_sendToQueueMouseClicked
 
     /**

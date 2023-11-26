@@ -31,7 +31,7 @@ public class UserCommon implements User {
     public UserCommon(String name, int CI) {
         this.name = name;
         this.files_list = new SimpleList<Document>();
-        this.dni = dni;
+        this.dni = CI;
     }
 
     @Override

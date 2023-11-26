@@ -1,5 +1,6 @@
 package DataStructureClasses;
 
+import Classes.Registry;
 import Classes.User;
 import Classes.UserAdministrator;
 import Classes.UserCommon;
@@ -112,7 +113,7 @@ public class OurHashTable<T> {
         } else {
 
             OurEntry<T> bucketedEntry = this.table[hash].getNext();
-            
+
             //Eliminamos la entry de la lista de entries
             this.entriesList.delete(bucketedEntry);
             this.table[hash] = null;
@@ -240,9 +241,6 @@ public class OurHashTable<T> {
         }
 
         return usersList;
-    }
-
-    public void deleteUser(String userName) {
     }
 
 }
