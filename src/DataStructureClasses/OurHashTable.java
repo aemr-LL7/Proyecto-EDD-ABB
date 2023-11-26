@@ -61,6 +61,7 @@ public class OurHashTable<T> {
             if (table[hash] == null) {
 
                 table[hash] = newEntry;
+                
 
             } else {
                 OurEntry<T> current = this.table[hash];
@@ -80,7 +81,7 @@ public class OurHashTable<T> {
             }
         } else {
 
-            System.out.println("La key" + key + " ya esta tomada, por favor escoja otra.");
+            System.out.println("La key " + key + " ya esta tomada, por favor escoja otra.");
 
         }
     }
@@ -111,16 +112,21 @@ public class OurHashTable<T> {
             System.out.println("No hay elemento asociado con esa key.");
         } else {
 
+            //Conseguir el siguiente elemento en la lista de colisiones si existe
             OurEntry<T> bucketedEntry = this.table[hash].getNext();
             
             //Eliminamos la entry de la lista de entries
-            this.entriesList.delete(bucketedEntry);
+            this.entriesList.delete(this.table[hash]);
             this.table[hash] = null;
 
+            //Re introducir toda la lista de clisiones a la hashtable
             while (bucketedEntry != null) {
                 this.putEntry(bucketedEntry);
                 bucketedEntry = bucketedEntry.getNext();
             }
+            
+            System.out.println();
+
 
         }
 
@@ -187,7 +193,7 @@ public class OurHashTable<T> {
             return false;
         } else {
 
-            OurEntry<T> bucketedEntry = this.table[hash].getNext();
+            OurEntry<T> bucketedEntry = this.table[hash];
 
             while (bucketedEntry != null) {
                 if ((bucketedEntry.getHashedKey() == hashedKey) && (bucketedEntry.getKey().equals(key.toLowerCase()))) {
@@ -216,33 +222,6 @@ public class OurHashTable<T> {
                 current = current.getNext();
             }
         }
-    }
-
-    public SimpleList<User> getUsersList() {
-        SimpleList<User> usersList = new SimpleList<>();
-
-        for (int i = 0; i < this.table.length; i++) {
-            OurEntry<T> current = this.table[i];
-
-            while (current != null) {
-                T value = current.getValue();
-
-                if (value instanceof UserCommon) {
-                    usersList.addAtTheEnd((UserCommon) value);
-                } else if (value instanceof UserHumanResources) {
-                    usersList.addAtTheEnd((UserHumanResources) value);
-                } else if (value instanceof UserAdministrator) {
-                    usersList.addAtTheEnd((UserAdministrator) value);
-                }
-
-                current = current.getNext();
-            }
-        }
-
-        return usersList;
-    }
-
-    public void deleteUser(String userName) {
     }
 
 }

@@ -62,16 +62,20 @@ public class SimpleList<T> {
 
     //recorrer hasta nulo
     public void printList() {
-        try {
-            SimpleNode<T> pAux = this.pFirst;
-            System.out.println("Lista==============================");
-            while (pAux != null) {
-                System.out.println(pAux.getData());
-                pAux = pAux.getpNext();
+        if (this.isEmpty()) {
+            System.out.println("La lista esta vacia");
+        } else {
+            try {
+                SimpleNode<T> pAux = this.pFirst;
+                System.out.println("Lista==============================");
+                while (pAux != null) {
+                    System.out.println(pAux.getData());
+                    pAux = pAux.getpNext();
+                }
+                System.out.println("===================================");
+            } catch (Exception e) {
+                System.out.println("error al printear.");
             }
-            System.out.println("===================================");
-        } catch (Exception e) {
-            System.out.println("error al printear.");
         }
     }
 
@@ -330,6 +334,7 @@ public class SimpleList<T> {
     }
 
     public void delete(T data) {
+
         SimpleNode<T> currentNode = this.pFirst;
         SimpleNode<T> previousNode = null;
 
