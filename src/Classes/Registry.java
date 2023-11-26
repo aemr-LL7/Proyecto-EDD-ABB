@@ -1,5 +1,7 @@
 package Classes;
 
+import java.util.Objects;
+
 /**
  *
  * @author B-St
@@ -7,7 +9,7 @@ package Classes;
 public class Registry {
 
     //Hacer timestamp con el tiempo de ejecucion
-    private double timestamp;
+    private long timestamp;
     private Document document;
     private boolean isPriority;
 
@@ -38,11 +40,31 @@ public class Registry {
         return this.document.getCreator().getPriority() > comparingRegistry.getDocument().getCreator().getPriority();
     }
 
+    // En la clase Registry
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Registry registry = (Registry) obj;
+        return Double.compare(registry.timestamp, timestamp) == 0
+                && isPriority == registry.isPriority
+                && Objects.equals(document, registry.document);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(timestamp, document, isPriority);
+    }
+
     public double getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(double timestamp) {
+    public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
     }
 
@@ -61,7 +83,5 @@ public class Registry {
     public void setIsPriority(boolean isPriority) {
         this.isPriority = isPriority;
     }
-
-
 
 }

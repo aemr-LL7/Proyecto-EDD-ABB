@@ -7,6 +7,7 @@ import Classes.UserCommon;
 import DataStructureClasses.OurHashTable;
 import DataStructureClasses.RegistryHeapTree;
 import DataStructureClasses.SimpleList;
+import GUI.Principal;
 
 
 /**
@@ -22,6 +23,7 @@ public class Main {
             -Interfaz
         
          */
-        
+        Principal main = new Principal();
+        main.setVisible(true);
     }
 }

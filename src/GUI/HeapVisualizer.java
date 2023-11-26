@@ -55,13 +55,91 @@ public class HeapVisualizer {
         }
     }
 
+//    public void visualizeHeap(RegistryHeapTree heap) {
+//        this.eraseVisualizer(); // Limpiar el grafo existente
+//        // Nivel actual en el árbol
+//        int level = 0;
+//
+//        for (int i = 0; i <= heap.getHeapSize(); i++) {
+//            Registry registry = heap.getHeapArray()[i];
+//            User userType = registry.getDocument().getCreator();
+//
+//            Node node = graph.addNode(Integer.toString(i));
+//            node.setAttribute("ui.label", "Name: " + registry.getDocument().getName() + ", " + "By: " + registry.getDocument().getCreator().getName());
+//
+//            // Establecer un color diferente para el nombre de cada nodo según el tipo de usuario
+//            if (userType instanceof UserCommon) {
+//                node.setAttribute("ui.style", "text-color: black; size: 15px; text-size: 15px;");
+//            } else if (userType instanceof UserHumanResources) {
+//                node.setAttribute("ui.style", "text-color: orange; size: 15px; text-size: 15px;");
+//            } else if (userType instanceof UserAdministrator) {
+//                node.setAttribute("ui.style", "text-color: blue; size: 15px; text-size: 15px;");
+//            }
+//
+//            // Mas ajustes de estilo
+//            if (registry.isPriority()) {
+//                node.setAttribute("ui.style", "fill-color: red; size: 15px; text-size: 15px;");
+//            } else {
+//                node.setAttribute("ui.style", "fill-color: green; size: 15px; text-size: 15px;");
+//            }
+//
+//            // Añadir aristas
+//            if (i != 0) {
+//                int parentIndex = (i - 1) / 2;
+//
+//                // Calcular la posicion en funcion del nivel y la posicion
+//                double[] coordinates = calculateNodeCoordinates(i, level);
+//                node.setAttribute("xyz", coordinates[0], coordinates[1], coordinates[2]);
+//
+//                Edge edge = graph.addEdge(Integer.toString(parentIndex) + "-" + Integer.toString(i),
+//                        Integer.toString(parentIndex), Integer.toString(i), true);
+//                edge.setAttribute("ui.style", "fill-color: black; size: 2px;");
+//            }
+//
+//            // Actualizar el nivel cuando se completa un nivel completo del árbol
+//            if (i == Math.pow(2, level + 1) - 2) {
+//                level++;
+//            }
+//        }
+//
+//        // Obtener el panel de vista y agregarlo al panel proporcionado
+//        ViewPanel view = (ViewPanel) viewer.getDefaultView();
+////        graphPanel.setLayout(new BorderLayout());
+////        graphPanel.add(view, BorderLayout.CENTER);
+////        graphPanel.revalidate();
+////        graphPanel.repaint();
+//
+//        // Listener de la rueda del mouse para el zoom
+//        view.addMouseWheelListener(e -> {
+//            if (e.getWheelRotation() < 0) {
+//                // Rueda hacia arriba (zoom in)
+//                this.zoomIn(viewer);
+//            } else {
+//                // Rueda hacia abajo (zoom out)
+//                this.zoomOut(viewer);
+//            }
+//        });
+//    }
+
     public void visualizeHeap(RegistryHeapTree heap) {
         this.eraseVisualizer(); // Limpiar el grafo existente
         // Nivel actual en el árbol
-        int level = 0; 
-        
+        int level = 0;
+
         for (int i = 0; i <= heap.getHeapSize(); i++) {
             Registry registry = heap.getHeapArray()[i];
+
+            // Validar que el registro y su documento no sean nulos
+            if (registry == null || registry.getDocument() == null) {
+                continue;
+            }
+
+            // Validar que el nombre del documento no esté repetido
+            if (containsDocumentName(registry.getDocument().getName(), i, graph)) {
+                System.out.println("Nombre de documento repetido: " + registry.getDocument().getName());
+                continue;
+            }
+
             User userType = registry.getDocument().getCreator();
 
             Node node = graph.addNode(Integer.toString(i));
@@ -82,7 +160,7 @@ public class HeapVisualizer {
             } else {
                 node.setAttribute("ui.style", "fill-color: green; size: 15px; text-size: 15px;");
             }
-            
+
             // Añadir aristas
             if (i != 0) {
                 int parentIndex = (i - 1) / 2;
@@ -104,10 +182,6 @@ public class HeapVisualizer {
 
         // Obtener el panel de vista y agregarlo al panel proporcionado
         ViewPanel view = (ViewPanel) viewer.getDefaultView();
-//        graphPanel.setLayout(new BorderLayout());
-//        graphPanel.add(view, BorderLayout.CENTER);
-//        graphPanel.revalidate();
-//        graphPanel.repaint();
 
         // Listener de la rueda del mouse para el zoom
         view.addMouseWheelListener(e -> {
@@ -149,6 +223,21 @@ public class HeapVisualizer {
         double z = 0;
 
         return new double[]{x, y, z};
+    }
+
+    // Método para verificar si un nombre de documento está repetido en el grafo
+    private boolean containsDocumentName(String documentName, int currentIndex, Graph graph) {
+        for (Node node : graph) {
+            if (node.getId().equals(Integer.toString(currentIndex))) {
+                continue; // Saltar el nodo actual
+            }
+
+            String nodeName = (String) node.getAttribute("ui.label");
+            if (nodeName != null && nodeName.contains(documentName)) {
+                return true; // Nombre de documento repetido
+            }
+        }
+        return false;
     }
 
 }

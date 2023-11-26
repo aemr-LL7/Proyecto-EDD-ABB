@@ -81,33 +81,31 @@ public class RegistryHeapTree {
 
     //Bajar los elementos que sean mayores y subir el menor de sus hijos
     private void minHeapify(int pos) {
-        if (!isLeaf(pos)) {
+        if (!isLeaf(pos) && pos < this.heapSize && this.heap[pos] != null) {
             int swapPos = pos;
 
-            /*
-            Pone en la izquierda el hijo menor de los dos. 
-            Si el hijo derecho no existe, no se cambia la posicion.
-            Luego se revisa si el hijo izquierdo es menor que el padre, si el hijo izquierdo es menor, se sube.
-             */
             if (this.rightChildIsNull(pos)) {
-
                 swapPos = this.leftChild(pos);
-
             } else if (this.leftChildIsNull(pos)) {
-
-                //Si el hijo izquierdo es null, se cambia por el derecho 
-                this.swap(this.leftChild(pos), this.rightChild(pos));
                 swapPos = this.rightChild(pos);
-
-            } else if (this.heap[this.rightChild(pos)].isTimeLowerThan(this.heap[this.leftChild(pos)])) {
-                this.swap(this.leftChild(pos), this.rightChild(pos));
-                swapPos = this.leftChild(pos);
+            } else {
+                // Ambos hijos no son nulos, elige el hijo con el menor timestamp
+                if (this.heap[this.rightChild(pos)] != null && this.heap[this.leftChild(pos)] != null) {
+                    if (this.heap[this.rightChild(pos)].isTimeLowerThan(this.heap[this.leftChild(pos)])) {
+                        swapPos = this.rightChild(pos);
+                    } else {
+                        swapPos = this.leftChild(pos);
+                    }
+                }
             }
 
-            //Se revisa el hijo derecho tambien para reducir errores en el codigo
-            if (!(this.heap[pos].isTimeLowerThan(this.heap[leftChild(pos)])) || !(this.heap[pos].isTimeLowerThan(this.heap[rightChild(pos)]))) {
-                swap(pos, swapPos);
-                minHeapify(swapPos);
+            // Continúa con el intercambio y la recursión solo si swapPos es válido
+            if (swapPos < this.heapSize && this.heap[swapPos] != null) {
+                // Se revisa el hijo derecho también para reducir errores en el código
+                if (!(this.heap[pos].isTimeLowerThan(this.heap[leftChild(pos)])) || !(this.heap[pos].isTimeLowerThan(this.heap[rightChild(pos)]))) {
+                    swap(pos, swapPos);
+                    minHeapify(swapPos);
+                }
             }
         }
     }
@@ -122,31 +120,31 @@ public class RegistryHeapTree {
 
     //Insertar 
     public void insert(Registry registry) {
-        if (!this.registryTable.isKeyTaken(registry.getDocument().getName().toLowerCase())) {
-            if (this.heapSize == this.heap.length) {
-                System.out.println("Min-Heap está lleno!");
-            }
-
-            if (this.isEmpty()) {
-                this.heap[0] = registry;
-                this.heapSize++;
-            } else {
-                this.heap[this.heapSize + 1] = registry;
-                this.heapSize++;
-                int justAddedPos = this.heapSize;
-
-                while (this.heap[justAddedPos].getTimestamp() < this.heap[parent(justAddedPos)].getTimestamp()) {
-                    swap(justAddedPos, parent(justAddedPos));
-                    justAddedPos = parent(justAddedPos);
-                }
-            }
-
-            //Anadir el registro a la hashtable 
-            this.registryTable.put(registry.getDocument().getName(), registry);
-        } else {
-            System.out.println("El documento ya se ha enviado a imprimir.");
+        if (this.heapSize == this.heap.length) {
+            System.out.println("Min-Heap está lleno!");
+            return;
         }
 
+        if (this.isEmpty()) {
+            this.heap[0] = registry;
+            this.heapSize++;
+        } else {
+            // Verificar si el documento ya está en la cola
+            if (containsDocument(registry.getDocument().getName())) {
+                System.out.println("El documento '" + registry.getDocument().getName() + "' ya está en la cola de impresión.");
+                return;
+            }
+
+            this.heap[this.heapSize] = registry;
+            this.heapSize++;
+
+            int justAddedPos = this.heapSize - 1;
+
+            while (justAddedPos > 0 && this.heap[justAddedPos].getTimestamp() < this.heap[parent(justAddedPos)].getTimestamp()) {
+                swap(justAddedPos, parent(justAddedPos));
+                justAddedPos = parent(justAddedPos);
+            }
+        }
     }
 
     //Eliminar y retornar el minimo
@@ -247,7 +245,7 @@ public class RegistryHeapTree {
     }
 
     //version antigua del print
-    private void oldPrint() {
+    public void oldPrint() {
 
         int counter = 0;
         while (this.heap[counter] != null) {
@@ -281,23 +279,22 @@ public class RegistryHeapTree {
         }
     }
 
-    public String arrayToString() {
-        StringBuilder result = new StringBuilder();
-
-        for (int i = 0; i <= this.heapSize; i++) {
-            result.append("[").append(i).append("] ").append(this.heap[i].getDocument().getName()).append("\n");
-
-//            if (i < this.heapSize) {
-//                result.append(", ");
-//            }
+    public String getHeapArrayAsString() {
+        StringBuilder result = new StringBuilder("[");
+        for (int i = 0; i < heapSize; i++) {
+            if (i > 0) {
+                result.append(", ");
+            }
+            result.append(heap[i]);
         }
-
+        result.append("]");
         return result.toString();
     }
 
     public boolean containsDocument(String documentName) {
         for (int i = 0; i <= this.heapSize; i++) {
-            if (this.heap[i] != null && this.heap[i].getDocument().getName().equalsIgnoreCase(documentName)) {
+            if (this.heap[i] != null && this.heap[i].getDocument() != null
+                    && this.heap[i].getDocument().getName().equalsIgnoreCase(documentName)) {
                 return true;
             }
         }
