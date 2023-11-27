@@ -8,6 +8,7 @@ import Classes.UserCommon;
 import Classes.UserHumanResources;
 import DataStructureClasses.OurHashTable;
 import DataStructureClasses.RegistryHeapTree;
+import GUI.Principal;
 
 
 /**
@@ -22,6 +23,9 @@ public class Main {
         
             -Interfaz
          */
+        
+        Principal main_window = new Principal();
+        main_window.setVisible(true);
         
 //        User user = new UserCommon("Pavo", 20);
 //        User user1 = new UserAdministrator("Pave", 21);

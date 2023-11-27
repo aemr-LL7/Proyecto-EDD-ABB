@@ -1,0 +1,741 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ClassDiagram name="Proyecto-EDD-ABB">
+  <ClassDiagramComponents>
+    <Class name="Document" package="Classes" visibility="public" xPosition="379.0" yPosition="692.0">
+      <Fields>
+        <Field name="name" type="String" visibility="private"/>
+        <Field name="docSize" type="int" visibility="private"/>
+        <Field name="content" type="String" visibility="private"/>
+        <Field name="creator" type="User" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public">
+          <Argument type="String" name="name"/>
+          <Argument type="String" name="content"/>
+          <Argument type="User" name="creator"/>
+        </Constructor>
+      </Constructors>
+      <Methods>
+        <Method name="toString" returnType="String" visibility="public"/>
+        <Method name="getCreator" returnType="User" visibility="public"/>
+        <Method name="getCreatorCI" returnType="int" visibility="public"/>
+        <Method name="getName" returnType="String" visibility="public"/>
+        <Method name="setName" returnType="void" visibility="public">
+          <Argument type="String" name="name"/>
+        </Method>
+        <Method name="getNumPages" returnType="int" visibility="public"/>
+        <Method name="setNumPages" returnType="void" visibility="public">
+          <Argument type="int" name="numPages"/>
+        </Method>
+        <Method name="getContent" returnType="String" visibility="public"/>
+        <Method name="setContent" returnType="void" visibility="public">
+          <Argument type="String" name="content"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="Registry" package="Classes" visibility="public" xPosition="743.0" yPosition="1035.0">
+      <Fields>
+        <Field name="timesTamp" type="double" visibility="private"/>
+        <Field name="document" type="Document" visibility="private"/>
+        <Field name="isPriority" type="boolean" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public">
+          <Argument type="int" name="timestamp"/>
+          <Argument type="Document" name="document"/>
+          <Argument type="boolean" name="isPriority"/>
+        </Constructor>
+      </Constructors>
+      <Methods>
+        <Method name="isTimeLowerThan" returnType="boolean" visibility="public">
+          <Argument type="Registry" name="comparingRegistry"/>
+        </Method>
+        <Method name="userHasPriorityOver" returnType="boolean" visibility="private">
+          <Argument type="Registry" name="comparingRegistry"/>
+        </Method>
+        <Method name="toString" returnType="String" visibility="public"/>
+        <Method name="getTimestamp" returnType="double" visibility="public"/>
+        <Method name="setTimestamp" returnType="void" visibility="public">
+          <Argument type="double" name="timestamp"/>
+        </Method>
+        <Method name="getDocument" returnType="Document" visibility="public"/>
+        <Method name="setDocument" returnType="void" visibility="public">
+          <Argument type="Document" name="document"/>
+        </Method>
+        <Method name="isPriority" returnType="boolean" visibility="public"/>
+        <Method name="setIsPriority" returnType="void" visibility="public">
+          <Argument type="boolean" name="isPriority"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="UserAdministrator" package="Classes" visibility="public" xPosition="1000.0" yPosition="20.0">
+      <Fields>
+        <Field name="name" type="String" visibility="private"/>
+        <Field name="dni" type="int" visibility="private"/>
+        <Field name="files_list" type="SimpleList&lt;Document&gt;" visibility="private"/>
+        <Field name="priority" type="int" visibility="private" isFinal="true"/>
+        <Field name="priorityModifier" type="double" visibility="private" isFinal="true"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public">
+          <Argument type="String" name="name"/>
+          <Argument type="int" name="dni"/>
+        </Constructor>
+      </Constructors>
+      <Methods>
+        <Method name="addDocument" returnType="void" visibility="public">
+          <Argument type="Document" name="document"/>
+        </Method>
+        <Method name="isNameAvailable" returnType="boolean" visibility="public">
+          <Argument type="String" name="documentName"/>
+        </Method>
+        <Method name="toString" returnType="String" visibility="public"/>
+        <Method name="getName" returnType="String" visibility="public"/>
+        <Method name="setName" returnType="void" visibility="public">
+          <Argument type="String" name="name"/>
+        </Method>
+        <Method name="getFiles_list" returnType="SimpleList" visibility="public"/>
+        <Method name="setFiles_list" returnType="void" visibility="public">
+          <Argument type="SimpleList" name="files_list"/>
+        </Method>
+        <Method name="getDni" returnType="int" visibility="public"/>
+        <Method name="getPriority" returnType="int" visibility="public"/>
+        <Method name="hasPriorityOver" returnType="boolean" visibility="public">
+          <Argument type="User" name="comparingUser"/>
+        </Method>
+        <Method name="getPriorityModifier" returnType="double" visibility="public"/>
+        <Method name="getDocumentNames" returnType="String" visibility="public"/>
+        <Method name="deleteAllDocuments" returnType="void" visibility="public"/>
+      </Methods>
+    </Class>
+    <Class name="UserCommon" package="Classes" visibility="public" xPosition="525.0" yPosition="20.0">
+      <Fields>
+        <Field name="name" type="String" visibility="private"/>
+        <Field name="dni" type="int" visibility="private"/>
+        <Field name="files_list" type="SimpleList&lt;Document&gt;" visibility="private"/>
+        <Field name="priority" type="int" visibility="private" isFinal="true"/>
+        <Field name="priorityModifier" type="double" visibility="private" isFinal="true"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public">
+          <Argument type="String" name="name"/>
+          <Argument type="int" name="CI"/>
+        </Constructor>
+      </Constructors>
+      <Methods>
+        <Method name="isNameAvailable" returnType="boolean" visibility="public">
+          <Argument type="String" name="documentName"/>
+        </Method>
+        <Method name="toString" returnType="String" visibility="public"/>
+        <Method name="addDocument" returnType="void" visibility="public">
+          <Argument type="Document" name="document"/>
+        </Method>
+        <Method name="getName" returnType="String" visibility="public"/>
+        <Method name="setName" returnType="void" visibility="public">
+          <Argument type="String" name="name"/>
+        </Method>
+        <Method name="getFiles_list" returnType="SimpleList" visibility="public"/>
+        <Method name="setFiles_list" returnType="void" visibility="public">
+          <Argument type="SimpleList" name="files_list"/>
+        </Method>
+        <Method name="getDni" returnType="int" visibility="public"/>
+        <Method name="getPriority" returnType="int" visibility="public"/>
+        <Method name="hasPriorityOver" returnType="boolean" visibility="public">
+          <Argument type="User" name="comparingUser"/>
+        </Method>
+        <Method name="getPriorityModifier" returnType="double" visibility="public"/>
+        <Method name="getDocumentNames" returnType="String" visibility="public"/>
+        <Method name="deleteAllDocuments" returnType="void" visibility="public"/>
+      </Methods>
+    </Class>
+    <Class name="UserHumanResources" package="Classes" visibility="public" xPosition="19.0" yPosition="398.0">
+      <Fields>
+        <Field name="name" type="String" visibility="private"/>
+        <Field name="dni" type="int" visibility="private"/>
+        <Field name="files_list" type="SimpleList&lt;Document&gt;" visibility="private"/>
+        <Field name="priority" type="int" visibility="private" isFinal="true"/>
+        <Field name="priorityModifier" type="double" visibility="private" isFinal="true"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public">
+          <Argument type="String" name="name"/>
+          <Argument type="int" name="dni"/>
+        </Constructor>
+      </Constructors>
+      <Methods>
+        <Method name="isNameAvailable" returnType="boolean" visibility="public">
+          <Argument type="String" name="documentName"/>
+        </Method>
+        <Method name="toString" returnType="String" visibility="public"/>
+        <Method name="addDocument" returnType="void" visibility="public">
+          <Argument type="Document" name="document"/>
+        </Method>
+        <Method name="getName" returnType="String" visibility="public"/>
+        <Method name="setName" returnType="void" visibility="public">
+          <Argument type="String" name="name"/>
+        </Method>
+        <Method name="getFiles_list" returnType="SimpleList" visibility="public"/>
+        <Method name="setFiles_list" returnType="void" visibility="public">
+          <Argument type="SimpleList" name="files_list"/>
+        </Method>
+        <Method name="getDni" returnType="int" visibility="public"/>
+        <Method name="getPriority" returnType="int" visibility="public"/>
+        <Method name="hasPriorityOver" returnType="boolean" visibility="public">
+          <Argument type="User" name="comparingUser"/>
+        </Method>
+        <Method name="getPriorityModifier" returnType="double" visibility="public"/>
+        <Method name="getDocumentNames" returnType="String" visibility="public"/>
+        <Method name="deleteAllDocuments" returnType="void" visibility="public"/>
+      </Methods>
+    </Class>
+    <Class name="OurEntry" package="DataStructureClasses" visibility="public" xPosition="1810.0" yPosition="20.0">
+      <Fields>
+        <Field name="hashedKey" type="int" visibility="private"/>
+        <Field name="key" type="String" visibility="private"/>
+        <Field name="value" type="T" visibility="private"/>
+        <Field name="next" type="OurEntry&lt;T&gt;" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public">
+          <Argument type="String" name="key"/>
+          <Argument type="int" name="hashedKey"/>
+          <Argument type="T" name="value"/>
+        </Constructor>
+      </Constructors>
+      <Methods>
+        <Method name="getHashedKey" returnType="int" visibility="public"/>
+        <Method name="getKey" returnType="String" visibility="public"/>
+        <Method name="getValue" returnType="T" visibility="public"/>
+        <Method name="getNext" returnType="OurEntry&lt;T&gt;" visibility="public"/>
+        <Method name="setHashedKey" returnType="void" visibility="public">
+          <Argument type="int" name="hashedKey"/>
+        </Method>
+        <Method name="setKey" returnType="void" visibility="public">
+          <Argument type="String" name="key"/>
+        </Method>
+        <Method name="setValue" returnType="void" visibility="public">
+          <Argument type="T" name="value"/>
+        </Method>
+        <Method name="setNext" returnType="void" visibility="public">
+          <Argument type="OurEntry&lt;T&gt;" name="next"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="OurHashTable" package="DataStructureClasses" visibility="public" xPosition="1845.0" yPosition="398.0">
+      <Fields>
+        <Field name="DEFAULT_TABLE_SIZE" type="int" visibility="private" isFinal="true"/>
+        <Field name="tableSize" type="int" visibility="private"/>
+        <Field name="table" type="OurEntry&lt;T&gt;[]" visibility="private"/>
+        <Field name="entriesList" type="SimpleList&lt;T&gt;" visibility="private" isFinal="true"/>
+        <Field name="originalFileName" type="String" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public"/>
+      </Constructors>
+      <Methods>
+        <Method name="getEntriesList" returnType="SimpleList&lt;T&gt;" visibility="public"/>
+        <Method name="getOriginalFileName" returnType="String" visibility="public"/>
+        <Method name="setOriginalFileName" returnType="void" visibility="public">
+          <Argument type="String" name="originalFileName"/>
+        </Method>
+        <Method name="put" returnType="void" visibility="public">
+          <Argument type="String" name="key"/>
+          <Argument type="T" name="value"/>
+        </Method>
+        <Method name="get" returnType="T" visibility="public">
+          <Argument type="String" name="key"/>
+        </Method>
+        <Method name="delete" returnType="void" visibility="public">
+          <Argument type="String" name="key"/>
+        </Method>
+        <Method name="hashFunction" returnType="int" visibility="private">
+          <Argument type="int" name="key"/>
+        </Method>
+        <Method name="updateTableSize" returnType="void" visibility="private"/>
+        <Method name="isKeyTaken" returnType="boolean" visibility="public">
+          <Argument type="String" name="key"/>
+        </Method>
+        <Method name="clear" returnType="void" visibility="public"/>
+        <Method name="showUsersTable" returnType="void" visibility="public"/>
+      </Methods>
+    </Class>
+    <Class name="OurQueue" package="DataStructureClasses" visibility="public" xPosition="49.0" yPosition="900.0">
+      <Fields>
+        <Field name="pFirst" type="SimpleNode&lt;T&gt;" visibility="private"/>
+        <Field name="pLast" type="SimpleNode&lt;T&gt;" visibility="private"/>
+        <Field name="size" type="int" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public"/>
+      </Constructors>
+      <Methods>
+        <Method name="isEmpty" returnType="boolean" visibility="public"/>
+        <Method name="insert" returnType="void" visibility="public">
+          <Argument type="T" name="data"/>
+        </Method>
+        <Method name="pop" returnType="T" visibility="public"/>
+        <Method name="getpFirst" returnType="SimpleNode&lt;T&gt;" visibility="public"/>
+        <Method name="setpFirst" returnType="void" visibility="public">
+          <Argument type="SimpleNode&lt;T&gt;" name="pFirst"/>
+        </Method>
+        <Method name="getpLast" returnType="SimpleNode&lt;T&gt;" visibility="public"/>
+        <Method name="setpLast" returnType="void" visibility="public">
+          <Argument type="SimpleNode&lt;T&gt;" name="pLast"/>
+        </Method>
+        <Method name="getSize" returnType="int" visibility="public"/>
+        <Method name="setSize" returnType="void" visibility="public">
+          <Argument type="int" name="size"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="RegistryHeapTree" package="DataStructureClasses" visibility="public" xPosition="49.0" yPosition="1295.0">
+      <Fields>
+        <Field name="heap" type="Registry[]" visibility="private"/>
+        <Field name="registryTable" type="OurHashTable&lt;Registry&gt;" visibility="private"/>
+        <Field name="heapSize" type="int" visibility="private"/>
+        <Field name="MAX_SIZE" type="int" visibility="private" isStatic="true" isFinal="true"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public"/>
+      </Constructors>
+      <Methods>
+        <Method name="getHeapSize" returnType="int" visibility="public"/>
+        <Method name="getHeapArray" returnType="Registry[]" visibility="public"/>
+        <Method name="isEmpty" returnType="boolean" visibility="public"/>
+        <Method name="isFull" returnType="boolean" visibility="public"/>
+        <Method name="parent" returnType="int" visibility="private">
+          <Argument type="int" name="i"/>
+        </Method>
+        <Method name="leftChild" returnType="int" visibility="private">
+          <Argument type="int" name="i"/>
+        </Method>
+        <Method name="rightChild" returnType="int" visibility="private">
+          <Argument type="int" name="i"/>
+        </Method>
+        <Method name="isLeaf" returnType="boolean" visibility="private">
+          <Argument type="int" name="i"/>
+        </Method>
+        <Method name="swap" returnType="void" visibility="private">
+          <Argument type="int" name="i"/>
+          <Argument type="int" name="j"/>
+        </Method>
+        <Method name="minHeapify" returnType="void" visibility="private">
+          <Argument type="int" name="pos"/>
+        </Method>
+        <Method name="rightChildIsNull" returnType="boolean" visibility="private">
+          <Argument type="int" name="pos"/>
+        </Method>
+        <Method name="leftChildIsNull" returnType="boolean" visibility="private">
+          <Argument type="int" name="pos"/>
+        </Method>
+        <Method name="insert" returnType="void" visibility="public">
+          <Argument type="Registry" name="registry"/>
+        </Method>
+        <Method name="removeMin" returnType="Registry" visibility="public"/>
+        <Method name="eliminateRegistry" returnType="void" visibility="public">
+          <Argument type="String" name="documentName"/>
+        </Method>
+        <Method name="clearHeap" returnType="void" visibility="public"/>
+        <Method name="clearHeap" returnType="void" visibility="public">
+          <Argument type="int" name="ammount"/>
+        </Method>
+        <Method name="printTree" returnType="void" visibility="public"/>
+        <Method name="printTreeAndUpdateList" returnType="void" visibility="public">
+          <Argument type="OurQueue&lt;Registry&gt;" name="auxQueue"/>
+          <Argument type="DefaultListModel&lt;String&gt;" name="listModel"/>
+        </Method>
+        <Method name="getRegistryNamesArray" returnType="String[]" visibility="public"/>
+        <Method name="containsDocument" returnType="boolean" visibility="public">
+          <Argument type="String" name="documentName"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="SimpleList" package="DataStructureClasses" visibility="public" xPosition="1343.0" yPosition="20.0">
+      <Fields>
+        <Field name="pFirst" type="SimpleNode&lt;T&gt;" visibility="private"/>
+        <Field name="pLast" type="SimpleNode&lt;T&gt;" visibility="private"/>
+        <Field name="size" type="int" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public"/>
+      </Constructors>
+      <Methods>
+        <Method name="isEmpty" returnType="boolean" visibility="public"/>
+        <Method name="addStart" returnType="void" visibility="public">
+          <Argument type="T" name="data"/>
+        </Method>
+        <Method name="addAtTheEnd" returnType="void" visibility="public">
+          <Argument type="T" name="data"/>
+        </Method>
+        <Method name="printList" returnType="void" visibility="public"/>
+        <Method name="printToString" returnType="String" visibility="public"/>
+        <Method name="printUsersList" returnType="void" visibility="public"/>
+        <Method name="getValueByIndex" returnType="T" visibility="public">
+          <Argument type="int" name="index"/>
+        </Method>
+        <Method name="contains" returnType="boolean" visibility="public">
+          <Argument type="String" name="value"/>
+        </Method>
+        <Method name="contains" returnType="boolean" visibility="public">
+          <Argument type="int" name="value"/>
+        </Method>
+        <Method name="searchByValue" returnType="SimpleNode&lt;T&gt;" visibility="public">
+          <Argument type="T" name="value"/>
+        </Method>
+        <Method name="indexOf" returnType="int" visibility="public">
+          <Argument type="T" name="valorBuscado"/>
+        </Method>
+        <Method name="deleteFirst" returnType="void" visibility="public"/>
+        <Method name="deleteLast" returnType="void" visibility="public"/>
+        <Method name="isValidIndex" returnType="boolean" visibility="public">
+          <Argument type="int" name="index"/>
+        </Method>
+        <Method name="insertAtIndex" returnType="void" visibility="public">
+          <Argument type="int" name="index"/>
+          <Argument type="T" name="data"/>
+        </Method>
+        <Method name="deleteByIndex" returnType="void" visibility="public">
+          <Argument type="int" name="index"/>
+        </Method>
+        <Method name="sort" returnType="void" visibility="public"/>
+        <Method name="swapIntegers" returnType="void" visibility="private">
+          <Argument type="SimpleNode&lt;Integer&gt;" name="current"/>
+          <Argument type="SimpleNode&lt;Integer&gt;" name="next"/>
+        </Method>
+        <Method name="wipeList" returnType="void" visibility="public"/>
+        <Method name="toArray" returnType="Object[]" visibility="public"/>
+        <Method name="delete" returnType="void" visibility="public">
+          <Argument type="T" name="data"/>
+        </Method>
+        <Method name="getpFirst" returnType="SimpleNode&lt;T&gt;" visibility="public"/>
+        <Method name="setpFirst" returnType="void" visibility="public">
+          <Argument type="SimpleNode&lt;T&gt;" name="pFirst"/>
+        </Method>
+        <Method name="getpLast" returnType="SimpleNode&lt;T&gt;" visibility="public"/>
+        <Method name="setpLast" returnType="void" visibility="public">
+          <Argument type="SimpleNode&lt;T&gt;" name="pLast"/>
+        </Method>
+        <Method name="getSize" returnType="int" visibility="public"/>
+        <Method name="setSize" returnType="void" visibility="public">
+          <Argument type="int" name="size"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="SimpleNode" package="DataStructureClasses" visibility="public" xPosition="990.0" yPosition="551.0">
+      <Fields>
+        <Field name="data" type="T" visibility="private"/>
+        <Field name="pNext" type="SimpleNode" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public">
+          <Argument type="T" name="data"/>
+        </Constructor>
+        <Constructor visibility="public">
+          <Argument type="T" name="data"/>
+          <Argument type="SimpleNode&lt;T&gt;" name="pNext"/>
+        </Constructor>
+      </Constructors>
+      <Methods>
+        <Method name="getData" returnType="T" visibility="public"/>
+        <Method name="setData" returnType="void" visibility="public">
+          <Argument type="T" name="data"/>
+        </Method>
+        <Method name="getpNext" returnType="SimpleNode" visibility="public"/>
+        <Method name="setpNext" returnType="void" visibility="public">
+          <Argument type="SimpleNode&lt;T&gt;" name="pNext"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="FileManager" package="FileManager" visibility="public" xPosition="1845.0" yPosition="859.0">
+      <Fields>
+        <Field name="SAVED_DIRECTORY" type="String" visibility="private" isFinal="true"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public"/>
+      </Constructors>
+      <Methods>
+        <Method name="savedPathExists" returnType="boolean" visibility="public"/>
+        <Method name="fileCounter" returnType="int" visibility="public"/>
+        <Method name="saveFileToTxt" returnType="void" visibility="public">
+          <Argument type="File" name="inFile"/>
+        </Method>
+        <Method name="saveStringToTxt" returnType="void" visibility="public">
+          <Argument type="String" name="string"/>
+        </Method>
+        <Method name="setSystemLookAndFeel" returnType="void" visibility="private"/>
+        <Method name="selectFile" returnType="File" visibility="public"/>
+        <Method name="readUsersFromCSV" returnType="OurHashTable" visibility="public">
+          <Argument type="File" name="inFile"/>
+        </Method>
+        <Method name="writeUsersToCSV" returnType="void" visibility="public">
+          <Argument type="OurHashTable&lt;User&gt;" name="userTable"/>
+        </Method>
+        <Method name="generateFileName" returnType="String" visibility="private"/>
+      </Methods>
+    </Class>
+    <Class name="HeapVisualizer" package="GUI" visibility="public" xPosition="690.0" yPosition="1400.0">
+      <Fields>
+        <Field name="graph" type="Graph" visibility="private"/>
+        <Field name="viewer" type="Viewer" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public"/>
+      </Constructors>
+      <Methods>
+        <Method name="eraseVisualizer" returnType="void" visibility="public"/>
+        <Method name="resetView" returnType="void" visibility="public"/>
+        <Method name="visualizeHeap" returnType="void" visibility="public">
+          <Argument type="RegistryHeapTree" name="heap"/>
+        </Method>
+        <Method name="zoomIn" returnType="void" visibility="public">
+          <Argument type="Viewer" name="viewer"/>
+        </Method>
+        <Method name="zoomOut" returnType="void" visibility="public">
+          <Argument type="Viewer" name="viewer"/>
+        </Method>
+        <Method name="adjustZoom" returnType="void" visibility="private">
+          <Argument type="Viewer" name="viewer"/>
+          <Argument type="double" name="factor"/>
+        </Method>
+        <Method name="updateViewRange" returnType="void" visibility="private">
+          <Argument type="Viewer" name="viewer"/>
+        </Method>
+        <Method name="calculateNodeCoordinates" returnType="double[]" visibility="private">
+          <Argument type="int" name="position"/>
+          <Argument type="int" name="level"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="Principal" package="GUI" visibility="public" xPosition="1170.0" yPosition="842.0">
+      <Fields>
+        <Field name="startTime" type="Instant" visibility="private"/>
+        <Field name="changesWereMade" type="boolean" visibility="private"/>
+        <Field name="visualizer" type="HeapVisualizer" visibility="private"/>
+        <Field name="heapTree" type="RegistryHeapTree" visibility="private"/>
+        <Field name="usersTable" type="OurHashTable&lt;User&gt;" visibility="private"/>
+        <Field name="documentsTable" type="OurHashTable&lt;Document&gt;" visibility="private"/>
+        <Field name="windowCount" type="int" visibility="private" isStatic="true"/>
+        <Field name="aboutMsgBtn" type="javax.swing.JMenuItem" visibility="private"/>
+        <Field name="addUser" type="javax.swing.JLabel" visibility="private"/>
+        <Field name="bgHeap" type="javax.swing.JPanel" visibility="private"/>
+        <Field name="column" type="javax.swing.JPanel" visibility="private"/>
+        <Field name="comboBoxUsers" type="javax.swing.JComboBox&lt;String&gt;" visibility="private"/>
+        <Field name="contentAreaText" type="javax.swing.JTextArea" visibility="private"/>
+        <Field name="createNewDocument" type="javax.swing.JButton" visibility="private"/>
+        <Field name="deleteDocument" type="javax.swing.JLabel" visibility="private"/>
+        <Field name="deleteFromQueue" type="javax.swing.JLabel" visibility="private"/>
+        <Field name="deleteUser" type="javax.swing.JLabel" visibility="private"/>
+        <Field name="exitBtn" type="javax.swing.JMenuItem" visibility="private"/>
+        <Field name="jLabel1" type="javax.swing.JLabel" visibility="private"/>
+        <Field name="jLabel10" type="javax.swing.JLabel" visibility="private"/>
+        <Field name="jLabel12" type="javax.swing.JLabel" visibility="private"/>
+        <Field name="jLabel13" type="javax.swing.JLabel" visibility="private"/>
+        <Field name="jLabel14" type="javax.swing.JLabel" visibility="private"/>
+        <Field name="jLabel15" type="javax.swing.JLabel" visibility="private"/>
+        <Field name="jLabel18" type="javax.swing.JLabel" visibility="private"/>
+        <Field name="jLabel19" type="javax.swing.JLabel" visibility="private"/>
+        <Field name="jLabel2" type="javax.swing.JLabel" visibility="private"/>
+        <Field name="jLabel23" type="javax.swing.JLabel" visibility="private"/>
+        <Field name="jLabel25" type="javax.swing.JLabel" visibility="private"/>
+        <Field name="jLabel26" type="javax.swing.JLabel" visibility="private"/>
+        <Field name="jLabel27" type="javax.swing.JLabel" visibility="private"/>
+        <Field name="jLabel3" type="javax.swing.JLabel" visibility="private"/>
+        <Field name="jLabel4" type="javax.swing.JLabel" visibility="private"/>
+        <Field name="jLabel5" type="javax.swing.JLabel" visibility="private"/>
+        <Field name="jLabel6" type="javax.swing.JLabel" visibility="private"/>
+        <Field name="jLabel7" type="javax.swing.JLabel" visibility="private"/>
+        <Field name="jLabel8" type="javax.swing.JLabel" visibility="private"/>
+        <Field name="jLabel9" type="javax.swing.JLabel" visibility="private"/>
+        <Field name="jMenu1" type="javax.swing.JMenu" visibility="private"/>
+        <Field name="jMenu2" type="javax.swing.JMenu" visibility="private"/>
+        <Field name="jPanel1" type="javax.swing.JPanel" visibility="private"/>
+        <Field name="jPanel10" type="javax.swing.JPanel" visibility="private"/>
+        <Field name="jPanel11" type="javax.swing.JPanel" visibility="private"/>
+        <Field name="jPanel12" type="javax.swing.JPanel" visibility="private"/>
+        <Field name="jPanel13" type="javax.swing.JPanel" visibility="private"/>
+        <Field name="jPanel2" type="javax.swing.JPanel" visibility="private"/>
+        <Field name="jPanel3" type="javax.swing.JPanel" visibility="private"/>
+        <Field name="jPanel4" type="javax.swing.JPanel" visibility="private"/>
+        <Field name="jPanel5" type="javax.swing.JPanel" visibility="private"/>
+        <Field name="jPanel6" type="javax.swing.JPanel" visibility="private"/>
+        <Field name="jPanel7" type="javax.swing.JPanel" visibility="private"/>
+        <Field name="jPanel8" type="javax.swing.JPanel" visibility="private"/>
+        <Field name="jPanel9" type="javax.swing.JPanel" visibility="private"/>
+        <Field name="jScrollPane1" type="javax.swing.JScrollPane" visibility="private"/>
+        <Field name="jScrollPane2" type="javax.swing.JScrollPane" visibility="private"/>
+        <Field name="jScrollPane3" type="javax.swing.JScrollPane" visibility="private"/>
+        <Field name="layout" type="javax.swing.JPanel" visibility="private"/>
+        <Field name="layoutUserTable" type="javax.swing.JTable" visibility="private"/>
+        <Field name="loadBtn" type="javax.swing.JMenuItem" visibility="private"/>
+        <Field name="menubar" type="javax.swing.JMenuBar" visibility="private"/>
+        <Field name="printQueueBtn" type="javax.swing.JButton" visibility="private"/>
+        <Field name="registryLayoutList" type="javax.swing.JList&lt;String&gt;" visibility="private"/>
+        <Field name="saveBtn" type="javax.swing.JMenuItem" visibility="private"/>
+        <Field name="sendToQueue" type="javax.swing.JLabel" visibility="private"/>
+        <Field name="showHeapTreeLabel" type="javax.swing.JLabel" visibility="private"/>
+        <Field name="titleField" type="javax.swing.JTextField" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public"/>
+      </Constructors>
+      <Methods>
+        <Method name="getEventTime" returnType="long" visibility="private"/>
+        <Method name="createUser" returnType="void" visibility="private">
+          <Argument type="String" name="userName"/>
+          <Argument type="int" name="userDni"/>
+          <Argument type="int" name="userType"/>
+        </Method>
+        <Method name="loadUserFile" returnType="void" visibility="private">
+          <Argument type="File" name="inFile"/>
+        </Method>
+        <Method name="deleteASingleDocument" returnType="void" visibility="private">
+          <Argument type="User" name="selectedUser"/>
+        </Method>
+        <Method name="addToPrintQueue" returnType="void" visibility="private">
+          <Argument type="User" name="selectedUser"/>
+        </Method>
+        <Method name="eliminateRegistryQueue" returnType="void" visibility="private"/>
+        <Method name="refreshLayoutTable" returnType="void" visibility="private"/>
+        <Method name="refreshLayoutList" returnType="void" visibility="private"/>
+        <Method name="updateComboUsers" returnType="void" visibility="private"/>
+        <Method name="showPrintedDocumentInfo" returnType="void" visibility="private">
+          <Argument type="Document" name="document"/>
+        </Method>
+        <Method name="showExitConfirmationDialog" returnType="int" visibility="private"/>
+        <Method name="showAboutDialog" returnType="void" visibility="private"/>
+        <Method name="setSystemLookAndFeel" returnType="void" visibility="private"/>
+        <Method name="initComponents" returnType="// &lt;editor-fold defaultstate=&quot;collapsed&quot; desc=&quot;Generated Code&quot;&gt;//GEN-BEGIN:initComponents void" visibility="private"/>
+        <Method name="showHeapTreeLabelMouseClicked" returnType="void" visibility="private">
+          <Argument type="java.awt.event.MouseEvent" name="evt"/>
+        </Method>
+        <Method name="loadBtnActionPerformed" returnType="void" visibility="private">
+          <Argument type="java.awt.event.ActionEvent" name="evt"/>
+        </Method>
+        <Method name="exitBtnActionPerformed" returnType="void" visibility="private">
+          <Argument type="java.awt.event.ActionEvent" name="evt"/>
+        </Method>
+        <Method name="aboutMsgBtnActionPerformed" returnType="void" visibility="private">
+          <Argument type="java.awt.event.ActionEvent" name="evt"/>
+        </Method>
+        <Method name="addUserMouseClicked" returnType="void" visibility="private">
+          <Argument type="java.awt.event.MouseEvent" name="evt"/>
+        </Method>
+        <Method name="saveBtnActionPerformed" returnType="void" visibility="private">
+          <Argument type="java.awt.event.ActionEvent" name="evt"/>
+        </Method>
+        <Method name="titleFieldFocusGained" returnType="void" visibility="private">
+          <Argument type="java.awt.event.FocusEvent" name="evt"/>
+        </Method>
+        <Method name="titleFieldFocusLost" returnType="void" visibility="private">
+          <Argument type="java.awt.event.FocusEvent" name="evt"/>
+        </Method>
+        <Method name="contentAreaTextFocusGained" returnType="void" visibility="private">
+          <Argument type="java.awt.event.FocusEvent" name="evt"/>
+        </Method>
+        <Method name="contentAreaTextFocusLost" returnType="void" visibility="private">
+          <Argument type="java.awt.event.FocusEvent" name="evt"/>
+        </Method>
+        <Method name="createNewDocumentActionPerformed" returnType="void" visibility="private">
+          <Argument type="java.awt.event.ActionEvent" name="evt"/>
+        </Method>
+        <Method name="deleteDocumentMouseClicked" returnType="void" visibility="private">
+          <Argument type="java.awt.event.MouseEvent" name="evt"/>
+        </Method>
+        <Method name="deleteFromQueueMouseClicked" returnType="void" visibility="private">
+          <Argument type="java.awt.event.MouseEvent" name="evt"/>
+        </Method>
+        <Method name="deleteUserMouseClicked" returnType="void" visibility="private">
+          <Argument type="java.awt.event.MouseEvent" name="evt"/>
+        </Method>
+        <Method name="sendToQueueMouseClicked" returnType="void" visibility="private">
+          <Argument type="java.awt.event.MouseEvent" name="evt"/>
+        </Method>
+        <Method name="printQueueBtnActionPerformed" returnType="void" visibility="private">
+          <Argument type="java.awt.event.ActionEvent" name="evt"/>
+        </Method>
+        <Method name="main" returnType="void" visibility="public" isStatic="true">
+          <Argument type="String" name="args"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="Main" package="Main" visibility="public" xPosition="1850.0" yPosition="1279.0">
+      <Fields/>
+      <Constructors/>
+      <Methods>
+        <Method name="main" returnType="void" visibility="public" isStatic="true">
+          <Argument type="String[]" name="args"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Interface name="User" package="Classes" visibility="public" xPosition="121.0" yPosition="20.0">
+      <Methods>
+        <Method name="getName" returnType="String" visibility="public"/>
+        <Method name="setName" returnType="void" visibility="public">
+          <Argument type="String" name="name"/>
+        </Method>
+        <Method name="getPriority" returnType="int" visibility="public"/>
+        <Method name="getFiles_list" returnType="SimpleList" visibility="public"/>
+        <Method name="setFiles_list" returnType="void" visibility="public">
+          <Argument type="SimpleList" name="files_list"/>
+        </Method>
+        <Method name="getDni" returnType="int" visibility="public"/>
+        <Method name="hasPriorityOver" returnType="boolean" visibility="public">
+          <Argument type="User" name="comparingUser"/>
+        </Method>
+        <Method name="getPriorityModifier" returnType="double" visibility="public"/>
+        <Method name="toString" returnType="String" visibility="public"/>
+        <Method name="isNameAvailable" returnType="boolean" visibility="public">
+          <Argument type="String" name="documentName"/>
+        </Method>
+        <Method name="addDocument" returnType="void" visibility="public">
+          <Argument type="Document" name="document"/>
+        </Method>
+        <Method name="getDocumentNames" returnType="String" visibility="public"/>
+        <Method name="deleteAllDocuments" returnType="void" visibility="public"/>
+      </Methods>
+    </Interface>
+  </ClassDiagramComponents>
+  <ClassDiagramRelations>
+    <UseRelation source="Classes.UserCommon" target="Classes.Document" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="DataStructureClasses.SimpleList" target="DataStructureClasses.SimpleNode" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="DataStructureClasses.OurQueue" target="DataStructureClasses.SimpleNode" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="GUI.Principal" target="Classes.User" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <HasRelation name="creator" source="Classes.Document" target="Classes.User" type="Aggregation" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="FileManager.FileManager" target="DataStructureClasses.OurHashTable" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="DataStructureClasses.RegistryHeapTree" target="DataStructureClasses.OurQueue" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <HasRelation name="files_list" source="Classes.UserAdministrator" target="Classes.Document" type="Aggregation" sourceCardinality="1..1" targetCardinality="0..*" collectionType="SimpleList&lt;Document&gt;"/>
+    <HasRelation name="pNext" source="DataStructureClasses.SimpleNode" target="DataStructureClasses.SimpleNode" type="Aggregation" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="Classes.UserCommon" target="Classes.User" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="Classes.Document" target="Classes.User" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="Classes.Registry" target="Classes.Document" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="Classes.UserHumanResources" target="Classes.Document" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="DataStructureClasses.RegistryHeapTree" target="Classes.Registry" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="GUI.HeapVisualizer" target="DataStructureClasses.RegistryHeapTree" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="DataStructureClasses.SimpleNode" target="DataStructureClasses.SimpleNode" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <HasRelation name="heapTree" source="GUI.Principal" target="DataStructureClasses.RegistryHeapTree" type="Aggregation" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <HasRelation name="registryTable" source="DataStructureClasses.RegistryHeapTree" target="Classes.Registry" type="Aggregation" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <HasRelation name="files_list" source="Classes.UserCommon" target="Classes.Document" type="Aggregation" sourceCardinality="1..1" targetCardinality="0..*" collectionType="SimpleList&lt;Document&gt;"/>
+    <UseRelation source="Classes.UserAdministrator" target="Classes.User" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="Classes.UserHumanResources" target="Classes.User" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="Classes.Registry" target="Classes.Registry" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <HasRelation name="documentsTable" source="GUI.Principal" target="Classes.Document" type="Aggregation" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="Classes.User" target="Classes.Document" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <HasRelation name="visualizer" source="GUI.Principal" target="GUI.HeapVisualizer" type="Aggregation" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <ImplementsRelation name="&lt;&lt;implements&gt;&gt;" source="Classes.UserCommon" target="Classes.User"/>
+    <UseRelation source="Classes.User" target="DataStructureClasses.SimpleList" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="GUI.Principal" target="Classes.Document" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="DataStructureClasses.OurHashTable" target="DataStructureClasses.SimpleList" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="Classes.UserCommon" target="DataStructureClasses.SimpleList" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <ImplementsRelation name="&lt;&lt;implements&gt;&gt;" source="Classes.UserHumanResources" target="Classes.User"/>
+    <UseRelation source="DataStructureClasses.OurEntry" target="DataStructureClasses.OurEntry" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="Classes.UserAdministrator" target="DataStructureClasses.SimpleList" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="Classes.UserAdministrator" target="Classes.Document" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <ImplementsRelation name="&lt;&lt;implements&gt;&gt;" source="Classes.UserAdministrator" target="Classes.User"/>
+    <HasRelation name="files_list" source="Classes.UserHumanResources" target="Classes.Document" type="Aggregation" sourceCardinality="1..1" targetCardinality="0..*" collectionType="SimpleList&lt;Document&gt;"/>
+    <HasRelation name="document" source="Classes.Registry" target="Classes.Document" type="Aggregation" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <HasRelation name="usersTable" source="GUI.Principal" target="Classes.User" type="Aggregation" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="Classes.UserHumanResources" target="DataStructureClasses.SimpleList" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="Classes.User" target="Classes.User" sourceCardinality="1..1" targetCardinality="1..1"/>
+  </ClassDiagramRelations>
+</ClassDiagram>

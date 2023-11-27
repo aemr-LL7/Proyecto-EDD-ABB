@@ -379,8 +379,7 @@ public class Principal extends javax.swing.JFrame {
                 + "◙ AUTORES: \n"
                 + "▬ Andres Marquez.\n"
                 + "▬ Eros Villarroel.\n\n"
-                + "◙ Botones: \n\n- \n\n"
-                + "◙ Errores conocidos: \n\na \n\n"
+                + "◙ Botones: \n\n-Añadir Usuario: Agrega un nuevo usuario. Pide Nombre, Cedula y Tipo de Usuario.\n-Eliminar Usuario: Elimina un usuario seleccionado, llevandose consigo sus documentos creado (Excepto los que fueron enviados a imprimir).\n-Eliminar Documento: Selecciona un usuario de la tabla y elimina alguno de los documentos creados.\n-Eliminar Doc de la Cola: Elimina algun documento seleccionado de la cola de impresion.\n-Enviar a Imprimir: Selecciona un usuario de la tabla y Agrega un documento proveniente de dicho usuario a la Cola de Impresion.\n-Mostar HeapTree: Muestra una representacion visual de la cola de prioridad a traves de la libreria GraphStream\n-Crear Documento: Crea un nuevo documento para el usuario seleccionado.\n-Imprimir Documento: Imprime todos los documentos presentes en la cola de prioridad y la vacia.\n\n"
                 + "► Librerias usadas: \n\n1) AbsoluteLayout.\n2) GraphStream.\n\n";
 
         JOptionPane.showMessageDialog(
